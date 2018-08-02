@@ -2,20 +2,20 @@
 
 ## Introducción
 
-En el capítulo previo tu aprendiste como funcionan los modelos lineales, y aprendiste algunas herramientas basicas para entender lo que un modelo esta diciendo con sus datos. El capitulo previo se enfocó en simular conjunto de datos. Este capitulo se centrará en datos reales, mostrando como tu puedes progresivamente construir un modelo ayudando a entender los datos. 
+En el capítulo previo aprendimos como funcionan los modelos lineales, y aprendimos algunas herramientas basicas para entender lo que un modelo esta diciendo con sus datos. El capítulo previo se enfocó en simular conjunto de datos. Este capitulo se centrará en datos reales, mostrando como puedes progresivamente construir un modelo ayudando a entender los datos. 
 
-Tomaremos ventaja del hecho que se puede (que podemos) pensar que un modelo particiona tus datos en patrones y residuos. Encontraremos patrones con visualizaciones, luego los haremos concretos y precisos con un modelo. Repetiremos luego el proceso, pero reemplazaremos la variable antigua con los residuos del modelo. The goal is to transition from implicit knowledge in the data and your head to explicit knowledge in a quantitative model. This makes it easier to apply to new domains, and easier for others to use. 
+Tomaremos ventaja del hecho que se puede pensar que un modelo particiona tus datos en patrones y residuos. Encontraremos patrones con visualizaciones, luego los haremos concretos y precisos con un modelo. Repetiremos luego el proceso, pero reemplazaremos la variable antigua con los residuos del modelo. The goal is to transition from implicit knowledge in the data and your head to explicit knowledge in a quantitative model. This makes it easier to apply to new domains, and easier for others to use. 
 
-For very large and complex datasets this will be a lot of work. There are certainly alternative approaches - a more machine learning approach is simply to focus on the predictive ability of the model. These approaches tend to produce black boxes: the model does a really good job at generating predictions, but you don't know why. This is a totally reasonable approach, but it does make it hard to apply your real world knowledge to the model. That, in turn, makes it difficult to assess whether or not the model will continue to work in the long-term, as fundamentals change. For most real models, I'd expect you to use some combination of this approach and a more classic automated approach.
+Para un grande y complejo conjunto de datos esto será mucho trabajo. There are certainly alternative approaches - a more machine learning approach is simply to focus on the predictive ability of the model. These approaches tend to produce black boxes: the model does a really good job at generating predictions, but you don't know why. This is a totally reasonable approach, but it does make it hard to apply your real world knowledge to the model. That, in turn, makes it difficult to assess whether or not the model will continue to work in the long-term, as fundamentals change. For most real models, I'd expect you to use some combination of this approach and a more classic automated approach.
 
 Es un desafio saber cuando detenerse. Tu necesitas averiguar cuando tu modelo es bastante bueno, y es poco probable que la investigacion adicional pagué. Me gusta especialmente esta cita del usuario Broseidon241: 
 
 > Hace mucho tiempo en clases de arte, mi profesor me dijo "un artista necesita saber 
 > cuando una pieza se termina. No puedes ajustar algo a la perfeccion - envuelvelo. 
-> If you don't like it, do it over again. Otherwise begin something new". Later
-> in life, I heard "A poor seamstress makes many mistakes. A good seamstress 
-> works hard to correct those mistakes. A great seamstress isn't afraid to 
-> throw out the garment and start over."
+> Si no te gusta, hazlo otra vez. O sino empieza algo nuevo". Mas tarde
+> en la vida, yo escuché "Una pobre costurera comete muchos errores. Una buena costurera 
+> trabaja duro para corregir esos errores. Una grandiosa costurera no tiene miedo de 
+> tirar la prenda y empezar nuevamente."
 
 -- Broseidon241, <https://www.reddit.com/r/datascience/comments/4irajq>
 
