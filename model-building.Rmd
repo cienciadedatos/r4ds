@@ -21,7 +21,7 @@ Es un desafio saber cuando detenerse. Tu necesitas averiguar cuando tu modelo es
 
 ### Prerequisitos
 
-Usaremos las mismas herramientas que en el capitulo anterior, pero agregaremos algunos datos reales: `diamonds` de ggplot2, y `flights` de nycflights13. También necesitaremos lubridate para trabajar con fechas/tiempos en `flights`.
+Usaremos las mismas herramientas que en el capitulo anterior, pero agregaremos algunos datos reales: `diamonds` de ggplot2, y `flights` de nycflights13. También necesitaremos lubridate para trabajar con fechas/horas en `flights`.
 
 ```{r setup, message = FALSE}
 library(tidyverse)
@@ -32,9 +32,9 @@ library(nycflights13)
 library(lubridate)
 ```
 
-## Why are low quality diamonds more expensive? {#diamond-prices}
+## ¿Porqué los diamantes de baja calidad son más caros? {#diamond-prices}
 
-En el capitulo anterior we've seen a surprising relationship between the quality of diamonds and their price: low quality diamonds (poor cuts, bad colours, and inferior clarity) have higher prices.
+En el capitulo anterior vimos una sorprendente relacion entre la calidad de los diamantes y su precio: baja calidad de diamantes (cortes pobres, malos colores, y claridad inferior) tienen mas altos precios.
 
 ```{r dev = "png"}
 ggplot(diamonds, aes(cut, price)) + geom_boxplot()
@@ -44,7 +44,7 @@ ggplot(diamonds, aes(clarity, price)) + geom_boxplot()
 
 Note that the worst diamond color is J (slightly yellow), and the worst clarity is I1 (inclusions visible to the naked eye).
 
-### Price and carat
+### Precio y Quilates
 
 It looks like lower quality diamonds have higher prices because there is an important confounding variable: the weight (`carat`) of the diamond. The weight of the diamond is the single most important factor for determining the price of the diamond, and lower quality diamonds tend to be larger.
 
