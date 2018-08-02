@@ -21,7 +21,7 @@ Es un desafio saber cuando detenerse. Tu necesitas averiguar cuando tu modelo es
 
 ### Prerequisitos
 
-We'll use the same tools as in the previous chapter, but add in some real datasets: `diamonds` from ggplot2, and `flights` from nycflights13.  We'll also need lubridate in order to work with the date/times in `flights`.
+Usaremos las mismas herramientas que en el capitulo anterior, pero agregaremos algunos datos reales: `diamonds` de ggplot2, y `flights` de nycflights13. También necesitaremos lubridate para trabajar con fechas/tiempos en `flights`.
 
 ```{r setup, message = FALSE}
 library(tidyverse)
@@ -34,7 +34,7 @@ library(lubridate)
 
 ## Why are low quality diamonds more expensive? {#diamond-prices}
 
-In previous chapters we've seen a surprising relationship between the quality of diamonds and their price: low quality diamonds (poor cuts, bad colours, and inferior clarity) have higher prices.
+En el capitulo anterior we've seen a surprising relationship between the quality of diamonds and their price: low quality diamonds (poor cuts, bad colours, and inferior clarity) have higher prices.
 
 ```{r dev = "png"}
 ggplot(diamonds, aes(cut, price)) + geom_boxplot()
