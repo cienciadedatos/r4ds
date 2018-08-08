@@ -42,11 +42,11 @@ ggplot(diamonds, aes(color, price)) + geom_boxplot()
 ggplot(diamonds, aes(clarity, price)) + geom_boxplot()
 ```
 
-Note that the worst diamond color is J (slightly yellow), and the worst clarity is I1 (inclusions visible to the naked eye).
+Tener en cuenta que el peor diamante es J (ligero amarillo), y la peor claridad es I1 (inclusiones visibles a simple vista).
 
 ### Precio y Quilates
 
-It looks like lower quality diamonds have higher prices because there is an important confounding variable: the weight (`carat`) of the diamond. The weight of the diamond is the single most important factor for determining the price of the diamond, and lower quality diamonds tend to be larger.
+Parece que los diamantes de menor calidad tiene precios mas altos porque hay una importante variable de confusion: el peso (`carat`) del diamante. El peso del diamante es el factor individual mas importante para determinar el precio del diamante, y los diamantes de menor calidad tienden a ser mas grandes.
 
 ```{r}
 ggplot(diamonds, aes(carat, price)) + 
