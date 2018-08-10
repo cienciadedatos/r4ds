@@ -53,10 +53,10 @@ ggplot(diamonds, aes(carat, price)) +
   geom_hex(bins = 50)
 ```
 
-We can make it easier to see how the other attributes of a diamond affect its relative `price` by fitting a model to separate out the effect of `carat`. But first, lets make a couple of tweaks to the diamonds dataset to make it easier to work with:
+Podemos hacer que sea más fácil ver cómo los otros atributos de un diamante afectan su `price` relativo al ajustar un modelo para separar el efecto de `carat`. Pero primero, hagamos algunos ajustes al conjunto de datos de diamantes para que sea más fácil trabajar con: 
 
-1. Focus on diamonds smaller than 2.5 carats (99.7% of the data)
-1. Log-transform the carat and price variables.
+1. foco en los diamantes mas pequeños que 2.5 quilates (99.7% de los datos)
+1. Log-transformacion de variables quilate y precio.
 
 ```{r}
 diamonds2 <- diamonds %>% 
@@ -64,20 +64,20 @@ diamonds2 <- diamonds %>%
   mutate(lprice = log2(price), lcarat = log2(carat))
 ```
 
-Together, these changes make it easier to see the relationship between `carat` and `price`:
+Juntos, esos cambios hacen mas facil ver la relación entre `carat` y `price`:
 
 ```{r}
 ggplot(diamonds2, aes(lcarat, lprice)) + 
   geom_hex(bins = 50)
 ```
 
-The log-transformation is particularly useful here because it makes the pattern linear, and linear patterns are the easiest to work with. Let's take the next step and remove that strong linear pattern. We first make the pattern explicit by fitting a model:
+La log-transformacion es particularmente util aqui porque hace que el patron sea lineal, y patrones lineales son mas faciles de usar.  Tomemos el proximo paso y eliminemos ese patron lineal fuerte. Primero hacemos explicito el patron ajustando el modelo:
 
 ```{r}
 mod_diamond <- lm(lprice ~ lcarat, data = diamonds2)
 ```
 
-Then we look at what the model tells us about the data. Note that I back transform the predictions, undoing the log transformation, so I can overlay the predictions on the raw data:
+Luego observamos lo que el modelo nos dice. Tener en cuenta que devuelvo la transformacion de la prediccion, deshaciendo la log transformacion, para poder superponer las predicciones en los datos:
 
 ```{r}
 grid <- diamonds2 %>% 
@@ -91,9 +91,9 @@ ggplot(diamonds2, aes(carat, price)) +
   geom_line(data = grid, colour = "red", size = 1)
 ```
 
-That tells us something interesting about our data. If we believe our model, then the large diamonds are much cheaper than expected. This is probably because no diamond in this dataset costs more than $19,000.
+Eso nos dice algo interesante acerca de nuestros datos. Si creemos en nuestro modelo, los diamantes grandes son mucho mas baratos que lo esperado. Esto es probablemente porque no hay diamantes en estos datos que cuesten mas que $19,000.
 
-Now we can look at the residuals, which verifies that we've successfully removed the strong linear pattern:
+Ahora podemos ver los residuos, lo cual comprueba que hemos eliminado el patron lineal fuerte:
 
 ```{r}
 diamonds2 <- diamonds2 %>% 
@@ -103,7 +103,7 @@ ggplot(diamonds2, aes(lcarat, lresid)) +
   geom_hex(bins = 50)
 ```
 
-Importantly, we can now re-do our motivating plots using those residuals instead of `price`. 
+Es importante destacar que ahora podemos volver a hacer nuestros graficos motivadores utilizando esos residuos en lugar de `price`. 
 
 ```{r dev = "png"}
 ggplot(diamonds2, aes(cut, lresid)) + geom_boxplot()
