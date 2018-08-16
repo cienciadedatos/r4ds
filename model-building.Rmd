@@ -111,17 +111,17 @@ ggplot(diamonds2, aes(color, lresid)) + geom_boxplot()
 ggplot(diamonds2, aes(clarity, lresid)) + geom_boxplot()
 ```
 
-Now we see the relationship we expect: as the quality of the diamond increases, so too does its relative price. To interpret the `y` axis, we need to think about what the residuals are telling us, and what scale they are on. A residual of -1 indicates that `lprice` was 1 unit lower than a prediction based solely on its weight. $2^{-1}$ is 1/2, points with a value of -1 are half the expected price, and residuals with value 1 are twice the predicted price.
+Ahora vemos la relacion que esperabamos: a medida que aumenta la calidad del diamante, tambien lo hace su precio relativo. Para interpretar el eje `y`, necesitamos pensar que nos dicen los residuos, y en que escala estan. Un residuo de -1 indica que `lprice` era 1 unidad mas baja que la prediccion unicamente basada en su peso. $2^{-1}$ es 1/2, los puntos con un valor de -1 son la mitad del precio estimado, y los residuos con el valor 1 son el doble del precio predicho.
 
-### Un modelo mas complicado
+### Un modelo más complicado
 
-If we wanted to, we could continue to build up our model, moving the effects we've observed into the model to make them explicit. For example, we could include `color`, `cut`, and `clarity` into the model so that we also make explicit the effect of these three categorical variables:
+Si quisieramos, podriamos continuar construyendo nuestro modelo, trasladando los efectos que hemos observado en el modelo para hacerlos explicitos. Por ejemplo, podriamos incluir `color`, `cut`, y `clarity` en el modelo para que tambien hagamos explicito el efecto de esas tres variables categoricas:
 
 ```{r}
 mod_diamond2 <- lm(lprice ~ lcarat + color + cut + clarity, data = diamonds2)
 ```
 
-This model now includes four predictors, so it's getting harder to visualise. Fortunately, they're currently all independent which means that we can plot them individually in four plots. To make the process a little easier, we're going to use the `.model` argument to `data_grid`:
+Este modelo ahora incluye cuatro predictores, This model now includes four predictors, por lo que es mas dificil de visualizar. Afortunadamente, todos ellos son actualmente independientes lo que significa que podemos graficarlos individualmente en cuatro graficos. Para hacer el proceso mas facil, vamos a usar el argumento `.model` para `data_grid`:
 
 ```{r}
 grid <- diamonds2 %>% 
@@ -133,7 +133,7 @@ ggplot(grid, aes(cut, pred)) +
   geom_point()
 ```
 
-If the model needs variables that you haven't explicitly supplied, `data_grid()` will automatically fill them in with "typical" value. For continuous variables, it uses the median, and categorical variables it uses the most common value (or values, if there's a tie).
+Si el modelo necesita variables que no hayas suministrado, `data_grid()` automaticamente los rellenará con el valor "typical". Para variables continuas, es usada la mediana, y variables categoricas usa el valor mas comun (o valores, si hay un empate).
 
 ```{r}
 diamonds2 <- diamonds2 %>% 
@@ -143,7 +143,7 @@ ggplot(diamonds2, aes(lcarat, lresid2)) +
   geom_hex(bins = 50)
 ```
 
-This plot indicates that there are some diamonds with quite large residuals - remember a residual of 2 indicates that the diamond is 4x the price that we expected. It's often useful to look at unusual values individually:
+Este grafico indica que hay algunos diamantes con residuos bastante grandes - recuerde que un residuo de 2 indica que el diamante es 4x el precio que esperabamos. A menudo es util mirar los valores inusuales individualmente:
 
 ```{r}
 diamonds2 %>% 
@@ -154,7 +154,7 @@ diamonds2 %>%
   arrange(price)
 ```
 
-Nothing really jumps out at me here, but it's probably worth spending time considering if this indicates a problem with our model, or if there are errors in the data. If there are mistakes in the data, this could be an opportunity to buy diamonds that have been priced low incorrectly.
+Nada realmente interesante hasta aquí, pero probablemente valga la pena pasar tiempo considerando si esto indica un problema con nuestro modelo, o si hay errores en los datos. Si hay errores en los datos, esta podria ser una oportunidad para comprar diamantes que tienen un precio bajo incorrecto.
 
 ### Ejercicios
 
