@@ -158,23 +158,23 @@ Nada realmente interesante hasta aquí, pero probablemente valga la pena pasar t
 
 ### Ejercicios
 
-1.  In the plot of `lcarat` vs. `lprice`, there are some bright vertical
-    strips. What do they represent?
+1.  En el grafico de `lcarat` vs. `lprice`, hay unas tiras verticales brillantes.
+    ¿Que representan?
 
-1.  If `log(price) = a_0 + a_1 * log(carat)`, what does that say about 
-    the relationship between `price` and `carat`?
+1.  Si `log(price) = a_0 + a_1 * log(carat)`, que eso dice acerca  
+    la relacion entre `price` y `carat`?
     
-1.  Extract the diamonds that have very high and very low residuals. 
-    Is there anything unusual about these diamonds? Are they particularly bad
-    or good, or do you think these are pricing errors?
+1.  Extrae los diamantes que tiene muy alto y muy bajo residuos. 
+    ¿Hau algo inusual en estos diamantes? ¿Son particularmente malos 
+    o buenos?, o ¿crees que estos son errores de precio?
 
-1.  Does the final model, `mod_diamond2`, do a good job of predicting
-    diamond prices? Would you trust it to tell you how much to spend
-    if you were buying a diamond?
+1.  ¿El modelo final, `mod_diamond2`, hace un buen trabajo prediciendo 
+    precios de diamantes? ¿confiarias en que te diga cuanto gastar 
+    si estuvieras comprando un diamante?
 
-## What affects the number of daily flights?
+## ¿Que afecta el numero de vuelos diarias?
 
-Let's work through a similar process for a dataset that seems even simpler at first glance: the number of flights that leave NYC per day. This is a really small dataset --- only 365 rows and 2 columns --- and we're not going to end up with a fully realised model, but as you'll see, the steps along the way will help us better understand the data. Let's get started by counting the number of flights per day and visualising it with ggplot2.
+Trabajaremos a traves de un proceso similar para un conjunto de datos que parece aun mas simple a primera vista: el numero de vuelos que salen de NYC por dia. Este es un conjunto realmente pequeño de datos --- solo 365 filas y 2 columnas --- y no vamos a terminar con un modelo completamente realizado, pero como veras, los pasos en el camino nos ayudarán a entender mejor los datos. Comenzaremos contando  el numero de vuelos por dia y visualizandolos con ggplot2.
 
 ```{r}
 daily <- flights %>% 
