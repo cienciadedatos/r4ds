@@ -187,9 +187,9 @@ ggplot(daily, aes(date, n)) +
   geom_line()
 ```
 
-### Dia de semana
+### Día de semana
 
-Understanding the long-term trend is challenging because there's a very strong day-of-week effect that dominates the subtler patterns. Let's start by looking at the distribution of flight numbers by day-of-week:
+Comprender la tendencia a largo plazo es un desafío porque hay un fuerte efecto en los dias de la semana que dominan los patrones sutiles. Comenzaremos mirando la distribucion de numero de vuelos por dia de la semana:
 
 ```{r}
 daily <- daily %>% 
@@ -198,9 +198,9 @@ ggplot(daily, aes(wday, n)) +
   geom_boxplot()
 ```
 
-There are fewer flights on weekends because most travel is for business. The effect is particularly pronounced on Saturday: you might sometimes leave on Sunday for a Monday morning meeting, but it's very rare that you'd leave on Saturday as you'd much rather be at home with your family.
+Hay pocos vuelos los fin de semana porque la mayoria de los viajes es por negocios. El efecto es particularmente pronunciado el sabado: tu podrias algunas veces salir un domingo para una reunion un lunes en la mañana, pero esto es bastante raro que salgas un sabado ya que preferirias estar en casa con tu familia.
 
-One way to remove this strong pattern is to use a model. First, we fit the model, and display its predictions overlaid on the original data:
+Una forma de eliminar este fuerte patron es usar un modelo. Primero, ajustaremos el modelo, y mostraremos sus predicciones superpuestas sobre los datos originales:
 
 ```{r}
 mod <- lm(n ~ wday, data = daily)
@@ -214,7 +214,7 @@ ggplot(daily, aes(wday, n)) +
   geom_point(data = grid, colour = "red", size = 4)
 ```
 
-Next we compute and visualise the residuals:
+A continuacion calculamos y visualizamos los residuos:
 
 ```{r}
 daily <- daily %>% 
