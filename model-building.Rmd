@@ -2,17 +2,17 @@
 
 ## Introducción
 
-En el capítulo previo aprendimos como funcionan los modelos lineales, y aprendimos algunas herramientas básicas para entender lo que un modelo esta diciendo con sus datos. El capítulo previo se enfocó en simular conjunto de datos. Este capítulo se centrará en datos reales, mostrando como puedes progresivamente construir un modelo ayudando a entender los datos. 
+En el capítulo previo aprendimos cómo funcionan los modelos lineales, y aprendimos algunas herramientas básicas para entender lo que un modelo está diciendo con sus datos. El capítulo previo se enfocó en simular conjunto de datos. Este capítulo se centrará en datos reales, mostrando como puedes progresivamente construir un modelo ayudando a entender los datos. 
 
-Tomaremos ventaja del hecho que se puede pensar que un modelo particiona tus datos en patrones y residuos. Encontraremos patrones con visualizaciones, luego los haremos concretos y precisos con un modelo. Repetiremos luego el proceso, pero reemplazaremos la variable antigua con los residuos del modelo. El objetivo es pasar de un conocimiento implicito en la data a un conocimiento explicito en un modelo cuantitativo. Esto hace que sea mas facil aplicar nuevos dominios, y mas facil de usar para otros. 
+Tomaremos ventaja del hecho que se puede pensar que un modelo particiona tus datos en patrones y residuos. Encontraremos patrones con visualizaciones, luego los haremos concretos y precisos con un modelo. Repetiremos luego el proceso, pero reemplazaremos la variable antigua con los residuos del modelo. El objetivo es pasar de un conocimiento implícito en la data a un conocimiento explícito en un modelo cuantitativo. Esto hace que sea más fácil aplicar nuevos dominios, y más fácil de usar para otros. 
 
-Para un grande y complejo conjunto de datos esto será mucho trabajo. Sin duda hay enfoques alternativos - un enfoque de aprendizaje mas automatico es simplemente enfocarse en la capacidad predictiva del modelo. Ese enfoque tiende a producir cajas negras: el modelo hace muy bien su trabajo generando prediciones, pero no sabes porque. Esto es un enfoque totalmente razonable, pero lo hace dificil de aplicar el conocimiento del mundo real al modelo. Eso, a su vez, hace dificil evaluar si el modelo continuará o no funcionando a largo plazo, ya que los fundamentos cambian. Para la mayoria de los modelos, esperaría que usaras alguna combinacion de este enfoque y un enfoque clasico mas automatizado.
+Para un grande y complejo conjunto de datos esto será mucho trabajo. Sin duda hay enfoques alternativos - un enfoque de aprendizaje más automático es simplemente enfocarse en la capacidad predictiva del modelo. Ese enfoque tiende a producir cajas negras: el modelo hace muy bien su trabajo generando prediciones, pero no sabes porque. Esto es un enfoque totalmente razonable, pero lo hace difícil de aplicar el conocimiento del mundo real al modelo. Eso, a su vez, hace difícil evaluar si el modelo continuará o no funcionando a largo plazo, ya que los fundamentos cambian. Para la mayoría de los modelos, esperaría que usaras alguna combinación de este enfoque y un enfoque clásico mas automatizado.
 
-Es un desafio saber cuando detenerse. Tu necesitas averiguar cuando tu modelo es bastante bueno, y es poco probable que la investigacion adicional pagué. Me gusta especialmente esta cita del usuario Broseidon241: 
+Es un desafío saber cuándo detenerse. Tú necesitas averiguar cuando tu modelo es bastante bueno, y es poco probable que la investigación adicional pagué. Me gusta especialmente esta cita del usuario Broseidon241: 
 
 > Hace mucho tiempo en clases de arte, mi profesor me dijo "un artista necesita saber 
-> cuando una pieza se termina. No puedes ajustar algo a la perfeccion - envuelvelo. 
-> Si no te gusta, hazlo otra vez. O sino empieza algo nuevo". Mas tarde
+> cuándo una pieza se termina. No puedes ajustar algo a la perfección - envuélvelo. 
+> Si no te gusta, hazlo otra vez. O sino empieza algo nuevo". Más tarde
 > en la vida, yo escuché "Una pobre costurera comete muchos errores. Una buena costurera 
 > trabaja duro para corregir esos errores. Una grandiosa costurera no tiene miedo de 
 > tirar la prenda y empezar nuevamente."
@@ -21,7 +21,7 @@ Es un desafio saber cuando detenerse. Tu necesitas averiguar cuando tu modelo es
 
 ### Prerequisitos
 
-Usaremos las mismas herramientas que en el capitulo anterior, pero agregaremos algunos datos reales: `diamonds` de ggplot2, y `flights` de nycflights13. También necesitaremos lubridate para trabajar con fechas/horas en `flights`.
+Usaremos las mismas herramientas que en el capítulo anterior, pero agregaremos algunos datos reales: `diamonds` de ggplot2, y `flights` de nycflights13. También necesitaremos lubridate para trabajar con fechas/horas en `flights`.
 
 ```{r setup, message = FALSE}
 library(tidyverse)
@@ -32,9 +32,9 @@ library(nycflights13)
 library(lubridate)
 ```
 
-## ¿Porqué los diamantes de baja calidad son más caros? {#diamond-prices}
+## ¿Por qué los diamantes de baja calidad son más caros? {#diamond-prices}
 
-En el capitulo anterior vimos una sorprendente relacion entre la calidad de los diamantes y su precio: baja calidad de diamantes (cortes pobres, malos colores, y claridad inferior) tienen mas altos precios.
+En el capítulo anterior vimos una sorprendente relación entre la calidad de los diamantes y su precio: baja calidad de diamantes (cortes pobres, malos colores, y claridad inferior) tienen más altos precios.
 
 ```{r dev = "png"}
 ggplot(diamonds, aes(cut, price)) + geom_boxplot()
@@ -46,7 +46,7 @@ Tener en cuenta que el peor diamante es J (ligero amarillo), y la peor claridad 
 
 ### Precio y Quilates
 
-Parece que los diamantes de menor calidad tiene precios mas altos porque hay una importante variable de confusion: el peso (`carat`) del diamante. El peso del diamante es el factor individual mas importante para determinar el precio del diamante, y los diamantes de menor calidad tienden a ser mas grandes.
+Parece que los diamantes de menor calidad tiene precios más altos porque hay una importante variable de confusión: el peso (`carat`) del diamante. El peso del diamante es el factor individual más importante para determinar el precio del diamante, y los diamantes de menor calidad tienden a ser más grandes.
 
 ```{r}
 ggplot(diamonds, aes(carat, price)) + 
@@ -55,8 +55,8 @@ ggplot(diamonds, aes(carat, price)) +
 
 Podemos hacer que sea más fácil ver cómo los otros atributos de un diamante afectan su `price` relativo al ajustar un modelo para separar el efecto de `carat`. Pero primero, hagamos algunos ajustes al conjunto de datos de diamantes para que sea más fácil trabajar con: 
 
-1. foco en los diamantes mas pequeños que 2.5 quilates (99.7% de los datos)
-1. Log-transformacion de variables quilate y precio.
+1. Foco en los diamantes más pequeños que 2.5 quilates (99.7% de los datos)
+1. Log-transformación de variables quilate y precio.
 
 ```{r}
 diamonds2 <- diamonds %>% 
@@ -64,20 +64,20 @@ diamonds2 <- diamonds %>%
   mutate(lprice = log2(price), lcarat = log2(carat))
 ```
 
-Juntos, esos cambios hacen mas facil ver la relación entre `carat` y `price`:
+Juntos, esos cambios hacen más fácil ver la relación entre `carat` y `price`:
 
 ```{r}
 ggplot(diamonds2, aes(lcarat, lprice)) + 
   geom_hex(bins = 50)
 ```
 
-La log-transformacion es particularmente util aqui porque hace que el patron sea lineal, y patrones lineales son mas faciles de usar.  Tomemos el proximo paso y eliminemos ese patron lineal fuerte. Primero hacemos explicito el patron ajustando el modelo:
+La log-transformación es particularmente util aquí porque hace que el patrón sea lineal, y patrones lineales son más fáciles de usar.  Tomemos el próximo paso y eliminemos ese patron lineal fuerte. Primero hacemos explicito el patrón ajustando el modelo:
 
 ```{r}
 mod_diamond <- lm(lprice ~ lcarat, data = diamonds2)
 ```
 
-Luego observamos lo que el modelo nos dice. Tener en cuenta que devuelvo la transformacion de la prediccion, deshaciendo la log transformacion, para poder superponer las predicciones en los datos:
+Luego observamos lo que el modelo nos dice. Tener en cuenta que devuelvo la transformación de la predicción, deshaciendo la log transformación, para poder superponer las predicciones en los datos:
 
 ```{r}
 grid <- diamonds2 %>% 
@@ -91,9 +91,9 @@ ggplot(diamonds2, aes(carat, price)) +
   geom_line(data = grid, colour = "red", size = 1)
 ```
 
-Eso nos dice algo interesante acerca de nuestros datos. Si creemos en nuestro modelo, los diamantes grandes son mucho mas baratos que lo esperado. Esto es probablemente porque no hay diamantes en estos datos que cuesten mas que $19,000.
+Eso nos dice algo interesante acerca de nuestros datos. Si creemos en nuestro modelo, los diamantes grandes son mucho más baratos que lo esperado. Esto es probablemente porque no hay diamantes en estos datos que cuesten más que $19,000.
 
-Ahora podemos ver los residuos, lo cual comprueba que hemos eliminado el patron lineal fuerte:
+Ahora podemos ver los residuos, lo cual comprueba que hemos eliminado el patrón lineal fuerte:
 
 ```{r}
 diamonds2 <- diamonds2 %>% 
@@ -103,7 +103,7 @@ ggplot(diamonds2, aes(lcarat, lresid)) +
   geom_hex(bins = 50)
 ```
 
-Es importante destacar que ahora podemos volver a hacer nuestros graficos motivadores utilizando esos residuos en lugar de `price`. 
+Es importante destacar que ahora podemos volver a hacer nuestros gráficos motivadores utilizando esos residuos en lugar de `price`. 
 
 ```{r dev = "png"}
 ggplot(diamonds2, aes(cut, lresid)) + geom_boxplot()
@@ -111,17 +111,17 @@ ggplot(diamonds2, aes(color, lresid)) + geom_boxplot()
 ggplot(diamonds2, aes(clarity, lresid)) + geom_boxplot()
 ```
 
-Ahora vemos la relacion que esperabamos: a medida que aumenta la calidad del diamante, tambien lo hace su precio relativo. Para interpretar el eje `y`, necesitamos pensar que nos dicen los residuos, y en que escala estan. Un residuo de -1 indica que `lprice` era 1 unidad mas baja que la prediccion unicamente basada en su peso. $2^{-1}$ es 1/2, los puntos con un valor de -1 son la mitad del precio estimado, y los residuos con el valor 1 son el doble del precio predicho.
+Ahora vemos la relación que esperábamos: a medida que aumenta la calidad del diamante, también lo hace su precio relativo. Para interpretar el eje `y`, necesitamos pensar que nos dicen los residuos, y en que escala estan. Un residuo de -1 indica que `lprice` era 1 unidad más baja que la predicción únicamente basada en su peso. $2^{-1}$ es 1/2, los puntos con un valor de -1 son la mitad del precio estimado, y los residuos con el valor 1 son el doble del precio predicho.
 
 ### Un modelo más complicado
 
-Si quisieramos, podriamos continuar construyendo nuestro modelo, trasladando los efectos que hemos observado en el modelo para hacerlos explicitos. Por ejemplo, podriamos incluir `color`, `cut`, y `clarity` en el modelo para que tambien hagamos explicito el efecto de esas tres variables categoricas:
+Si quisiéramos, podríamos continuar construyendo nuestro modelo, trasladando los efectos que hemos observado en el modelo para hacerlos explícitos. Por ejemplo, podriamos incluir `color`, `cut`, y `clarity` en el modelo para que también hagamos explícito el efecto de esas tres variables categóricas:
 
 ```{r}
 mod_diamond2 <- lm(lprice ~ lcarat + color + cut + clarity, data = diamonds2)
 ```
 
-Este modelo ahora incluye cuatro predictores, This model now includes four predictors, por lo que es mas dificil de visualizar. Afortunadamente, todos ellos son actualmente independientes lo que significa que podemos graficarlos individualmente en cuatro graficos. Para hacer el proceso mas facil, vamos a usar el argumento `.model` para `data_grid`:
+Este modelo ahora incluye cuatro predictores, por lo que es más difícil de visualizar. Afortunadamente, todos ellos son actualmente independientes lo que significa que podemos graficarlos individualmente en cuatro gráficos. Para hacer el proceso más fácil, vamos a usar el argumento `.model` para `data_grid`:
 
 ```{r}
 grid <- diamonds2 %>% 
@@ -133,7 +133,7 @@ ggplot(grid, aes(cut, pred)) +
   geom_point()
 ```
 
-Si el modelo necesita variables que no hayas suministrado, `data_grid()` automaticamente los rellenará con el valor "typical". Para variables continuas, es usada la mediana, y variables categoricas usa el valor mas comun (o valores, si hay un empate).
+Si el modelo necesita variables que no hayas suministrado, `data_grid()` automáticamente los rellenará con el valor "typical". Para variables continuas, es usada la mediana, y variables categóricas usa el valor más común (o valores, si hay un empate).
 
 ```{r}
 diamonds2 <- diamonds2 %>% 
@@ -143,7 +143,7 @@ ggplot(diamonds2, aes(lcarat, lresid2)) +
   geom_hex(bins = 50)
 ```
 
-Este grafico indica que hay algunos diamantes con residuos bastante grandes - recuerde que un residuo de 2 indica que el diamante es 4x el precio que esperabamos. A menudo es util mirar los valores inusuales individualmente:
+Este grafico indica que hay algunos diamantes con residuos bastante grandes - recuerde que un residuo de 2 indica que el diamante es 4x el precio que esperábamos. A menudo es útil mirar los valores inusuales individualmente:
 
 ```{r}
 diamonds2 %>% 
@@ -154,27 +154,27 @@ diamonds2 %>%
   arrange(price)
 ```
 
-Nada realmente interesante hasta aquí, pero probablemente valga la pena pasar tiempo considerando si esto indica un problema con nuestro modelo, o si hay errores en los datos. Si hay errores en los datos, esta podria ser una oportunidad para comprar diamantes que tienen un precio bajo incorrecto.
+Nada realmente interesante hasta aquí, pero probablemente valga la pena pasar tiempo considerando si esto indica un problema con nuestro modelo, o si hay errores en los datos. Si hay errores en los datos, esta podría ser una oportunidad para comprar diamantes que tienen un precio bajo incorrecto.
 
 ### Ejercicios
 
-1.  En el grafico de `lcarat` vs. `lprice`, hay unas tiras verticales brillantes.
+1.  En el gráfico de `lcarat` vs. `lprice`, hay unas tiras verticales brillantes.
     ¿Que representan?
 
 1.  Si `log(price) = a_0 + a_1 * log(carat)`, que eso dice acerca  
-    la relacion entre `price` y `carat`?
+    la relación entre `price` y `carat`?
     
 1.  Extrae los diamantes que tiene muy alto y muy bajo residuos. 
-    ¿Hau algo inusual en estos diamantes? ¿Son particularmente malos 
+    ¿Hay algo inusual en estos diamantes? ¿Son particularmente malos 
     o buenos?, o ¿crees que estos son errores de precio?
 
 1.  ¿El modelo final, `mod_diamond2`, hace un buen trabajo prediciendo 
-    precios de diamantes? ¿confiarias en que te diga cuanto gastar 
+    precios de diamantes? ¿Confiarías en que te diga cuanto gastar 
     si estuvieras comprando un diamante?
 
-## ¿Que afecta el numero de vuelos diarias?
+## ¿Que afecta el número de vuelos diarias?
 
-Trabajaremos a traves de un proceso similar para un conjunto de datos que parece aun mas simple a primera vista: el numero de vuelos que salen de NYC por dia. Este es un conjunto realmente pequeño de datos --- solo 365 filas y 2 columnas --- y no vamos a terminar con un modelo completamente realizado, pero como veras, los pasos en el camino nos ayudarán a entender mejor los datos. Comenzaremos contando  el numero de vuelos por dia y visualizandolos con ggplot2.
+Trabajaremos a través de un proceso similar para un conjunto de datos que parece aún más simple a primera vista: el número de vuelos que salen de NYC por día. Este es un conjunto realmente pequeño de datos --- solo 365 filas y 2 columnas --- y no vamos a terminar con un modelo completamente realizado, pero como veras, los pasos en el camino nos ayudarán a entender mejor los datos. Comenzaremos contando  el número de vuelos por día y visualizándolos con ggplot2.
 
 ```{r}
 daily <- flights %>% 
@@ -189,7 +189,7 @@ ggplot(daily, aes(date, n)) +
 
 ### Día de semana
 
-Comprender la tendencia a largo plazo es un desafío porque hay un fuerte efecto en los dias de la semana que dominan los patrones sutiles. Comenzaremos mirando la distribucion de numero de vuelos por dia de la semana:
+Comprender la tendencia a largo plazo es un desafío porque hay un fuerte efecto en los días de la semana que dominan los patrones sutiles. Comenzaremos mirando la distribución de número de vuelos por día de la semana:
 
 ```{r}
 daily <- daily %>% 
