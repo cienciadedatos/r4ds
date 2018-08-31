@@ -198,9 +198,9 @@ ggplot(daily, aes(wday, n)) +
   geom_boxplot()
 ```
 
-Hay pocos vuelos los fin de semana porque la mayoria de los viajes es por negocios. El efecto es particularmente pronunciado el sabado: tu podrias algunas veces salir un domingo para una reunion un lunes en la mañana, pero esto es bastante raro que salgas un sabado ya que preferirias estar en casa con tu familia.
+Hay pocos vuelos los fines de semana porque la mayoría de los viajes es por negocios. El efecto es particularmente pronunciado el sábado: tu podrías algunas veces salir un domingo para una reunión un lunes en la mañana, pero esto es bastante raro que salgas un sábado ya que preferirías estar en casa con tu familia.
 
-Una forma de eliminar este fuerte patron es usar un modelo. Primero, ajustaremos el modelo, y mostraremos sus predicciones superpuestas sobre los datos originales:
+Una forma de eliminar este fuerte patrón es usar un modelo. Primero, ajustaremos el modelo, y mostraremos sus predicciones superpuestas sobre los datos originales:
 
 ```{r}
 mod <- lm(n ~ wday, data = daily)
@@ -225,11 +225,11 @@ daily %>%
   geom_line()
 ```
 
-Notar el cambio en el eje Y: ahora estamos viendo la desviacion desde el numero de vuelos esperados, dados los dias de la semana. Este grafico es util porque ahora que removimos mucho de los grandes efectos dia-de-semana, nosotros podemos ver algo de los patrones mas sutiles que quedan:
+Notar el cambio en el eje Y: ahora estamos viendo la desviación desde el numero de vuelos esperados, dados los días de la semana. Este grafico es útil porque ahora que removimos mucho de los grandes efectos día-de-semana, nosotros podemos ver algo de los patrones más sutiles que quedan:
 
 1.  Nuestro modelo parece fallar a partir de junio: todavía se puede ver un 
-    patron regular que nuestro modelo no ha capturado. Dibujando un diagrama con una 
-    linea para cada dia de la semana se hace mas facil de ver:
+    patrón regular que nuestro modelo no ha capturado. Dibujando un diagrama con una 
+    linea para cada día de la semana se hace más facil de ver:
 
     ```{r}
     ggplot(daily, aes(date, resid, colour = wday)) + 
@@ -237,24 +237,23 @@ Notar el cambio en el eje Y: ahora estamos viendo la desviacion desde el numero 
       geom_line()
     ```
 
-    Nuestro modelo falla en predecir con precision el numero de vuelos los sabados: 
-    durante el verano hay mas vuelos de los que esperamos, y durante el otoño 
-    hay menos. Nosotros veremos como podemos capturar mejor este patron en la 
-    siguiente seccion.
+    Nuestro modelo falla en predecir con precisión el número de vuelos los sábados: 
+    durante el verano hay más vuelos de los que esperamos, y durante el otoño 
+    hay menos. Nosotros veremos como podemos capturar mejor este patrón en la 
+    siguiente sección.
 
-1.  Hay algunos dias con mucho menos vuelos que los esperados:
+1.  Hay algunos días con mucho menos vuelos que los esperados:
 
     ```{r}
     daily %>% 
       filter(resid < -100)
     ```
 
-     Si tu estas familiarizado con los feriados publicos en Estados Unidos, puedes ver el dia de año nuevo,
-     el 4 de julio, el dia de   accion de gracia y navidad. Hay algunos otros que parecen no 
-     corresponder a feriados publicos. Trabajaras en esos en uno 
-     de los ejercicios.
+     Si tu estas familiarizado con los feriados públicos en Estados Unidos, puedes ver el día de año nuevo,
+     el 4 de julio, el día de   acción de gracia y navidad. Hay algunos otros que parecen no 
+     corresponder a feriados públicos. Trabajarás en uno de esos ejercicios.
     
-1.  Parece que hay una tendencia mas suave a largo plazo en el transcurso del año.
+1.  Parece que hay una tendencia más suave a largo plazo en el transcurso del año.
     Podemos destacar esa tendencia con `geom_smooth()`:
 
     ```{r}
@@ -265,15 +264,15 @@ Notar el cambio en el eje Y: ahora estamos viendo la desviacion desde el numero 
       geom_smooth(se = FALSE, span = 0.20)
     ```
 
-    Hay menos vuelos en enero (y diciembre), y mas en verano 
-    (May-Sep). No podemos hacer mucho cuantitativamente con este patron, porque  
-    solo tenemos un año de datos. Pero podemos usar nuestro conocimiento 
+    Hay menos vuelos en enero (y diciembre), y más en verano 
+    (May-Sep). No podemos hacer mucho cuantitativamente con este patrón, porque  
+    sólo tenemos un año de datos. Pero podemos usar nuestro conocimiento 
     para pensar en posibles explicaciones.
 
 ### Efecto estacional de Sábado
 
-Primero abordaremos nuestra falla para predecir con exactitud el numero de vuelos el sabado. Un buen lugar para empezar es 
-volver a los numeros en bruto, enfocandonos en el sabado:
+Primero abordaremos nuestra falla para predecir con exactitud el número de vuelos el sábado. Un buen lugar para empezar es 
+volver a los números en bruto, enfocándonos en el sábado:
 
 ```{r}
 daily %>% 
@@ -286,9 +285,9 @@ daily %>%
 
 (He usado tanto puntos como líneas para dejar más claro que son los datos y qué es la interpolación.)
 
-Yo sospecho que este patron es causado por las vacaciones de invierno: mucha gente va de vacaciones en verano, y a las personas no les importa viajar un sabado en sus vacaciones. Al mirar este grafico, podemos suponer que las vacaciones de verano son de principio de  junio a finales de Agosto. Parece que se alinea bastante bien con los [Terminos escolares del estado](http://schools.nyc.gov/Calendar/2013-2014+School+Year+Calendars.htm): las vacaciones de verano en 2013 fueron del 26 de junio hasta el 9 de septiembre. 
+Yo sospecho que este patrón es causado por las vacaciones de invierno: mucha gente va de vacaciones en verano, y a las personas no les importa viajar un sábado en sus vacaciones. Al mirar este gráfico, podemos suponer que las vacaciones de verano son de principio de  junio a finales de Agosto. Parece que se alinea bastante bien con los [Términos escolares del estado](http://schools.nyc.gov/Calendar/2013-2014+School+Year+Calendars.htm): las vacaciones de verano en 2013 fueron del 26 de junio hasta el 9 de septiembre. 
 
-¿Por qué hay mas vuelos los sabados en primavera que en otoño? Le pregunté a algunos amigos estadounidenses y ellos me dijeron que es menos comun planificar vacaciones familiares durante el otoño porque debido a los grandes feriados de accion de gracia y navidad. No tenemos los datos para estar seguros, pero parece la hipotesis mas razonable.
+¿Por qué hay más vuelos los sábados en primavera que en otoño? Le pregunté a algunos amigos estadounidenses y ellos me dijeron que es menos común planificar vacaciones familiares durante el otoño porque debido a los grandes feriados de acción de gracia y navidad. No tenemos los datos para estar seguros, pero parece la hipótesis más razonable.
 
 Vamos a crear una variable "term" que capture aproximadamente las 3 reglas de colegios, y verifique nuestro trabajo con un gráfico:
 
@@ -311,9 +310,9 @@ daily %>%
   scale_x_date(NULL, date_breaks = "1 month", date_labels = "%b")
 ```
 
-(Modifiqué manualmente las fechas para obtener mejores cortes en el grafico. Usar una visualizacion para ayudarte a entender que funcion esta cumpliendo es una poderosa tecnica general.)
+(Modifiqué manualmente las fechas para obtener mejores cortes en el gráfico. Usar una visualización para ayudarte a entender que función esta cumpliendo es una poderosa técnica general.)
 
-Es util ver como esta nueva variable afecta los otros dias de la semana:
+Es útil ver como esta nueva variable afecta los otros días de la semana:
 
 ```{r}
 daily %>% 
@@ -321,7 +320,7 @@ daily %>%
     geom_boxplot()
 ```
 
-Parece que hay una variacion significativa entre los terminos, por lo que es razonable ajustar los efectos por separado de los dias de semana para cada termino. Esto mejora nuestro modelo, pero no tanto como podriamos esperar:
+Parece que hay una variación significativa entre los términos, por lo que es razonable ajustar los efectos por separado de los días de semana para cada término. Esto mejora nuestro modelo, pero no tanto como podríamos esperar:
 
 ```{r}
 mod1 <- lm(n ~ wday, data = daily)
@@ -346,7 +345,7 @@ ggplot(daily, aes(wday, n)) +
   facet_wrap(~ term)
 ```
 
-Nuestro modelo esta encontrando el efecto _mean_ , pero tenemos muchos valores atipicos grandes, por lo tanto la media tiende a estar lejos de los valores atipicos. Podemos aliviar este problema usando un modelo que es mas robusto a los efectos de los valores atipicos: `MASS::rlm()`. Esto reduce en gran medida el impacto de los valores atipicos en nuestras estimaciones, y proporciona un modelo que hace un buen trabajo eliminando el patron del dia de la semana:
+Nuestro modelo esta encontrando el efecto _mean_ , pero tenemos muchos valores atípicos grandes, por lo tanto la media tiende a estar lejos de los valores atípicos. Podemos aliviar este problema usando un modelo que es más robusto a los efectos de los valores atípicos: `MASS::rlm()`. Esto reduce en gran medida el impacto de los valores atípicos en nuestras estimaciones, y proporciona un modelo que hace un buen trabajo eliminando el patrón del día de la semana:
 
 ```{r, warn = FALSE}
 mod3 <- MASS::rlm(n ~ wday * term, data = daily)
@@ -363,7 +362,7 @@ Ahora es mucho más fácil ver la tendencia a largo plazo, y los positivos y neg
 
 ### Variables calculadas
 
-Si tu estas experimentando con muchos modelos y muchas visualizaciones, es una buena idea agrupar la creacion de variables en una funcion para que no haya posibilidad de aplicar accidentalmente transformaciones a diferentes lugares. Por ejemplo, podriamos escribir:
+Si estas experimentando con muchos modelos y muchas visualizaciones, es una buena idea agrupar la creación de variables en una función para que no haya posibilidad de aplicar accidentalmente transformaciones a diferentes lugares. Por ejemplo, podríamos escribir:
 
 ```{r}
 compute_vars <- function(data) {
@@ -375,18 +374,18 @@ compute_vars <- function(data) {
 }
 ```
 
-Otra opción es colocar las transformaciones directamente en la formula del modelo:
+Otra opción es colocar las transformaciones directamente en la fórmula del modelo:
 
 ```{r}
 wday2 <- function(x) wday(x, label = TRUE)
 mod3 <- lm(n ~ wday2(date) * term(date), data = daily)
 ```
 
-Cualquiera de los enfoques es razonable. Hacer que una variable transformada sea explicita es útil si quieres verificar tu trabajo, o usarlas en una visualización. Pero no puedes usar facilmente transformaciones (como splines) que devuelven multiples columnas. Incluir las transformaciones en el modelo hace la vida mas facil cuando se trabaja con diferentes conjuntos de datos porque el modelo es autonomo. 
+Cualquiera de los enfoques es razonable. Hacer que una variable transformada sea explicita es útil si quieres verificar tu trabajo, o usarlas en una visualización. Pero no puedes usar fácilmente transformaciones (como splines) que devuelven múltiples columnas. Incluir las transformaciones en el modelo hace la vida más fácil cuando se trabaja con diferentes conjuntos de datos porque el modelo es autónomo. 
 
 ### Epocas del año: un enfoque alternativo
 
-En la sección anterior usamos nuestro conocimiento (como el término escolar de US afecta el viaje) para mejorar el modelo. Una alternativa es usar nuestro conocimiento explicito en el modelo para darle mas espacio para hablar. Podriamos usar un modelo mas flexible y permitir que capture el patron que nos interesa. Una tendencia lineal simple no es adecuada, por lo que podriamos intentar usar una spline natural para ajustarnos a una curva suave durante el año:
+En la sección anterior usamos nuestro conocimiento (como el término escolar de US afecta el viaje) para mejorar el modelo. Una alternativa es usar nuestro conocimiento explícito en el modelo para darle más espacio para hablar. Podríamos usar un modelo más flexible y permitir que capture el patrón que nos interesa. Una tendencia lineal simple no es adecuada, por lo que podríamos intentar usar una spline natural para ajustarnos a una curva suave durante el año:
 
 ```{r}
 library(splines)
@@ -400,68 +399,68 @@ daily %>%
     geom_point()
 ```
 
-Vemos un patron fuerte en el numero de vuelos de los sabados. Esto es tranquilizador, porque tambien vimos ese patron en los datos brutos. Es una buena señal cuando obtienes la misma señal desde diferentes enfoques.
+Vemos un patrón fuerte en el número de vuelos de los sábados. Esto es tranquilizador, porque también vimos ese patrón en los datos brutos. Es una buena señal cuando obtienes la misma señal desde diferentes enfoques.
 
 
 ### Ejercicios
 
-1.  Usa tus habilidades detestivescas de Google para intercambiar ideas sobre por qué hubo menos vuelos previstos el 20 de enero, 26 de mayo y 1 de septiembre. (Pista: todos tienen la misma explicacion.) ¿Como generalizarias esos días a otros años?
+1.  Usa tus habilidades detestivescas de Google para intercambiar ideas sobre por qué hubo menos vuelos previstos el 20 de enero, 26 de mayo y 1 de septiembre. (Pista: todos tienen la misma explicación.) ¿Cómo generalizarías esos días a otros años?
 
-1.  ¿Que representan esos tres dias con altos residuos positivos?
-    ¿Como generalizarias esos días a otros años?
+1.  ¿Qué representan esos tres días con altos residuos positivos?
+    ¿Cómo generalizarias esos días a otros años?
 
     ```{r}
     daily %>% 
       top_n(3, resid)
     ```
 
-1.  Crear una nueva variable que divida la variable `wday` en terminos, pero solo
-    para sabados, es decir, deberia tener `Thurs`, `Fri`, pero `Sat-summer`, 
-    `Sat-spring`, `Sat-fall`. ¿Como este modelo se compara con el modelo que tiene 
-    la combinacion de `wday` y `term`?
+1.  Crear una nueva variable que divida la variable `wday` en términos, pero solo
+    para sábados, es decir, debería tener `Thurs`, `Fri`, pero `Sat-summer`, 
+    `Sat-spring`, `Sat-fall`. ¿Cómo este modelo se compara con el modelo que tiene 
+    la combinación de `wday` y `term`?
     
-1.  Crear una nueva variable `wday` que combina el dia de la semana, terminos 
-    (para sabados), y feriados publicos. ¿a que se parecen los residuos 
+1.  Crear una nueva variable `wday` que combina el día de la semana, términos 
+    (para sábados), y feriados públicos. ¿a qué se parecen los residuos 
     del modelo?
 
-1.  ¿Que sucede si ajustamos un efecto de dia de la semana que varia mes por mes 
-    (es decir, `n ~ wday * month`)? ¿Porqué esto no es muy útil? 
+1.  ¿Qué sucede si ajustamos un efecto de día de la semana que varía mes por mes 
+    (es decir, `n ~ wday * month`)? ¿Por qué esto no es muy útil? 
 
-1.  ¿Que esperarias del modelo `n ~ wday + ns(date, 5)`?
+1.  ¿Que esperarías del modelo `n ~ wday + ns(date, 5)`?
     Sabiendo lo que sabes sobre los datos, ¿porqué esperarias que no sea 
     particularmente efectivo?
     
 1.  Presumimos que las personas que salen los domingos son probablemente 
     viajeros de negocios quienes necesitan estar en algun lugar el lunes. Explora esa 
-    hipotesis al ver como se rompe en funcion de la distancia y tiempo: si 
-    es verdad, esperarias ver mas vuelos en la tarde del domingo a lugares que estan muy lejos.
+    hipótesis al ver como se rompe en función de la distancia y tiempo: si 
+    es verdad, esperarías ver más vuelos en la tarde del domingo a lugares que estan muy lejos.
 
-1.  Es un poco frustante que el domingo y sabado tengan fines separados
-    del grafico. Escribe una pequeña funcion para establecer los niveles del 
+1.  Es un poco frustante que el domingo y sábado tengan fines separados
+    del gráfico. Escribe una pequeña función para establecer los niveles del 
     factor para que la semana comience el lunes.
 
-## Aprende mas sobre los modelos
+## Aprende más sobre los modelos
 
-Solo hemos dado una pincelada acerca de los modelos, pero es de esperar que hayas obtenido algunas herramientas simples, pero de uso general que puedes usar para mejorar tus propios analisis. !Está bien para empezar! Como has visto, incluso modelos muy simples pueden marcar una gran capacidad para desentrañar interacciones entre variables.
+Solo hemos dado una pincelada acerca de los modelos, pero es de esperar que hayas obtenido algunas herramientas simples, pero de uso general que puedes usar para mejorar tus propios análisis. ! Está bien para empezar! Como has visto, incluso modelos muy simples pueden marcar una gran capacidad para desentrañar interacciones entre variables.
 
-Estos capitulos de modelos son aun mas dogmaticos que el resto del libro. Yo enfoco el modelamiento desde una perspectiva diferente a los otros, y hay relativamente poco espacio dedicado a ello. El modelamiento realmente requiere un libro completo, asi que recomiendo que leas alguno de estos 3 libros:
+Estos capítulos de modelos son aún más dogmáticos que el resto del libro. Yo enfoco el modelamiento desde una perspectiva diferente a los otros, y hay relativamente poco espacio dedicado a ello. El modelamiento realmente requiere un libro completo, así que recomiendo que leas alguno de estos 3 libros:
 
 * *Statistical Modeling: A Fresh Approach* by Danny Kaplan,
   <http://www.mosaic-web.org/go/StatisticalModeling/>. Este libro provee
-  una introduccion suave al modelado, donde construyes por intuicion,
-  herramientas matematicas, y habilidades de R en paralelo. el libro reemplaza 
-  un tradicional curso de "introduction to statistics", propporcionando un plan de estudios 
-  actualizado y reelevante para la ciencia de datos.
+  una introducción suave al modelado, donde construyes por intuición,
+  herramientas matemáticas, y habilidades de R en paralelo. el libro reemplaza 
+  un tradicional curso de "introduction to statistics", proporcionando un plan de estudios 
+  actualizado y relevante para la ciencia de datos.
 
 * *An Introduction to Statistical Learning* by Gareth James, Daniela Witten, 
   Trevor Hastie, and Robert Tibshirani, <http://www-bcf.usc.edu/~gareth/ISL/> 
-  (Disponible en linea gratis). Este libro presenta una moderna familia de 
-  tecnicas de modelamiento colectivamente conocidas como aprendizaje estadistico.
-  Para una mas profunda comprensión de la matematica detras de los modelos, lee el clasico
+  (Disponible en línea gratis). Este libro presenta una moderna familia de 
+  técnicas de modelamiento colectivamente conocidas como aprendizaje estadístico.
+  Para una mas profunda comprensión de la matemática detras de los modelos, lee el clásico
   *Elements of Statistical Learning* por Trevor Hastie, Robert Tibshirani, y
   Jerome Friedman, <http://statweb.stanford.edu/~tibs/ElemStatLearn/> (También
-  disponible en linea gratis).
+  disponible en línea gratis).
 
 * *Applied Predictive Modeling* por Max Kuhn and Kjell Johnson, 
   <http://appliedpredictivemodeling.com>. Este libro es un compañero del paquete 
-  __caret__  y provee herramientas practicas para lidiar con desafíos de modelado predictivo.
+  __caret__  y provee herramientas prácticas para lidiar con desafíos de modelado predictivo.
