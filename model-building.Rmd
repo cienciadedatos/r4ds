@@ -214,7 +214,7 @@ ggplot(daily, aes(wday, n)) +
   geom_point(data = grid, colour = "red", size = 4)
 ```
 
-A continuacion calculamos y visualizamos los residuos:
+A continuación calculamos y visualizamos los residuos:
 
 ```{r}
 daily <- daily %>% 
@@ -225,11 +225,11 @@ daily %>%
   geom_line()
 ```
 
-Note the change in the y-axis: now we are seeing the deviation from the expected number of flights, given the day of week. This plot is useful because now that we've removed much of the large day-of-week effect, we can see some of the subtler patterns that remain:
+Notar el cambio en el eje Y: ahora estamos viendo la desviacion desde el numero de vuelos esperados, dados los dias de la semana. Este grafico es util porque ahora que removimos mucho de los grandes efectos dia-de-semana, nosotros podemos ver algo de los patrones mas sutiles que quedan:
 
-1.  Our model seems to fail starting in June: you can still see a strong 
-    regular pattern that our model hasn't captured. Drawing a plot with one 
-    line for each day of the week makes the cause easier to see:
+1.  Nuestro modelo parece fallar a partir de junio: todavía se puede ver un 
+    patron regular que nuestro modelo no ha capturado. Dibujando un diagrama con una 
+    linea para cada dia de la semana se hace mas facil de ver:
 
     ```{r}
     ggplot(daily, aes(date, resid, colour = wday)) + 
@@ -237,25 +237,25 @@ Note the change in the y-axis: now we are seeing the deviation from the expected
       geom_line()
     ```
 
-    Our model fails to accurately predict the number of flights on Saturday:
-    during summer there are more flights than we expect, and during Fall there 
-    are fewer. We'll see how we can do better to capture this pattern in the
-    next section.
+    Nuestro modelo falla en predecir con precision el numero de vuelos los sabados: 
+    durante el verano hay mas vuelos de los que esperamos, y durante el otoño 
+    hay menos. Nosotros veremos como podemos capturar mejor este patron en la 
+    siguiente seccion.
 
-1.  There are some days with far fewer flights than expected:
+1.  Hay algunos dias con mucho menos vuelos que los esperados:
 
     ```{r}
     daily %>% 
       filter(resid < -100)
     ```
 
-    If you're familiar with American public holidays, you might spot New Year's 
-    day, July 4th, Thanksgiving and Christmas. There are some others that don't 
-    seem to correspond to public holidays. You'll work on those in one 
-    of the exercises.
+     Si tu estas familiarizado con los feriados publicos en Estados Unidos, puedes ver el dia de año nuevo,
+     el 4 de julio, el dia de   accion de gracia y navidad. Hay algunos otros que parecen no 
+     corresponder a feriados publicos. Trabajaras en esos en uno 
+     de los ejercicios.
     
-1.  There seems to be some smoother long term trend over the course of a year.
-    We can highlight that trend with `geom_smooth()`:
+1.  Parece que hay una tendencia mas suave a largo plazo en el transcurso del año.
+    Podemos destacar esa tendencia con `geom_smooth()`:
 
     ```{r}
     daily %>% 
@@ -265,10 +265,10 @@ Note the change in the y-axis: now we are seeing the deviation from the expected
       geom_smooth(se = FALSE, span = 0.20)
     ```
 
-    There are fewer flights in January (and December), and more in summer 
-    (May-Sep). We can't do much with this pattern quantitatively, because we 
-    only have a single year of data. But we can use our domain knowledge to 
-    brainstorm potential explanations.
+    Hay menos vuelos en enero (y diciembre), y mas en verano 
+    (May-Sep). No podemos hacer mucho cuantitativamente con este patron, porque  
+    solo tenemos un año de datos. Pero podemos usar nuestro conocimiento 
+    para pensar en posibles explicaciones.
 
 ### Efecto estacional de Sábado
 
