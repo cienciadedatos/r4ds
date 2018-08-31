@@ -405,65 +405,63 @@ Vemos un patron fuerte en el numero de vuelos de los sabados. Esto es tranquiliz
 
 ### Ejercicios
 
-1.  Usa tus habilidades detestivescas de Google para intercambiar ideas sobre por qué hubo menos vuelos previstos el 20 de enero, 26 de mayo y 1 de septiembre. (Pista: todos tienen la misma explicacion.) ¿Como generalizarias esos dias a otros años?
+1.  Usa tus habilidades detestivescas de Google para intercambiar ideas sobre por qué hubo menos vuelos previstos el 20 de enero, 26 de mayo y 1 de septiembre. (Pista: todos tienen la misma explicacion.) ¿Como generalizarias esos días a otros años?
 
-1.  What do the three days with high positive residuals represent?
-    How would these days generalise to another year?
+1.  ¿Que representan esos tres dias con altos residuos positivos?
+    ¿Como generalizarias esos días a otros años?
 
     ```{r}
     daily %>% 
       top_n(3, resid)
     ```
 
-1.  Create a new variable that splits the `wday` variable into terms, but only
-    for Saturdays, i.e. it should have `Thurs`, `Fri`, but `Sat-summer`, 
-    `Sat-spring`, `Sat-fall`. How does this model compare with the model with 
-    every combination of `wday` and `term`?
+1.  Crear una nueva variable que divida la variable `wday` en terminos, pero solo
+    para sabados, es decir, deberia tener `Thurs`, `Fri`, pero `Sat-summer`, 
+    `Sat-spring`, `Sat-fall`. ¿Como este modelo se compara con el modelo que tiene 
+    la combinacion de `wday` y `term`?
     
-1.  Create a new `wday` variable that combines the day of week, term 
-    (for Saturdays), and public holidays. What do the residuals of 
-    that model look like?
+1.  Crear una nueva variable `wday` que combina el dia de la semana, terminos 
+    (para sabados), y feriados publicos. ¿a que se parecen los residuos 
+    del modelo?
 
-1.  What happens if you fit a day of week effect that varies by month 
-    (i.e. `n ~ wday * month`)? Why is this not very helpful? 
+1.  ¿Que sucede si ajustamos un efecto de dia de la semana que varia mes por mes 
+    (es decir, `n ~ wday * month`)? ¿Porqué esto no es muy útil? 
 
-1.  What would you expect the model `n ~ wday + ns(date, 5)` to look like?
-    Knowing what you know about the data, why would you expect it to be
-    not particularly effective?
+1.  ¿Que esperarias del modelo `n ~ wday + ns(date, 5)`?
+    Sabiendo lo que sabes sobre los datos, ¿porqué esperarias que no sea 
+    particularmente efectivo?
+    
+1.  Presumimos que las personas que salen los domingos son probablemente 
+    viajeros de negocios quienes necesitan estar en algun lugar el lunes. Explora esa 
+    hipotesis al ver como se rompe en funcion de la distancia y tiempo: si 
+    es verdad, esperarias ver mas vuelos en la tarde del domingo a lugares que estan muy lejos.
 
-1.  We hypothesised that people leaving on Sundays are more likely to be 
-    business travellers who need to be somewhere on Monday. Explore that 
-    hypothesis by seeing how it breaks down based on distance and time: if 
-    it's true, you'd expect to see more Sunday evening flights to places that 
-    are far away.
+1.  Es un poco frustante que el domingo y sabado tengan fines separados
+    del grafico. Escribe una pequeña funcion para establecer los niveles del 
+    factor para que la semana comience el lunes.
 
-1.  It's a little frustrating that Sunday and Saturday are on separate ends
-    of the plot. Write a small function to set the levels of the 
-    factor so that the week starts on Monday.
+## Aprende mas sobre los modelos
 
-## Learning more about models
+Solo hemos dado una pincelada acerca de los modelos, pero es de esperar que hayas obtenido algunas herramientas simples, pero de uso general que puedes usar para mejorar tus propios analisis. !Está bien para empezar! Como has visto, incluso modelos muy simples pueden marcar una gran capacidad para desentrañar interacciones entre variables.
 
-We have only scratched the absolute surface of modelling, but you have hopefully gained some simple, but general-purpose tools that you can use to improve your own data analyses. It's OK to start simple! As you've seen, even very simple models can make a dramatic difference in your ability to tease out interactions between variables.
-
-These modelling chapters are even more opinionated than the rest of the book. I approach modelling from a somewhat different perspective to most others, and there is relatively little space devoted to it. Modelling really deserves a book on its own, so I'd highly recommend that you read at least one of these three books:
+Estos capitulos de modelos son aun mas dogmaticos que el resto del libro. Yo enfoco el modelamiento desde una perspectiva diferente a los otros, y hay relativamente poco espacio dedicado a ello. El modelamiento realmente requiere un libro completo, asi que recomiendo que leas alguno de estos 3 libros:
 
 * *Statistical Modeling: A Fresh Approach* by Danny Kaplan,
-  <http://www.mosaic-web.org/go/StatisticalModeling/>. This book provides 
-  a gentle introduction to modelling, where you build your intuition,
-  mathematical tools, and R skills in parallel. The book replaces a traditional
-  "introduction to statistics" course, providing a curriculum that is up-to-date 
-  and relevant to data science.
+  <http://www.mosaic-web.org/go/StatisticalModeling/>. Este libro provee
+  una introduccion suave al modelado, donde construyes por intuicion,
+  herramientas matematicas, y habilidades de R en paralelo. el libro reemplaza 
+  un tradicional curso de "introduction to statistics", propporcionando un plan de estudios 
+  actualizado y reelevante para la ciencia de datos.
 
 * *An Introduction to Statistical Learning* by Gareth James, Daniela Witten, 
   Trevor Hastie, and Robert Tibshirani, <http://www-bcf.usc.edu/~gareth/ISL/> 
-  (available online for free). This book presents a family of modern modelling
-  techniques collectively known as statistical learning.  For an even deeper
-  understanding of the math behind the models, read the classic 
-  *Elements of Statistical Learning* by Trevor Hastie, Robert Tibshirani, and
-  Jerome Friedman, <http://statweb.stanford.edu/~tibs/ElemStatLearn/> (also
-  available online for free).
+  (Disponible en linea gratis). Este libro presenta una moderna familia de 
+  tecnicas de modelamiento colectivamente conocidas como aprendizaje estadistico.
+  Para una mas profunda comprensión de la matematica detras de los modelos, lee el clasico
+  *Elements of Statistical Learning* por Trevor Hastie, Robert Tibshirani, y
+  Jerome Friedman, <http://statweb.stanford.edu/~tibs/ElemStatLearn/> (También
+  disponible en linea gratis).
 
-* *Applied Predictive Modeling* by Max Kuhn and Kjell Johnson, 
-  <http://appliedpredictivemodeling.com>. This book is a companion to the 
-  __caret__ package and provides practical tools for dealing with real-life
-  predictive modelling challenges.
+* *Applied Predictive Modeling* por Max Kuhn and Kjell Johnson, 
+  <http://appliedpredictivemodeling.com>. Este libro es un compañero del paquete 
+  __caret__  y provee herramientas practicas para lidiar con desafíos de modelado predictivo.
