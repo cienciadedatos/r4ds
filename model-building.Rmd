@@ -272,7 +272,8 @@ Notar el cambio en el eje Y: ahora estamos viendo la desviacion desde el numero 
 
 ### Efecto estacional de Sábado
 
-Let's first tackle our failure to accurately predict the number of flights on Saturday. A good place to start is to go back to the raw numbers, focussing on Saturdays:
+Primero abordaremos nuestra falla para predecir con exactitud el numero de vuelos el sabado. Un buen lugar para empezar es 
+volver a los numeros en bruto, enfocandonos en el sabado:
 
 ```{r}
 daily %>% 
@@ -283,13 +284,13 @@ daily %>%
     scale_x_date(NULL, date_breaks = "1 month", date_labels = "%b")
 ```
 
-(I've used both points and lines to make it more clear what is data and what is interpolation.)
+(He usado tanto puntos como líneas para dejar más claro que son los datos y qué es la interpolación.)
 
-I suspect this pattern is caused by summer holidays: many people go on holiday in the summer, and people don't mind travelling on Saturdays for vacation. Looking at this plot, we might guess that summer holidays are from early June to late August. That seems to line up fairly well with the [state's school terms](http://schools.nyc.gov/Calendar/2013-2014+School+Year+Calendars.htm): summer break in 2013 was Jun 26--Sep 9. 
+Yo sospecho que este patron es causado por las vacaciones de invierno: mucha gente va de vacaciones en verano, y a las personas no les importa viajar un sabado en sus vacaciones. Al mirar este grafico, podemos suponer que las vacaciones de verano son de principio de  junio a finales de Agosto. Parece que se alinea bastante bien con los [Terminos escolares del estado](http://schools.nyc.gov/Calendar/2013-2014+School+Year+Calendars.htm): las vacaciones de verano en 2013 fueron del 26 de junio hasta el 9 de septiembre. 
 
-Why are there more Saturday flights in the Spring than the Fall? I asked some American friends and they suggested that it's less common to plan family vacations during the Fall because of the big Thanksgiving and Christmas holidays. We don't have the data to know for sure, but it seems like a plausible working hypothesis.
+¿Por qué hay mas vuelos los sabados en primavera que en otoño? Le pregunté a algunos amigos estadounidenses y ellos me dijeron que es menos comun planificar vacaciones familiares durante el otoño porque debido a los grandes feriados de accion de gracia y navidad. No tenemos los datos para estar seguros, pero parece la hipotesis mas razonable.
 
-Lets create a "term" variable that roughly captures the three school terms, and check our work with a plot:
+Vamos a crear una variable "term" que capture aproximadamente las 3 reglas de colegios, y verifique nuestro trabajo con un gráfico:
 
 ```{r}
 term <- function(date) {
