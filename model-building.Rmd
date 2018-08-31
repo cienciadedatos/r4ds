@@ -311,9 +311,9 @@ daily %>%
   scale_x_date(NULL, date_breaks = "1 month", date_labels = "%b")
 ```
 
-(I manually tweaked the dates to get nice breaks in the plot. Using a visualisation to help you understand what your function is doing is a really powerful and general technique.)
+(Modifiqué manualmente las fechas para obtener mejores cortes en el grafico. Usar una visualizacion para ayudarte a entender que funcion esta cumpliendo es una poderosa tecnica general.)
 
-It's useful to see how this new variable affects the other days of the week:
+Es util ver como esta nueva variable afecta los otros dias de la semana:
 
 ```{r}
 daily %>% 
@@ -321,7 +321,7 @@ daily %>%
     geom_boxplot()
 ```
 
-It looks like there is significant variation across the terms, so fitting a separate day of week effect for each term is reasonable. This improves our model, but not as much as we might hope:
+Parece que hay una variacion significativa entre los terminos, por lo que es razonable ajustar los efectos por separado de los dias de semana para cada termino. Esto mejora nuestro modelo, pero no tanto como podriamos esperar:
 
 ```{r}
 mod1 <- lm(n ~ wday, data = daily)
@@ -333,7 +333,7 @@ daily %>%
     geom_line(alpha = 0.75)
 ```
 
-We can see the problem by overlaying the predictions from the model on to the raw data:
+Podemos ver el problema al superponer las predicciones del modelo a los datos brutos:
 
 ```{r}
 grid <- daily %>% 
@@ -346,7 +346,7 @@ ggplot(daily, aes(wday, n)) +
   facet_wrap(~ term)
 ```
 
-Our model is finding the _mean_ effect, but we have a lot of big outliers, so mean tends to be far away from the typical value. We can alleviate this problem by using a model that is robust to the effect of outliers: `MASS::rlm()`. This greatly reduces the impact of the outliers on our estimates, and gives a model that does a good job of removing the day of week pattern:
+Nuestro modelo esta encontrando el efecto _mean_ , pero tenemos muchos valores atipicos grandes, por lo tanto la media tiende a estar lejos de los valores atipicos. Podemos aliviar este problema usando un modelo que es mas robusto a los efectos de los valores atipicos: `MASS::rlm()`. Esto reduce en gran medida el impacto de los valores atipicos en nuestras estimaciones, y proporciona un modelo que hace un buen trabajo eliminando el patron del dia de la semana:
 
 ```{r, warn = FALSE}
 mod3 <- MASS::rlm(n ~ wday * term, data = daily)
@@ -358,12 +358,12 @@ daily %>%
   geom_line()
 ```
 
-It's now much easier to see the long-term trend, and the positive and negative outliers.
+Ahora es mucho más fácil ver la tendencia a largo plazo, y los positivos y negativos valores atípicos.
 
 
-### Computed variables
+### Variables calculadas
 
-If you're experimenting with many models and many visualisations, it's a good idea to bundle the creation of variables up into a function so there's no chance of accidentally applying a different transformation in different places. For example, we could write:
+Si tu estas experimentando con muchos modelos y muchas visualizaciones, es una buena idea agrupar la creacion de variables en una funcion para que no haya posibilidad de aplicar accidentalmente transformaciones a diferentes lugares. Por ejemplo, podriamos escribir:
 
 ```{r}
 compute_vars <- function(data) {
@@ -375,18 +375,18 @@ compute_vars <- function(data) {
 }
 ```
 
-Another option is to put the transformations directly in the model formula:
+Otra opción es colocar las transformaciones directamente en la formula del modelo:
 
 ```{r}
 wday2 <- function(x) wday(x, label = TRUE)
 mod3 <- lm(n ~ wday2(date) * term(date), data = daily)
 ```
 
-Either approach is reasonable. Making the transformed variable explicit is useful if you want to check your work, or use them in a visualisation. But you can't easily use transformations (like splines) that return multiple columns. Including the transformations in the model function makes life a little easier when you're working with many different datasets because the model is self contained.
+Cualquiera de los enfoques es razonable. Hacer que una variable transformada sea explicita es útil si quieres verificar tu trabajo, o usarlas en una visualización. Pero no puedes usar facilmente transformaciones (como splines) que devuelven multiples columnas. Incluir las transformaciones en el modelo hace la vida mas facil cuando se trabaja con diferentes conjuntos de datos porque el modelo es autonomo. 
 
-### Time of year: an alternative approach
+### Epocas del año: un enfoque alternativo
 
-In the previous section we used our domain knowledge (how the US school term affects travel) to improve the model. An alternative to using our knowledge explicitly in the model is to give the data more room to speak. We could use a more flexible model and allow that to capture the pattern we're interested in. A simple linear trend isn't adequate, so we could try using a natural spline to fit a smooth curve across the year:
+En la sección anterior usamos nuestro conocimiento (como el término escolar de US afecta el viaje) para mejorar el modelo. Una alternativa es usar nuestro conocimiento explicito en el modelo para darle mas espacio para hablar. Podriamos usar un modelo mas flexible y permitir que capture el patron que nos interesa. Una tendencia lineal simple no es adecuada, por lo que podriamos intentar usar una spline natural para ajustarnos a una curva suave durante el año:
 
 ```{r}
 library(splines)
@@ -400,14 +400,12 @@ daily %>%
     geom_point()
 ```
 
-We see a strong pattern in the numbers of Saturday flights. This is reassuring, because we also saw that pattern in the raw data. It's a good sign when you get the same signal from different approaches.
+Vemos un patron fuerte en el numero de vuelos de los sabados. Esto es tranquilizador, porque tambien vimos ese patron en los datos brutos. Es una buena señal cuando obtienes la misma señal desde diferentes enfoques.
 
 
-### Exercises
+### Ejercicios
 
-1.  Use your Google sleuthing skills to brainstorm why there were fewer than
-    expected flights on Jan 20, May 26, and Sep 1. (Hint: they all have the
-    same explanation.) How would these days generalise to another year?
+1.  Usa tus habilidades detestivescas de Google para intercambiar ideas sobre por qué hubo menos vuelos previstos el 20 de enero, 26 de mayo y 1 de septiembre. (Pista: todos tienen la misma explicacion.) ¿Como generalizarias esos dias a otros años?
 
 1.  What do the three days with high positive residuals represent?
     How would these days generalise to another year?
