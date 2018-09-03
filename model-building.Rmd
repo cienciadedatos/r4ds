@@ -2,26 +2,26 @@
 
 ## Introducción
 
-En el capítulo previo aprendimos cómo funcionan los modelos lineales, y aprendimos algunas herramientas básicas para entender lo que un modelo está diciendo con sus datos. El capítulo previo se enfocó en simular conjunto de datos. Este capítulo se centrará en datos reales, mostrando como puedes progresivamente construir un modelo ayudando a entender los datos. 
+En el capítulo previo aprendimos cómo funcionan los modelos lineales, y aprendimos algunas herramientas básicas para entender lo que un modelo está mostrando con sus datos. El capítulo previo se enfocó en simular conjunto de datos. Este capítulo se centrará en datos reales, mostrando como puedes progresivamente construir un modelo que te ayude a entender los datos. 
 
 Tomaremos ventaja del hecho que se puede pensar que un modelo particiona tus datos en patrones y residuos. Encontraremos patrones con visualizaciones, luego los haremos concretos y precisos con un modelo. Repetiremos luego el proceso, pero reemplazaremos la variable antigua con los residuos del modelo. El objetivo es pasar de un conocimiento implícito en la data a un conocimiento explícito en un modelo cuantitativo. Esto hace que sea más fácil aplicar nuevos dominios, y más fácil de usar para otros. 
 
-Para un grande y complejo conjunto de datos esto será mucho trabajo. Sin duda hay enfoques alternativos - un enfoque de aprendizaje más automático es simplemente enfocarse en la capacidad predictiva del modelo. Ese enfoque tiende a producir cajas negras: el modelo hace muy bien su trabajo generando prediciones, pero no sabes porque. Esto es un enfoque totalmente razonable, pero lo hace difícil de aplicar el conocimiento del mundo real al modelo. Eso, a su vez, hace difícil evaluar si el modelo continuará o no funcionando a largo plazo, ya que los fundamentos cambian. Para la mayoría de los modelos, esperaría que usaras alguna combinación de este enfoque y un enfoque clásico mas automatizado.
+Para un grande y complejo conjunto de datos esto será mucho trabajo. Sin duda hay enfoques alternativos - un enfoque de aprendizaje más automático es simplemente enfocarse en la capacidad predictiva del modelo. Ese enfoque tiende a producir cajas negras: el modelo hace muy bien su trabajo generando predicciones, pero no sabes por qué. Esto es un enfoque totalmente razonable, pero es difícil de aplicar el conocimiento del mundo real al modelo. Eso, a su vez, hace difícil evaluar si el modelo continuará o no funcionando a largo plazo, ya que los fundamentos cambian. Para la mayoría de los modelos, esperaría que usaras alguna combinación de este enfoque y un enfoque clásico más automatizado.
 
-Es un desafío saber cuándo detenerse. Tú necesitas averiguar cuando tu modelo es bastante bueno, y es poco probable que la investigación adicional pagué. Me gusta especialmente esta cita del usuario Broseidon241: 
+Es un desafío saber cuándo detenerse. Tú necesitas averiguar cuándo tu modelo es suficientemente bueno, y cuando una inversion adicional vale la pena. Me gusta especialmente esta cita del usuario Broseidon241: 
 
-> Hace mucho tiempo en clases de arte, mi profesor me dijo "un artista necesita saber 
-> cuándo una pieza se termina. No puedes ajustar algo a la perfección - envuélvelo. 
-> Si no te gusta, hazlo otra vez. O sino empieza algo nuevo". Más tarde
-> en la vida, yo escuché "Una pobre costurera comete muchos errores. Una buena costurera 
+> Hace mucho tiempo en clases de arte, mi profesor me dijo "Un artista necesita saber 
+> cuándo una pieza está terminada. No puedes retocar algo a la perfección - termínalo. 
+> Si no te gusta, hazlo otra vez. O sino empieza algo nuevo". En años posteriores,
+> yo escuché "Una pobre costurera comete muchos errores. Una buena costurera 
 > trabaja duro para corregir esos errores. Una grandiosa costurera no tiene miedo de 
-> tirar la prenda y empezar nuevamente."
+> tirar la prenda y empezar nuevamente".
 
 -- Broseidon241, <https://www.reddit.com/r/datascience/comments/4irajq>
 
-### Prerequisitos
+### Prerrequisitos
 
-Usaremos las mismas herramientas que en el capítulo anterior, pero agregaremos algunos datos reales: `diamonds` de ggplot2, y `flights` de nycflights13. También necesitaremos lubridate para trabajar con fechas/horas en `flights`.
+Usaremos las mismas herramientas que en el capítulo anterior, pero agregaremos algunos conjuntos de datos reales: `diamantes` de ggplot2, y `vuelos` de nycflights13. También necesitaremos lubridate para trabajar con fechas/horas en `vuelos`.
 
 ```{r setup, message = FALSE}
 library(tidyverse)
@@ -34,37 +34,37 @@ library(lubridate)
 
 ## ¿Por qué los diamantes de baja calidad son más caros? {#diamond-prices}
 
-En el capítulo anterior vimos una sorprendente relación entre la calidad de los diamantes y su precio: baja calidad de diamantes (cortes pobres, malos colores, y claridad inferior) tienen más altos precios.
+En el capítulo anterior vimos una sorprendente relación entre la calidad de los diamantes y su precio: baja calidad de diamantes (cortes pobres, colores malos, y claridad inferior) tienen más altos precios.
 
 ```{r dev = "png"}
-ggplot(diamonds, aes(cut, price)) + geom_boxplot()
-ggplot(diamonds, aes(color, price)) + geom_boxplot()
-ggplot(diamonds, aes(clarity, price)) + geom_boxplot()
+ggplot(diamantes, aes(corte, precio)) + geom_boxplot()
+ggplot(diamantes, aes(color, precio)) + geom_boxplot()
+ggplot(diamantes, aes(claridad, precio)) + geom_boxplot()
 ```
 
-Tener en cuenta que el peor diamante es J (ligero amarillo), y la peor claridad es I1 (inclusiones visibles a simple vista).
+Ten en cuenta que el peor diamante es J (amarillo claro), y la peor claridad es I1 (inclusiones visibles a simple vista).
 
-### Precio y Quilates
+### Precio y quilates
 
-Parece que los diamantes de menor calidad tiene precios más altos porque hay una importante variable de confusión: el peso (`carat`) del diamante. El peso del diamante es el factor individual más importante para determinar el precio del diamante, y los diamantes de menor calidad tienden a ser más grandes.
+Pareciera que los diamantes de menor calidad tiene precios más altos porque hay una importante variable de confusión: el peso (`carat`) del diamante. El peso del diamante es el factor individual más importante para determinar el precio del diamante, y los diamantes de menor calidad tienden a ser más grandes.
 
 ```{r}
-ggplot(diamonds, aes(carat, price)) + 
+ggplot(diamantes, aes(quilates, precio)) + 
   geom_hex(bins = 50)
 ```
 
-Podemos hacer que sea más fácil ver cómo los otros atributos de un diamante afectan su `price` relativo al ajustar un modelo para separar el efecto de `carat`. Pero primero, hagamos algunos ajustes al conjunto de datos de diamantes para que sea más fácil trabajar con: 
+Podemos hacer que sea más fácil ver cómo los otros atributos de un diamante afectan su `precio` relativo al ajustar un modelo para separar el efecto de `quilates`. Pero primero, hagamos algunos ajustes al conjunto de datos de diamantes para que sea más fácil trabajar con: 
 
 1. Foco en los diamantes más pequeños que 2.5 quilates (99.7% de los datos)
 1. Log-transformación de variables quilate y precio.
 
 ```{r}
-diamonds2 <- diamonds %>% 
-  filter(carat <= 2.5) %>% 
-  mutate(lprice = log2(price), lcarat = log2(carat))
+diamonds2 <- diamantes %>% 
+  filter(quilates <= 2.5) %>% 
+  mutate(lprice = log2(precio), lcarat = log2(quilates))
 ```
 
-Juntos, esos cambios hacen más fácil ver la relación entre `carat` y `price`:
+Juntos, esos cambios hacen más fácil ver la relación entre `quilates` y `precio`:
 
 ```{r}
 ggplot(diamonds2, aes(lcarat, lprice)) + 
@@ -77,21 +77,21 @@ La log-transformación es particularmente util aquí porque hace que el patrón 
 mod_diamond <- lm(lprice ~ lcarat, data = diamonds2)
 ```
 
-Luego observamos lo que el modelo nos dice. Tener en cuenta que devuelvo la transformación de la predicción, deshaciendo la log transformación, para poder superponer las predicciones en los datos:
+Luego observamos lo que el modelo nos dice. Ten en cuenta que vuelvo atrás la transformación de la predicción, deshaciendo la log transformación, para poder superponer las predicciones en los datos originales:
 
 ```{r}
 grid <- diamonds2 %>% 
-  data_grid(carat = seq_range(carat, 20)) %>% 
-  mutate(lcarat = log2(carat)) %>% 
+  data_grid(quilates = seq_range(quilates, 20)) %>% 
+  mutate(lcarat = log2(quilates)) %>% 
   add_predictions(mod_diamond, "lprice") %>% 
-  mutate(price = 2 ^ lprice)
+  mutate(precio = 2 ^ lprice)
 
-ggplot(diamonds2, aes(carat, price)) + 
+ggplot(diamonds2, aes(quilates, precio)) + 
   geom_hex(bins = 50) + 
   geom_line(data = grid, colour = "red", size = 1)
 ```
 
-Eso nos dice algo interesante acerca de nuestros datos. Si creemos en nuestro modelo, los diamantes grandes son mucho más baratos que lo esperado. Esto es probablemente porque no hay diamantes en estos datos que cuesten más que $19,000.
+Eso nos dice algo interesante acerca de nuestros datos. Si creemos en nuestro modelo, los diamantes grandes son mucho más baratos que lo esperado. Esto es probablemente porque no hay diamantes en estos datos que cuesten más que US$19,000.
 
 Ahora podemos ver los residuos, lo cual comprueba que hemos eliminado el patrón lineal fuerte:
 
@@ -103,37 +103,37 @@ ggplot(diamonds2, aes(lcarat, lresid)) +
   geom_hex(bins = 50)
 ```
 
-Es importante destacar que ahora podemos volver a hacer nuestros gráficos motivadores utilizando esos residuos en lugar de `price`. 
+Es importante destacar que ahora podemos volver a hacer nuestros gráficos motivadores utilizando esos residuos en lugar de `precio`. 
 
 ```{r dev = "png"}
-ggplot(diamonds2, aes(cut, lresid)) + geom_boxplot()
+ggplot(diamonds2, aes(corte, lresid)) + geom_boxplot()
 ggplot(diamonds2, aes(color, lresid)) + geom_boxplot()
-ggplot(diamonds2, aes(clarity, lresid)) + geom_boxplot()
+ggplot(diamonds2, aes(claridad, lresid)) + geom_boxplot()
 ```
 
 Ahora vemos la relación que esperábamos: a medida que aumenta la calidad del diamante, también lo hace su precio relativo. Para interpretar el eje `y`, necesitamos pensar que nos dicen los residuos, y en que escala estan. Un residuo de -1 indica que `lprice` era 1 unidad más baja que la predicción únicamente basada en su peso. $2^{-1}$ es 1/2, los puntos con un valor de -1 son la mitad del precio estimado, y los residuos con el valor 1 son el doble del precio predicho.
 
 ### Un modelo más complicado
 
-Si quisiéramos, podríamos continuar construyendo nuestro modelo, trasladando los efectos que hemos observado en el modelo para hacerlos explícitos. Por ejemplo, podriamos incluir `color`, `cut`, y `clarity` en el modelo para que también hagamos explícito el efecto de esas tres variables categóricas:
+Si quisiéramos, podríamos continuar construyendo nuestro modelo, traspasando los resultados que hemos observado en el modelo para hacerlos explícitos. Por ejemplo, podriamos incluir `color`, `corte`, y `claridad` en el modelo para que también hagamos explícito el efecto de esas tres variables categóricas:
 
 ```{r}
-mod_diamond2 <- lm(lprice ~ lcarat + color + cut + clarity, data = diamonds2)
+mod_diamond2 <- lm(lprice ~ lcarat + color + corte + claridad, data = diamonds2)
 ```
 
 Este modelo ahora incluye cuatro predictores, por lo que es más difícil de visualizar. Afortunadamente, todos ellos son actualmente independientes lo que significa que podemos graficarlos individualmente en cuatro gráficos. Para hacer el proceso más fácil, vamos a usar el argumento `.model` para `data_grid`:
 
 ```{r}
 grid <- diamonds2 %>% 
-  data_grid(cut, .model = mod_diamond2) %>% 
+  data_grid(corte, .model = mod_diamond2) %>% 
   add_predictions(mod_diamond2)
 grid
 
-ggplot(grid, aes(cut, pred)) + 
+ggplot(grid, aes(corte, pred)) + 
   geom_point()
 ```
 
-Si el modelo necesita variables que no hayas suministrado, `data_grid()` automáticamente los rellenará con el valor "typical". Para variables continuas, es usada la mediana, y variables categóricas usa el valor más común (o valores, si hay un empate).
+Si el modelo necesita variables que no hayas suministrado, `data_grid()` automáticamente los rellenará con el valor "typical". Para variables continuas, se usa la mediana, y para variables categóricas se usa el valor más común (o valores, si hay un empate).
 
 ```{r}
 diamonds2 <- diamonds2 %>% 
@@ -143,36 +143,36 @@ ggplot(diamonds2, aes(lcarat, lresid2)) +
   geom_hex(bins = 50)
 ```
 
-Este grafico indica que hay algunos diamantes con residuos bastante grandes - recuerde que un residuo de 2 indica que el diamante es 4x el precio que esperábamos. A menudo es útil mirar los valores inusuales individualmente:
+Este gráfico indica que hay algunos diamantes con residuos bastante grandes - recuerda que un residuo de 2 indica que el diamante es 4x el precio que esperábamos. A menudo es útil mirar los valores inusuales individualmente:
 
 ```{r}
 diamonds2 %>% 
   filter(abs(lresid2) > 1) %>% 
   add_predictions(mod_diamond2) %>% 
   mutate(pred = round(2 ^ pred)) %>% 
-  select(price, pred, carat:table, x:z) %>% 
-  arrange(price)
+  select(precio, pred, carat:table, x:z) %>% 
+  arrange(precio)
 ```
 
-Nada realmente interesante hasta aquí, pero probablemente valga la pena pasar tiempo considerando si esto indica un problema con nuestro modelo, o si hay errores en los datos. Si hay errores en los datos, esta podría ser una oportunidad para comprar diamantes que tienen un precio bajo incorrecto.
+Hasta aquí nada realmente interesante, pero probablemente valga la pena pasar tiempo considerando si esto significa un problema con nuestro modelo, o si hay errores en los datos. Si hay errores en los datos, esta podría ser una oportunidad para comprar diamantes que tienen un precio bajo incorrecto.
 
 ### Ejercicios
 
 1.  En el gráfico de `lcarat` vs. `lprice`, hay unas tiras verticales brillantes.
     ¿Que representan?
 
-1.  Si `log(price) = a_0 + a_1 * log(carat)`, que eso dice acerca  
-    la relación entre `price` y `carat`?
+1.  Si `log(precio) = a_0 + a_1 * log(quilates)`, ¿que dice eso acerca  
+    la relación entre `precio` y `quilates`?
     
-1.  Extrae los diamantes que tiene muy alto y muy bajo residuos. 
+1.  Extrae los diamantes que tiene muy alto y bajo residuos. 
     ¿Hay algo inusual en estos diamantes? ¿Son particularmente malos 
-    o buenos?, o ¿crees que estos son errores de precio?
+    o buenos?, o ¿Crees que estos son errores de precio?
 
 1.  ¿El modelo final, `mod_diamond2`, hace un buen trabajo prediciendo 
     precios de diamantes? ¿Confiarías en que te diga cuanto gastar 
     si estuvieras comprando un diamante?
 
-## ¿Que afecta el número de vuelos diarias?
+## ¿Que afecta el número de vuelos diarios?
 
 Trabajaremos a través de un proceso similar para un conjunto de datos que parece aún más simple a primera vista: el número de vuelos que salen de NYC por día. Este es un conjunto realmente pequeño de datos --- solo 365 filas y 2 columnas --- y no vamos a terminar con un modelo completamente realizado, pero como veras, los pasos en el camino nos ayudarán a entender mejor los datos. Comenzaremos contando  el número de vuelos por día y visualizándolos con ggplot2.
 
@@ -198,7 +198,7 @@ ggplot(daily, aes(wday, n)) +
   geom_boxplot()
 ```
 
-Hay pocos vuelos los fines de semana porque la mayoría de los viajes es por negocios. El efecto es particularmente pronunciado el sábado: tu podrías algunas veces salir un domingo para una reunión un lunes en la mañana, pero esto es bastante raro que salgas un sábado ya que preferirías estar en casa con tu familia.
+Hay pocos vuelos los fines de semana porque la mayoría de los viajes son por negocios. El efecto es particularmente pronunciado el sábado: tu podrías algunas veces salir un domingo para una reunión un lunes en la mañana, pero esto es bastante raro que salgas un sábado ya que preferirías estar en casa con tu familia.
 
 Una forma de eliminar este fuerte patrón es usar un modelo. Primero, ajustaremos el modelo, y mostraremos sus predicciones superpuestas sobre los datos originales:
 
@@ -225,11 +225,11 @@ daily %>%
   geom_line()
 ```
 
-Notar el cambio en el eje Y: ahora estamos viendo la desviación desde el numero de vuelos esperados, dados los días de la semana. Este grafico es útil porque ahora que removimos mucho de los grandes efectos día-de-semana, nosotros podemos ver algo de los patrones más sutiles que quedan:
+Notar el cambio en el eje Y: ahora estamos viendo la desviación desde el número de vuelos esperados, dados los días de la semana. Este gráfico es útil porque ahora que removimos mucho de los grandes efectos día-de-semana, nosotros podemos ver algo de los patrones más sutiles que quedan:
 
 1.  Nuestro modelo parece fallar a partir de junio: todavía se puede ver un 
     patrón regular que nuestro modelo no ha capturado. Dibujando un diagrama con una 
-    linea para cada día de la semana se hace más facil de ver:
+    línea para cada día de la semana se hace más facil de ver:
 
     ```{r}
     ggplot(daily, aes(date, resid, colour = wday)) + 
@@ -249,8 +249,8 @@ Notar el cambio en el eje Y: ahora estamos viendo la desviación desde el numero
       filter(resid < -100)
     ```
 
-     Si tu estas familiarizado con los feriados públicos en Estados Unidos, puedes ver el día de año nuevo,
-     el 4 de julio, el día de   acción de gracia y navidad. Hay algunos otros que parecen no 
+     Si tú estas familiarizado con los feriados públicos en Estados Unidos, podrías reconocer los días de año nuevo,
+     el 4 de julio, el día de Acción de Gracia y Navidad. Hay algunos otros que parecen no 
      corresponder a feriados públicos. Trabajarás en uno de esos ejercicios.
     
 1.  Parece que hay una tendencia más suave a largo plazo en el transcurso del año.
@@ -269,10 +269,10 @@ Notar el cambio en el eje Y: ahora estamos viendo la desviación desde el numero
     sólo tenemos un año de datos. Pero podemos usar nuestro conocimiento 
     para pensar en posibles explicaciones.
 
-### Efecto estacional de Sábado
+### Efecto estacional de sábado
 
 Primero abordaremos nuestra falla para predecir con exactitud el número de vuelos el sábado. Un buen lugar para empezar es 
-volver a los números en bruto, enfocándonos en el sábado:
+volver a los números originales, enfocándonos en el sábado:
 
 ```{r}
 daily %>% 
@@ -283,13 +283,13 @@ daily %>%
     scale_x_date(NULL, date_breaks = "1 month", date_labels = "%b")
 ```
 
-(He usado tanto puntos como líneas para dejar más claro que son los datos y qué es la interpolación.)
+(He usado tanto puntos como líneas para dejar más claro que son los datos y qué es la interpolación).
 
-Yo sospecho que este patrón es causado por las vacaciones de invierno: mucha gente va de vacaciones en verano, y a las personas no les importa viajar un sábado en sus vacaciones. Al mirar este gráfico, podemos suponer que las vacaciones de verano son de principio de  junio a finales de Agosto. Parece que se alinea bastante bien con los [Términos escolares del estado](http://schools.nyc.gov/Calendar/2013-2014+School+Year+Calendars.htm): las vacaciones de verano en 2013 fueron del 26 de junio hasta el 9 de septiembre. 
+Yo sospecho que este patrón es causado por las vacaciones de invierno: mucha gente va de vacaciones en verano, y a las personas no les importa viajar un sábado en sus vacaciones. Al mirar este gráfico, podemos suponer que las vacaciones de verano son de principio de  junio a finales de agosto. Parece que se alinea bastante bien con los [Reglamentos escolares del estado](http://schools.nyc.gov/Calendar/2013-2014+School+Year+Calendars.htm): las vacaciones de verano en 2013 fueron del 26 de junio hasta el 9 de septiembre. 
 
-¿Por qué hay más vuelos los sábados en primavera que en otoño? Le pregunté a algunos amigos estadounidenses y ellos me dijeron que es menos común planificar vacaciones familiares durante el otoño porque debido a los grandes feriados de acción de gracia y navidad. No tenemos los datos para estar seguros, pero parece la hipótesis más razonable.
+¿Por qué hay más vuelos los sábados en primavera que en otoño? Le pregunté a algunos amigos estadounidenses y ellos me dijeron que es menos común planificar vacaciones familiares durante el otoño porque debido a los grandes feriados de Acción de Gracia y Navidad. No tenemos los datos para estar seguros, pero parece la hipótesis más razonable.
 
-Vamos a crear una variable "term" que capture aproximadamente las 3 reglas de colegios, y verifique nuestro trabajo con un gráfico:
+Vamos a crear una variable "term" que capture aproximadamente las 3 reglas los colegios, y verifique nuestro trabajo con un gráfico:
 
 ```{r}
 term <- function(date) {
@@ -310,7 +310,7 @@ daily %>%
   scale_x_date(NULL, date_breaks = "1 month", date_labels = "%b")
 ```
 
-(Modifiqué manualmente las fechas para obtener mejores cortes en el gráfico. Usar una visualización para ayudarte a entender que función esta cumpliendo es una poderosa técnica general.)
+(Modifiqué manualmente las fechas para obtener mejores cortes en el gráfico. Usar una visualización para ayudarte a entender que función esta cumpliendo es una poderosa técnica general).
 
 Es útil ver como esta nueva variable afecta los otros días de la semana:
 
@@ -357,7 +357,7 @@ daily %>%
   geom_line()
 ```
 
-Ahora es mucho más fácil ver la tendencia a largo plazo, y los positivos y negativos valores atípicos.
+Ahora es mucho más fácil ver la tendencia a largo plazo, los positivos y negativos valores atípicos.
 
 
 ### Variables calculadas
@@ -385,7 +385,7 @@ Cualquiera de los enfoques es razonable. Hacer que una variable transformada sea
 
 ### Epocas del año: un enfoque alternativo
 
-En la sección anterior usamos nuestro conocimiento (como el término escolar de US afecta el viaje) para mejorar el modelo. Una alternativa es usar nuestro conocimiento explícito en el modelo para darle más espacio para hablar. Podríamos usar un modelo más flexible y permitir que capture el patrón que nos interesa. Una tendencia lineal simple no es adecuada, por lo que podríamos intentar usar una spline natural para ajustarnos a una curva suave durante el año:
+En la sección anterior usamos nuestro conocimiento (como el reglamento escolar de Estados Unidos afecta el viaje) para mejorar el modelo. Una alternativa es utilizar nuestro conocimiento explícito en el modelo para darle más espacio para hablar. Podríamos utilizar un modelo más flexible y permitir que capture el patrón que nos interesa. Una tendencia lineal simple no es adecuada, por lo que podríamos intentar usar una spline natural para ajustarnos a una curva suave durante el año:
 
 ```{r}
 library(splines)
@@ -414,12 +414,12 @@ Vemos un patrón fuerte en el número de vuelos de los sábados. Esto es tranqui
       top_n(3, resid)
     ```
 
-1.  Crear una nueva variable que divida la variable `wday` en términos, pero solo
+1.  Crea una nueva variable que divida la variable `wday` en términos, pero sólo
     para sábados, es decir, debería tener `Thurs`, `Fri`, pero `Sat-summer`, 
     `Sat-spring`, `Sat-fall`. ¿Cómo este modelo se compara con el modelo que tiene 
     la combinación de `wday` y `term`?
     
-1.  Crear una nueva variable `wday` que combina el día de la semana, términos 
+1.  Crea una nueva variable `wday` que combina el día de la semana, términos 
     (para sábados), y feriados públicos. ¿a qué se parecen los residuos 
     del modelo?
 
@@ -432,7 +432,7 @@ Vemos un patrón fuerte en el número de vuelos de los sábados. Esto es tranqui
     
 1.  Presumimos que las personas que salen los domingos son probablemente 
     viajeros de negocios quienes necesitan estar en algun lugar el lunes. Explora esa 
-    hipótesis al ver como se rompe en función de la distancia y tiempo: si 
+    hipótesis al ver cómo se rompe en función de la distancia y tiempo: si 
     es verdad, esperarías ver más vuelos en la tarde del domingo a lugares que estan muy lejos.
 
 1.  Es un poco frustante que el domingo y sábado tengan fines separados
@@ -441,7 +441,7 @@ Vemos un patrón fuerte en el número de vuelos de los sábados. Esto es tranqui
 
 ## Aprende más sobre los modelos
 
-Solo hemos dado una pincelada acerca de los modelos, pero es de esperar que hayas obtenido algunas herramientas simples, pero de uso general que puedes usar para mejorar tus propios análisis. ! Está bien para empezar! Como has visto, incluso modelos muy simples pueden marcar una gran capacidad para desentrañar interacciones entre variables.
+Solo hemos dado una pincelada acerca de los modelos, pero es de esperar que hayas obtenido algunas herramientas simples, pero de uso general que puedes usar para mejorar tus propios análisis. !Está bien para empezar! Como has visto, incluso modelos muy simples pueden marcar una gran capacidad para desentrañar interacciones entre variables.
 
 Estos capítulos de modelos son aún más dogmáticos que el resto del libro. Yo enfoco el modelamiento desde una perspectiva diferente a los otros, y hay relativamente poco espacio dedicado a ello. El modelamiento realmente requiere un libro completo, así que recomiendo que leas alguno de estos 3 libros:
 
@@ -456,7 +456,7 @@ Estos capítulos de modelos son aún más dogmáticos que el resto del libro. Yo
   Trevor Hastie, and Robert Tibshirani, <http://www-bcf.usc.edu/~gareth/ISL/> 
   (Disponible en línea gratis). Este libro presenta una moderna familia de 
   técnicas de modelamiento colectivamente conocidas como aprendizaje estadístico.
-  Para una mas profunda comprensión de la matemática detras de los modelos, lee el clásico
+  Para una más profunda comprensión de la matemática detrás de los modelos, lee el clásico
   *Elements of Statistical Learning* por Trevor Hastie, Robert Tibshirani, y
   Jerome Friedman, <http://statweb.stanford.edu/~tibs/ElemStatLearn/> (También
   disponible en línea gratis).
