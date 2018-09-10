@@ -1,46 +1,48 @@
-# Data import
+---
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+# Importación de datos
 
-## Introduction
+## Introducción
 
-Working with data provided by R packages is a great way to learn the tools of data science, but at some point you want to stop learning and start working with your own data. In this chapter, you'll learn how to read plain-text rectangular files into R. Here, we'll only scratch the surface of data import, but many of the principles will translate to other forms of data. We'll finish with a few pointers to packages that are useful for other types of data.
+Trabajar con datos provistos por los paquetes de R es una muy buena forma de conocer las herramientas de la ciencia de datos, pero en cierto punto debes dejar de aprender y comenzar a trabajar con tus propios datos. En este capítulo aprenderás cómo leer archivos rectangulares de texto plano en R. Aquí solo tocaremos superficialmente el tema de importación de datos, pero muchos de los principios se traducen a otras formas de datos. Finalizaremos sugiriendo algunos paquetes que son útiles para otros tipos de datos. 
 
-### Prerequisites
 
-In this chapter, you'll learn how to load flat files in R with the __readr__ package, which is part of the core tidyverse.
+
+### Requisitos previos
+
+En este capítulo aprenderás cómo cargar archivos planos en R con el paquete __readr__, el cual es parte de los archivos base de **tidyverse**.
 
 ```{r setup, message = FALSE}
 library(tidyverse)
 ```
 
-## Getting started
+## Comenzando
 
-Most of readr's functions are concerned with turning flat files into data frames:
+La mayoría de las funciones de **readr** se relacionan con transformar archivos planos en *data frames*:
 
-* `read_csv()` reads comma delimited files, `read_csv2()` reads semicolon
-  separated files (common in countries where `,` is used as the decimal place),
-  `read_tsv()` reads tab delimited files, and `read_delim()` reads in files
-  with any delimiter.
+* `read_csv()` lee archivos delimitados por coma, `read_csv2()` lee archivos separados por punto y coma 
+  (comunes en países donde ',' es utilizada para separar decimales),
+  `read_tsv()` lee archivos delimitados por tabulaciones, y `read_delim()` lee archivos con cualquier delimitador. 
+  
+* `read_fwf()` lee archivos de ancho fijo. Puedes especificar los campos ya sea por su ancho, con `fwf_widths()` o por su ubicación, con `fwf_positions()`. `read_table()` lee una variación común de estos archivos de ancho fijo en los que las columnas se encuentran separadas por espacios.
 
-* `read_fwf()` reads fixed width files. You can specify fields either by their
-  widths with `fwf_widths()` or their position with `fwf_positions()`.
-  `read_table()` reads a common variation of fixed width files where columns
-  are separated by white space.
+* `read_log()` lee archivos de registro estilo Apache (pero revisa también [webreadr](https://github.com/Ironholds/webreadr) el cual está construido sobre `read_log()` y proporciona muchas otras herramientas útiles).
 
-* `read_log()` reads Apache style log files. (But also check out
-  [webreadr](https://github.com/Ironholds/webreadr) which is built on top
-  of `read_log()` and provides many more helpful tools.)
+Estas funciones tienen todas sintaxis similares, una vez que dominas una, puedes utilizar todas las demás con facilidad. El resto del capítulo nos enfocaremos en `read_csv()`. No solo los archivos csv son una de las formas de almacenamiento más comunes, sino que una vez que comprendas `read_csv()` podrás aplicar fácilmente tus conocimientos a todas las otras funciones de __readr__.
 
-These functions all have similar syntax: once you've mastered one, you can use the others with ease. For the rest of this chapter we'll focus on `read_csv()`. Not only are csv files one of the most common forms of data storage, but once you understand `read_csv()`, you can easily apply your knowledge to all the other functions in readr.
-
-The first argument to `read_csv()` is the most important: it's the path to the file to read.
+El primer argumento de `read_csv()` es el más importante: es la ruta hasta el archivo a leer.
 
 ```{r, message = TRUE}
-heights <- read_csv("data/heights.csv")
+alturas <- read_csv("data/alturas.csv")
 ```
 
-When you run `read_csv()` it prints out a column specification that gives the name and type of each column. That's an important part of readr, which we'll come back to in [parsing a file].
+Cuando ejecutas `read_csv()`, devuelve una especificación columnar que indica el nombre y tipo de cada columna. Esta es una parte importante de **readr**, sobre la cual volveremos luego en [análisis estrutural de un archivo]. 
 
-You can also supply an inline csv file. This is useful for experimenting with readr and for creating reproducible examples to share with others:
+También puedes adicionar un archivo csv linear. Esto es útil para experimentar con **readr** y para crear ejemplos reproducibles para ser compartidos.
 
 ```{r}
 read_csv("a,b,c
@@ -48,90 +50,71 @@ read_csv("a,b,c
 4,5,6")
 ```
 
-In both cases `read_csv()` uses the first line of the data for the column names, which is a very common convention. There are two cases where you might want to tweak this behaviour:
+En ambos casos `read_csv()` emplea la primer línea de los datos para los nombres de columna, que es una convención muy común. Hay dos casos en los cuales podrías querer ajustar este comportamiento:
 
-1.  Sometimes there are a few lines of metadata at the top of the file. You can
-    use `skip = n` to skip the first `n` lines; or use `comment = "#"` to drop
-    all lines that start with (e.g.) `#`.
-    
+1. A veces hay unas pocas líneas de metadata al comienzo del archivo. Puedes usar `skip = n` para saltear las           primeras `n` líneas: o usar `comment = "#"` para quitar todas las líneas que comienzan con, por ejemplo, `#`.
+
+
     ```{r}
-    read_csv("The first line of metadata
-      The second line of metadata
+    read_csv("La primer línea de metadata 
+      La segunda línea de metadata
       x,y,z
       1,2,3", skip = 2)
     
-    read_csv("# A comment I want to skip
+    read_csv("# Un comentario que quiero saltear
       x,y,z
       1,2,3", comment = "#")
     ```
     
-1.  The data might not have column names. You can use `col_names = FALSE` to
-    tell `read_csv()` not to treat the first row as headings, and instead
-    label them sequentially from `X1` to `Xn`:
-    
+2.  Los datos pueden no tener nombres de columna. Puedes utilizar `col_names = FALSE` para decirle a `read_csv()` que     no trate la primera fila como encabezados, y en lugar de eso los etiquete secuencialmente desde `X1` a `Xn`:
+
     ```{r}
     read_csv("1,2,3\n4,5,6", col_names = FALSE)
     ```
     
-    (`"\n"` is a convenient shortcut for adding a new line. You'll learn more
-    about it and other types of string escape in [string basics].)
+    (`"\n"` es un atajo conveniente para agregar una línea nueva. Aprenderás más acerca de él y otros modos de evitar texto en [Básicos sobre texto]).
     
-    Alternatively you can pass `col_names` a character vector which will be
-    used as the column names:
+    Alternativamente puedes pasar a `col_names`un vector de caracteres que será utilizado como nombres de columna:
     
     ```{r}
     read_csv("1,2,3\n4,5,6", col_names = c("x", "y", "z"))
     ```
 
-Another option that commonly needs tweaking is `na`: this specifies the value (or values) that are used to represent missing values in your file:
+Otra opción que comúnmente necesita ajustes es `na` (del inglés, *"not available"*: Esto especifica el valor (o valores) que se utilizan para representar los valores faltantes en tu archivo: 
 
 ```{r}
 read_csv("a,b,c\n1,2,.", na = ".")
 ```
 
-This is all you need to know to read ~75% of CSV files that you'll encounter in practice. You can also easily adapt what you've learned to read tab separated files with `read_tsv()` and fixed width files with `read_fwf()`. To read in more challenging files, you'll need to learn more about how readr parses each column, turning them into R vectors.
+Esto es todo lo que necesitas saber para leer ~75% de los archivos csv con los que te encontrarás en la práctica. También puedes adaptar fácilmente lo que has aprendido para leer archivos separados por tabuladores con `read_tsv()` y archivos de ancho fijo con `read_fwf()`. Para leer archivos más desafiantes, necesitas aprender un poco más sobre cómo **readr** separa cada columna, transformándolas en vectores de R. 
 
-### Compared to base R
+### Comparando con R base
 
-If you've used R before, you might wonder why we're not using `read.csv()`. There are a few good reasons to favour readr functions over the base equivalents:
+Si utilizaste R anteriormente, tal vez te preguntas por qué no usamos `read.csv()`. Hay unas pocas y buenas razones para preferir las funciones de **readr** sobre los equivalentes de base:
 
-* They are typically much faster (~10x) than their base equivalents.
-  Long running jobs have a progress bar, so you can see what's happening. 
-  If you're looking for raw speed, try `data.table::fread()`. It doesn't fit 
-  quite so well into the tidyverse, but it can be quite a bit faster.
+* Generalmente son mucho más rápidas (~10x) que sus equivalentes de base. Los trabajos que tienen un tiempo de corrida prolongado poseen una barra de progreso, así puedes ver qué está ocurriendo. Si buscas la velocidad bruta, prueba `data.table::fread()`. No se ajusta tan bien en **tidyverse** pero puede ser bastante más rápido.
 
-* They produce tibbles, they don't convert character vectors to factors,
-  use row names, or munge the column names. These are common sources of
-  frustration with the base R functions.
+* Producen tibbles, no convierten los vectores de caracteres a factores, usan nombres de filas ni distorsionan los nombres de columnas. Estas son fuentes comunes de frustración con las funciones de R base.
 
-* They are more reproducible. Base R functions inherit some behaviour from
-  your operating system and environment variables, so import code that works 
-  on your computer might not work on someone else's.
+* Son más reproducibles. Las funciones de R Base heredan ciertos comportamientos de tu sistema operativo y de las variables del ambiente, de modo que importar código que funciona bien en tu computadora puede no funcionar en la de otros. 
 
-### Exercises
+### Ejercicios
 
-1.  What function would you use to read a file where fields were separated with  
-    "|"?
-    
-1.  Apart from `file`, `skip`, and `comment`, what other arguments do
-    `read_csv()` and `read_tsv()` have in common?
-    
-1.  What are the most important arguments to `read_fwf()`?
-   
-1.  Sometimes strings in a CSV file contain commas. To prevent them from
-    causing problems they need to be surrounded by a quoting character, like
-    `"` or `'`. By convention, `read_csv()` assumes that the quoting
-    character will be `"`, and if you want to change it you'll need to
-    use `read_delim()` instead. What arguments do you need to specify
-    to read the following text into a data frame?
+1. ¿Qué función utilizarías para leer un archivo donde los campos están separados con "|"?
+
+1. Además de `file`, `skip` y `comment` ¿Qué otros argumentos tienen en común `read_csv()` y `read_tsv`?
+
+1. ¿Cuáles son los argumentos más importantes de `read_fwf()`?
+
+1. Algunas veces, las cadenas de caracteres en un archivo csv contienen comas. Para evitar que causen problemas deben estar rodeadas por comillas, como `"` o `'`. Por convención, `read_csv()` asume que el caracter de separación será `"`, y si quieres cambiarlo necesitarás usar `read_delim()` en su lugar.¿Qué argumentos debes especificar para leer el siguiente texto en un marco de datos? 
+  
     
     ```{r, eval = FALSE}
     "x,y\n1,'a,b'"
     ```
-    
-1.  Identify what is wrong with each of the following inline CSV files. 
-    What happens when you run the code?
-    
+
+5. Identifica qué está mal en cada una de los siguientes archivos csv alineados. ¿Qué pasa cuando corres el código?    
+
     ```{r, eval = FALSE}
     read_csv("a,b\n1,2,3\n4,5,6")
     read_csv("a,b,c\n1,2\n1,2,3,4")
@@ -140,9 +123,10 @@ If you've used R before, you might wonder why we're not using `read.csv()`. Ther
     read_csv("a;b\n1;3")
     ```
 
-## Parsing a vector
+## segmentando un vector
 
-Before we get into the details of how readr reads files from disk, we need to take a little detour to talk about the `parse_*()` functions. These functions take a character vector and return a more specialised vector like a logical, integer, or date:
+Antes de entrar en detalles sobre cómo **readr** lee archivos del disco, necesitamos desviarnos un poco para hablar sobre las funciones `parse_*()`. Estas funciones toman un vector de caracteres y devuelven un vector más especializado, como un vector lógico, numérico, o fecha:
+
 
 ```{r}
 str(parse_logical(c("TRUE", "FALSE", "NA")))
@@ -150,79 +134,69 @@ str(parse_integer(c("1", "2", "3")))
 str(parse_date(c("2010-01-01", "1979-10-14")))
 ```
 
-These functions are useful in their own right, but are also an important building block for readr. Once you've learned how the individual parsers work in this section, we'll circle back and see how they fit together to parse a complete file in the next section.
+Estas funciones son útiles por sí mismas, pero también son un bloque estructural importante para **readr**. Una vez que aprendas cómo funcionan los segmentadores individuales en esta sección, volveremos atrás y veremos cómo se combinan entre ellos para segmentar un archivo completo en la próxima sección.
 
-Like all functions in the tidyverse, the `parse_*()` functions are uniform: the first argument is a character vector to parse, and the `na` argument specifies which strings should be treated as missing:
+Como todas las funciones en **tidyverse**, las funciones `parse_*()` son uniformes: el primer argumento es un vector de caracteres a segmentar, y el argumento `na` especifica qué cadenas deberían ser tratadas como faltantes: 
+
+
 
 ```{r}
 parse_integer(c("1", "231", ".", "456"), na = ".")
 ```
 
-If parsing fails, you'll get a warning:
+Si la segmentación falla, obtendrás una advertencia:
 
 ```{r}
 x <- parse_integer(c("123", "345", "abc", "123.45"))
 ```
-
-And the failures will be missing in the output:
+Y las fallas se perderán en la salida: 
 
 ```{r}
 x
 ```
 
-If there are many parsing failures, you'll need to use `problems()` to get the complete set. This returns a tibble, which you can then manipulate with dplyr.
+Si hay muchas fallas de segmentación, necesitarás utilizar `problems()` (del inglés, problemas) para obtener la totalidad de ellas. Esto devuelve una tibble que puedes luego manipular con **dplyr**.
+
 
 ```{r}
 problems(x)
 ```
+Utilizar los segmentadores es más que nada una cuestión de entender qué está disponible y cómo trabajan con diferentes tipos de entradas. Hay ocho segmentadores particularmente importantes. 
 
-Using parsers is mostly a matter of understanding what's available and how they deal with different types of input. There are eight particularly important parsers:
+1.  `parse_logical()` y `parse_integer()` segmentan valores lógicos y números enteros respectivamente.No hay prácticamente nada que pueda salir mal con estos segmentadores así que no los describiré en más detalle aquí.
 
-1.  `parse_logical()` and `parse_integer()` parse logicals and integers
-    respectively. There's basically nothing that can go wrong with these
-    parsers so I won't describe them here further.
-    
-1.  `parse_double()` is a strict numeric parser, and `parse_number()` 
-    is a flexible numeric parser. These are more complicated than you might
-    expect because different parts of the world write numbers in different
-    ways.
-    
-1.  `parse_character()` seems so simple that it shouldn't be necessary. But
-    one complication makes it quite important: character encodings.
+1. `parse_double()` es un segmentador numérico estricto, y `parse_number()` es un segmentador numérico flexible. Son más complicados de lo que podrías esperar porque diferentes partes del mundo escriben los números en diferentes formas.
 
-1.  `parse_factor()` create factors, the data structure that R uses to represent
-    categorical variables with fixed and known values.
+1. `parse_character()` parece tan simple que no debiera ser necesario. Pero una complicación lo hace bastante importante: la codificación de caracteres.
 
-1.  `parse_datetime()`, `parse_date()`, and `parse_time()` allow you to
-    parse various date & time specifications. These are the most complicated
-    because there are so many different ways of writing dates.
+1.  `parse_factor()` crea factores, la estructura de datos que R usa para representar variables categóricas con valores fijos y conocidos.
 
-The following sections describe these parsers in more detail.
+1.  `parse_datetime()`, `parse_date()`, y `parse_time()` te permiten segmentar diversas especificaciones de fechas y horas. Estos son los más complicados porque hay muchas formas diferentes de escribir fechas. 
 
-### Numbers
+Las secciones siguintes describen estos segmentadores en mayor detalle.
 
-It seems like it should be straightforward to parse a number, but three problems make it tricky:
+### Números
 
-1. People write numbers differently in different parts of the world.
-   For example, some countries use `.` in between the integer and fractional 
-   parts of a real number, while others use `,`.
-   
-1. Numbers are often surrounded by other characters that provide some
-   context, like "$1000" or "10%".
+Pareciera que segmentar un número debiera ser sencillo, pero hay tres problemas que pueden complicarlo: 
 
-1. Numbers often contain "grouping" characters to make them easier to read, 
-   like "1,000,000", and these grouping characters vary around the world.
+1. Las personas escriben los números de forma distinta en diferentes partes del mundo. Por ejemplo, algunos países utilizan `.` entre el entero y la fracción de un número real, mientras que otros utilizan `,`.
 
-To address the first problem, readr has the notion of a "locale", an object that specifies parsing options that differ from place to place. When parsing numbers, the most important option is the character you use for the decimal mark. You can override the default value of `.` by creating a new locale and setting the `decimal_mark` argument:
+
+1. A menudo los números están rodeados por otros caracteres que proporcionan algún contexto, como "$1000" o "10%".
+
+1. Los números frecuentemente contienen caracteres de "agrupación", haciéndolos más fáciles de leer, como "1,000,000". y esos caracteres de agrupación varían alrededor del mundo. 
+
+Para responder al primer problema, **readr** tiene el concepto de "locale", un objeto que especifica las opciones de segmentación que difieren de un lugar a otro. Cuando segmentamos números, la opción más importante es el caracter que utilizas como símbolo decimal. Puedes sobreescribir el valor por defecto de `.` creando un nuevo locale y estableciendo el argumento `decimal_mark` (del inglés, "símbolo decimal"):
+
+
 
 ```{r}
 parse_double("1.23")
 parse_double("1,23", locale = locale(decimal_mark = ","))
 ```
+El locale por defecto de **readr** es EEUU-céntrico, porque generalmente R es EEUU-céntrico (i.e. la documentación de R base está escrita en inglés americano). Una aproximación alternativa podría ser probar y adivinar las opciones por defecto de tu sistema operativo. Es difícil de hacerlo bien, y  lo que es más importante, hace que tu código sea frágil. Incluso si funciona en tu computadora, puede fallar cuando lo envíes a un colega en otro país.
 
-readr's default locale is US-centric, because generally R is US-centric (i.e. the documentation of base R is written in American English). An alternative approach would be to try and guess the defaults from your operating system. This is hard to do well, and, more importantly, makes your code fragile: even if it works on your computer, it might fail when you email it to a colleague in another country.
-
-`parse_number()` addresses the second problem: it ignores non-numeric characters before and after the number. This is particularly useful for currencies and percentages, but also works to extract numbers embedded in text.
+`parse_number()` responde al segundo problema: ignora los caracteres no-numéricos antes y después del número. Esto es particularmente útil para monedas y porcentajes, pero también sirve para extraer números insertos en texto.
 
 ```{r}
 parse_number("$100")
@@ -230,32 +204,33 @@ parse_number("20%")
 parse_number("It cost $123.45")
 ```
 
-The final problem is addressed by the combination of `parse_number()` and the locale as `parse_number()` will ignore the "grouping mark":
+El problema final se responde por la combinación de `parse_number()` y el locale, ya que `parse_number()` ignorará el "símbolo decimal":
 
 ```{r}
-# Used in America
+# Utilizado en América
 parse_number("$123,456,789")
 
-# Used in many parts of Europe
+# Utilizado en muchas regiones de Europa
 parse_number("123.456.789", locale = locale(grouping_mark = "."))
 
-# Used in Switzerland
+# Utilizado en Suiza
 parse_number("123'456'789", locale = locale(grouping_mark = "'"))
 ```
 
-### Strings {#readr-strings}
+### Cadenas de texto {#readr-strings}
 
-It seems like `parse_character()` should be really simple --- it could just return its input. Unfortunately life isn't so simple, as there are multiple ways to represent the same string. To understand what's going on, we need to dive into the details of how computers represent strings. In R, we can get at the underlying representation of a string using `charToRaw()`:
+En apariencia, `parse_character()` debería ser realmente simple --- podría tan solo devolver su entrada. Desafortunadamente la vida no es tan simple, dado que existen múltiples formas de representar la misma cadena de texto. Para entender qué está pasando, necesitamos bucear en los detalles de cómo las computadoras representan las cadenas de texto. En R, podemos acceder a la representación subyacente de una cadena de texto empleando `charToRaw()`:
+
 
 ```{r}
 charToRaw("Hadley")
 ```
+Cada número hexadecimal representa un byte de información: `48` es H, `61` es a, y así. El mapeo desde un número hexadecimal a caracteres se denomina la codificación, y en este caso la codificación se denomina ASCII. ASCII realiza un gran trabajo representando caracteres ingleses, ya que es la ***American** Standard Code for Information Interchange* (del inglés, Código Americano estandarizado para el intercambio de información).
 
-Each hexadecimal number represents a byte of information: `48` is H, `61` is a, and so on. The mapping from hexadecimal number to character is called the encoding, and in this case the encoding is called ASCII. ASCII does a great job of representing English characters, because it's the __American__ Standard Code for Information Interchange.
+Las cosas se complican un poco más para lenguajes diferentes del inglés. En los días del comienzo de la computación existían muchos estándares de codificación de caracteres no-ingleses compitiendo, y  para interpretar correctamente una cadena de texto, necesitas conocer tanto los valores como la codificación. Por ejemplo, dos codificaciones comunes son Latin1 (aka ISO-8859-1, utilizada para los lenguajes del oeste europeo), y Latin2 (aka ISO-8859-2, utilizados para los lenguajes del Este de Europa). En Latin1, el byte 'b1' es "Â±", pero en Latin2, ¡es "Ä"! Afortunadamente en la actualidad hay un estándar que tiene soporte casi en todos lados: UTF-8. UTF-8 puede codificar casi cualquier caracter utilizado por los humanos, como también muchos símbolos adicionales (¡como emoji!).
 
-Things get more complicated for languages other than English. In the early days of computing there were many competing standards for encoding non-English characters, and to correctly interpret a string you needed to know both the values and the encoding. For example, two common encodings are Latin1 (aka ISO-8859-1, used for Western European languages) and Latin2 (aka ISO-8859-2, used for Eastern European languages). In Latin1, the byte `b1` is "±", but in Latin2, it's "ą"! Fortunately, today there is one standard that is supported almost everywhere: UTF-8. UTF-8 can encode just about every character used by humans today, as well as many extra symbols (like emoji!).
+**readr** utiliza UTF-8 en todas partes: asume que tus datos están codificados en UTF-8 cuando los lee, y lo emplea siempre cuando los escribe. Esta es una buena opción por defecto, pero fallará con datos producidos por sistemas más viejos que no entienden UTF-8. Si te sucede esto, tus cadenas de texto se verán raras cuando las imprimas en la consola. Algunas veces solo uno o dos caracteres estarán errados. Otras veces obtendrás un total geroglífico. Por ejemplo: 
 
-readr uses UTF-8 everywhere: it assumes your data is UTF-8 encoded when you read it, and always uses it when writing. This is a good default, but will fail for data produced by older systems that don't understand UTF-8. If this happens to you, your strings will look weird when you print them. Sometimes just one or two characters might be messed up; other times you'll get complete gibberish. For example:
 
 ```{r}
 x1 <- "El Ni\xf1o was particularly bad this year"
@@ -265,106 +240,100 @@ x1
 x2
 ```
 
-To fix the problem you need to specify the encoding in `parse_character()`:
+Para corregir el problema necesitas especificar la codificación en `parse_character()`:
 
 ```{r}
 parse_character(x1, locale = locale(encoding = "Latin1"))
 parse_character(x2, locale = locale(encoding = "Shift-JIS"))
 ```
 
-How do you find the correct encoding? If you're lucky, it'll be included somewhere in the data documentation. Unfortunately, that's rarely the case, so readr provides  `guess_encoding()` to help you figure it out. It's not foolproof, and it works better when you have lots of text (unlike here), but it's a reasonable place to start. Expect to try a few different encodings before you find the right one.
+¿Cómo encontrarás la codificación correcta? Si tienes suerte, estará incluida en alguna parte de la documentación de los datos. Desafortunadamente raras veces es ese el caso, así que **readr** posee `guess_encoding()` para ayudarte a adivinarla. No es a prueba de tontos, y funciona mejor cuando tienes mucho texto (a diferencia de aquí), pero es un punto de inicio razonable. Debes esperar varias pruebas con diferentes codificaciones antes de encontrar la correcta.
 
 ```{r}
 guess_encoding(charToRaw(x1))
 guess_encoding(charToRaw(x2))
 ```
 
-The first argument to `guess_encoding()` can either be a path to a file, or, as in this case, a raw vector (useful if the strings are already in R).
+El primer argumento para `guess_encoding()` puede ser la ruta a un archivo o, como en este caso, un vector crudo (útil si el texto ya se encuentra en R).
 
-Encodings are a rich and complex topic, and I've only scratched the surface here. If you'd like to learn more I'd recommend reading the detailed explanation at <http://kunststube.net/encoding/>.
+Las codificaciones son un tema rico y complejo, y solo te di un pantallazo aquí. Si quisieras aprender más al respecto, te recomendaría que leas la explicación detallada en <http://kunststube.net/encoding/>.
 
-### Factors {#readr-factors}
 
-R uses factors to represent categorical variables that have a known set of possible values. Give `parse_factor()` a vector of known `levels` to generate a warning whenever an unexpected value is present:
+### Factores {#readr-factors}
+
+R utiliza factores para representar las variables categóricas que tienen un conjunto conocido de valores posibles. Puedes darle a `parse_factor()` un vector de `levels` (del inglés, niveles) conocidos para generar una advertencia cada vez que se presente un valor inesperado:
 
 ```{r}
-fruit <- c("apple", "banana")
-parse_factor(c("apple", "banana", "bananana"), levels = fruit)
+fruta <- c("manzana", "banana")
+parse_factor(c("manzana", "banana", "bananana"), levels = fruta)
 ```
+Pero si tienes muchas entradas problemáticas, a menudo es más fácil dejarlas como vectores de caracteres y luego utilizar las herramientas sobre las que aprenderás en [strings] y [factores] para limpiarlas.
 
-But if you have many problematic entries, it's often easier to leave as character vectors and then use the tools you'll learn about in [strings] and [factors] to clean them up.
+### Fechas, fechas-horas, y horas {#readr-datetimes}
 
-### Dates, date-times, and times {#readr-datetimes}
+Debes elegir entre tres segmentadores dependiendo si quieres una fecha (el número de los días desde el 01-01-1970), una fecha-hora (el número de segundos desde la medianoche del 01-01-1970), o una hora (el número de segundos desde la medianoche). Cuando se llaman sin argumentos adicionales: 
 
-You pick between three parsers depending on whether you want a date (the number of days since 1970-01-01), a date-time (the number of seconds since midnight 1970-01-01), or a time (the number of seconds since midnight). When called without any additional arguments:
 
-*   `parse_datetime()` expects an ISO8601 date-time. ISO8601 is an
-    international standard in which the components of a date are
-    organised from biggest to smallest: year, month, day, hour, minute, 
-    second.
-    
+*   `parse_datetime()` asume una fecha-hora ISO8601. ISO8601 es una estandarización internacional en la cual los componentes de una fecha están organizados de mayor a menor: año, mes, día, hora, minuto, segundo.
+
+
     ```{r}
     parse_datetime("2010-10-01T2010")
-    # If time is omitted, it will be set to midnight
+    # Si se omite la hora, será determinada como medianoche.
     parse_datetime("20101010")
     ```
     
-    This is the most important date/time standard, and if you work with
-    dates and times frequently, I recommend reading
-    <https://en.wikipedia.org/wiki/ISO_8601>
+Esta es la estandarización de fecha/hora más importante, y si trabajas con fechas y horas frecuentemente, recomiendo que leas <https://en.wikipedia.org/wiki/ISO_8601>
     
-*   `parse_date()` expects a four digit year, a `-` or `/`, the month, a `-` 
-    or `/`, then the day:
-    
+*   `parse_date()` asume un año de cuatro dígitos, un guión `-` o `/`, el mes, un guión `-` o `/`, luego el día.
+
     ```{r}
     parse_date("2010-10-01")
     ```
 
-*   `parse_time()` expects the hour, `:`, minutes, optionally `:` and seconds, 
-    and an optional am/pm specifier:
-  
+*   `parse_time()` espera la hora, `:`, minutos, opcionalmente `:` y segundos, y un especificador opcional am/pm:
+
     ```{r}
     library(hms)
     parse_time("01:10 am")
     parse_time("20:10:01")
     ```
     
-    Base R doesn't have a great built in class for time data, so we use 
-    the one provided in the hms package.
+R base no tiene una gran estructura en clases para datos temporales, por lo que usamos el provisto en el paquete **hms**.
 
-If these defaults don't work for your data you can supply your own date-time `format`, built up of the following pieces:
+Si esos valores por defecto no funcionan con tus datos, puedes proporcionar tu propio formato fecha-hora, construyéndolo con las siguientes piezas:
 
-Year
-: `%Y` (4 digits). 
-: `%y` (2 digits); 00-69 -> 2000-2069, 70-99 -> 1970-1999.
 
-Month
-: `%m` (2 digits).
-: `%b` (abbreviated name, like "Jan").
-: `%B` (full name, "January").
+Año
+: `%Y` (4 dígitos). 
+: `%y` (2 dígitos); 00-69 -> 2000-2069, 70-99 -> 1970-1999.
 
-Day
-: `%d` (2 digits).
-: `%e` (optional leading space).
+Mes
+: `%m` (2 dígitos).
+: `%b` (nombre abreviado, como "ene").
+: `%B` (nombre completo, "enero").
 
-Time
-: `%H` 0-23 hour.
-: `%I` 0-12, must be used with `%p`.
-: `%p` AM/PM indicator.
-: `%M` minutes.
-: `%S` integer seconds.
-: `%OS` real seconds. 
-: `%Z` Time zone (as name, e.g. `America/Chicago`). Beware of abbreviations:
-  if you're American, note that "EST" is a Canadian time zone that does not
-  have daylight savings time. It is _not_ Eastern Standard Time! We'll
-  come back to this [time zones].
-: `%z` (as offset from UTC, e.g. `+0800`). 
+Día
+: `%d` (2 dígitos).
+: `%e` (espacio opcional destacado ).
 
-Non-digits
-: `%.` skips one non-digit character.
-: `%*` skips any number of non-digits.
+Hora
+: `%H` 0-23 horas.
+: `%I` 0-12, debe utilizarse con `%p`.
+: `%p` indicador AM/PM.
+: `%M` minutos.
+: `%S` segundos enteros.
+: `%OS` segundos reales. 
+: `%Z` Zona horaria (como nombre, e.g. `America/Chicago`). Advertencia sobre abreviaturas: 
+  si eres americano, ten en cuenta que "EST" es una zona horaria canadiense que no tiene cambios de horario.¡**No** es la hora Estandar del Este! Volveremos sobre esto [zonas horarias].
+: `%z` (como complemento para las UTC, e.g. `+0800`). 
 
-The best way to figure out the correct format is to create a few examples in a character vector, and test with one of the parsing functions. For example:
+No-dígitos
+: `%.` saltea un caracter no-dígito.
+: `%*` Saltea cualquier número de no-dígitos.
+
+La mejor manera de deducir el formato correcto es crear unos pocos ejemplos en un vector de caracteres, y probarlos con una de las funciones segmentadoras. Por ejemplo: 
+
 
 ```{r}
 parse_date("01/02/15", "%m/%d/%y")
@@ -372,37 +341,30 @@ parse_date("01/02/15", "%d/%m/%y")
 parse_date("01/02/15", "%y/%m/%d")
 ```
 
-If you're using `%b` or `%B` with non-English month names, you'll need to set the  `lang` argument to `locale()`. See the list of built-in languages in `date_names_langs()`, or if your language is not already included, create your own with `date_names()`.
+Si estás utilizando `%b` o `%B` con nombres de meses no-ingleses, necesitarás determinar el argumento `lang` para `locale()`. Mira la lista de lenguajes incorporados en `date_names_langs()` o si tu lenguaje no está incluido, crea el tuyo con `date_names()`.
 
 ```{r}
 parse_date("1 janvier 2015", "%d %B %Y", locale = locale("fr"))
 ```
 
-### Exercises
+### Ejercicios
 
-1.  What are the most important arguments to `locale()`? 
+1.  ¿Cuáles son los argumentos más importantes para `locale()`?
 
-1.  What happens if you try and set `decimal_mark` and `grouping_mark` 
-    to the same character? What happens to the default value of 
-    `grouping_mark` when you set `decimal_mark` to ","? What happens
-    to the default value of `decimal_mark` when you set the `grouping_mark`
-    to "."?
+1.  ¿Qué pasa si pruebas y estableces `decimal_mark` y `grouping_mark` al mismo caracter? ¿Qué pasa con el valor por defecto de `grouping_mark` cuando seleccionas `decimal_mark` a `,`? ¿Qué pasa con el valor por defecto de `decimal_mark` cuando estableces `grouping_mark` a `.`?
 
-1.  I didn't discuss the `date_format` and `time_format` options to
-    `locale()`. What do they do? Construct an example that shows when 
-    they might be useful.
 
-1.  If you live outside the US, create a new locale object that encapsulates 
-    the settings for the types of file you read most commonly.
-    
-1.  What's the difference between `read_csv()` and `read_csv2()`?
-    
-1.  What are the most common encodings used in Europe? What are the
-    most common encodings used in Asia? Do some googling to find out.
+1.  No discutí las opciones `date_format` y `time_format` para `locale()`. ¿Qué hacen? Construye un ejemplo que muestre cuándo pueden ser útiles.
 
-1.  Generate the correct format string to parse each of the following 
-    dates and times:
-    
+1.  Si vives fuera de EEUU, crea un nuevo objeto locale que encapsule las opciones para los tipos de archivo que lees más comúnmente.
+
+1.  ¿Cuál es la diferencia entre `read_csv()` y `read_csv2()`?
+
+1.  ¿Cuáles son las codificaciones más comunes empleadas en Europa? ¿Cuáles son las codificaciones más comunes utilizadas en Asia? Googlea un poco para descubrirlo. 
+
+1.  Genera el formato correcto de texto para segmentar cada una de las siguientes fechas y horas:
+
+
     ```{r}
     d1 <- "January 1, 2010"
     d2 <- "2015-Mar-07"
@@ -413,16 +375,18 @@ parse_date("1 janvier 2015", "%d %B %Y", locale = locale("fr"))
     t2 <- "11:15:10.12 PM"
     ```
 
-## Parsing a file
+## Segmentar un archivo
 
-Now that you've learned how to parse an individual vector, it's time to return to the beginning and explore how readr parses a file. There are two new things that you'll learn about in this section:
+Ahora que aprendiste cómo segmentar un vector individual, es tiempo de volver al comienzo y explorar cómo **readr** segmenta un archivo. Hay dos cosas nuevas que aprenderás al respecto en esta sección: 
 
-1. How readr automatically guesses the type of each column.
-1. How to override the default specification.
+1.  Cómo **readr** deduce automáticamente el tipo de cada columna.
+1.  Cómo sobreescribir las especificaciones por defecto.
 
-### Strategy
 
-readr uses a heuristic to figure out the type of each column: it reads the first 1000 rows and uses some (moderately conservative) heuristics to figure out the type of each column. You can emulate this process with a character vector using `guess_parser()`, which returns readr's best guess, and `parse_guess()` which uses that guess to parse the column:
+### Estrategia
+
+**readr** utiliza una heurística para deducir el tipo de cada columna: Lee las primeras 1000 filas y utiliza alguna heurística (moderadamente conservativa) para deducir el formato de las columnas. Puedes simular este proceso con un vector de caracteres utilizando `guess_parser()`, que devuelve la mejor deducción de **readr**, y `parse_guess()` que utiliza esa deducción para segmentar la columna:
+
 
 ```{r}
 guess_parser("2010-10-01")
@@ -433,53 +397,52 @@ guess_parser(c("12,352,561"))
 
 str(parse_guess("2010-10-10"))
 ```
+La heurística prueba cada uno de los siguientes tipos, deteniéndose cuando encuentra una coincidencia:
 
-The heuristic tries each of the following types, stopping when it finds a match:
+* lógico: contiene solo "F", "T", "FALSE", o "TRUE".
+* entero: contiene solo caracteres numéricos (y '-').
+* doble: contiene solo dobles válidos (incluyendo números como '4.5e-5').
+* número: contiene dobles válidos con la marca de agrupamiento adentro.
+* hora: coincide con el formato horario (`time_format`) por defecto.
+* fecha: coincide con el formato fecha (`date_format`) por defecto.
+* fecha-hora: cualquier fecha ISO8601.
 
-* logical: contains only "F", "T", "FALSE", or "TRUE".
-* integer: contains only numeric characters (and `-`).
-* double: contains only valid doubles (including numbers like `4.5e-5`).
-* number: contains valid doubles with the grouping mark inside.
-* time: matches the default `time_format`.
-* date: matches the default `date_format`.
-* date-time: any ISO8601 date.
+Si ninguna de esas reglas se aplica, entonces la columna quedará como un vector de cadenas de texto.
 
-If none of these rules apply, then the column will stay as a vector of strings.
+### Problemas
 
-### Problems
+Esos valores por defecto no siempre funcionan para archivos de gran tamaño. Hay dos problemas básicos:
 
-These defaults don't always work for larger files. There are two basic problems:
+1.  Las primeras mil filas podrían ser un caso especial, y **readr** deduce un formato que no es suficientemente general. Por ejemplo, podrías tener una columna de dobles que solo contiene enteros en las primeras 1000 filas.
 
-1.  The first thousand rows might be a special case, and readr guesses
-    a type that is not sufficiently general. For example, you might have 
-    a column of doubles that only contains integers in the first 1000 rows. 
+1.  La columna podría contener muchos valores ausentes. Si las primeras 1000 filas contienen solo `NA`s, **readr** deducirá que es un vector de caracteres, mientras que tu probablemente quieras segmentarlo como algo más específico.
 
-1.  The column might contain a lot of missing values. If the first 1000
-    rows contain only `NA`s, readr will guess that it's a character 
-    vector, whereas you probably want to parse it as something more
-    specific.
+**readr** contiene un archivo csv desafiante que ilustra ambos problemas:
 
-readr contains a challenging CSV that illustrates both of these problems:
+
 
 ```{r}
-challenge <- read_csv(readr_example("challenge.csv"))
+desafio <- read_csv(readr_example("desafio.csv"))
 ```
 
-(Note the use of `readr_example()` which finds the path to one of the files included with the package)
+(Nota el uso de `readr_example()` que encuentra la ruta a uno de los archivos incluidos en el paquete)
 
-There are two printed outputs: the column specification generated by looking at the first 1000 rows, and the first five parsing failures. It's always a good idea to explicitly pull out the `problems()`, so you can explore them in more depth:
+Hay dos resultados impresos en la consola: la especificación de columna generada al mirar las primeras 1000 filas, y las primeras cinco fallas de segmentación. Siempre es una buena idea extraer explícitamente los `problemas()`, así puedes explorarlos en mayor profundidad:
+
 
 ```{r}
-problems(challenge)
+problems(desafio)
 ```
 
-A good strategy is to work column by column until there are no problems remaining. Here we can see that there are a lot of parsing problems with the `x` column - there are trailing characters after the integer value. That suggests we need to use a double parser instead.
+Una buena estrategia es trabajar columna por columna hasta que no queden problemas. Aquí podemos ver que hubieron muchos problemas de segmentación con la columna `x` - hay caracteres arrastrados luego del valor entero. Esto sugiere que necesitamos utilizar un segmentador doble en su lugar.
 
-To fix the call, start by copying and pasting the column specification into your original call:
+Para solucionar la llamada, comienza copiando y pegando la especificación de columna en tu llamada original:
+
+
 
 ```{r, eval = FALSE}
-challenge <- read_csv(
-  readr_example("challenge.csv"), 
+desafio <- read_csv(
+  readr_example("desafio.csv"), 
   col_types = cols(
     x = col_integer(),
     y = col_character()
@@ -487,11 +450,12 @@ challenge <- read_csv(
 )
 ```
 
-Then you can tweak the type of the `x` column:
+Luego puedes ajustar el tipo de la columna `x`:
+
 
 ```{r}
-challenge <- read_csv(
-  readr_example("challenge.csv"), 
+desafio <- read_csv(
+  readr_example("desafio.csv"), 
   col_types = cols(
     x = col_double(),
     y = col_character()
@@ -499,53 +463,51 @@ challenge <- read_csv(
 )
 ```
 
-That fixes the first problem, but if we look at the last few rows, you'll see that they're dates stored in a character vector:
+Esto corrige el primer problema, pero si miras a las últimas filas, verás que son fechas almacenadas en un vector de caracteres:
 
 ```{r}
-tail(challenge)
+tail(desafio)
 ```
 
-You can fix that by specifying that `y` is a date column:
+Puedes corregir esto especificando que `y` es una columna fecha: 
 
 ```{r}
-challenge <- read_csv(
-  readr_example("challenge.csv"), 
+desafio <- read_csv(
+  readr_example("desafio.csv"), 
   col_types = cols(
     x = col_double(),
     y = col_date()
   )
 )
-tail(challenge)
+tail(desafio)
 ```
 
-Every `parse_xyz()` function has a corresponding `col_xyz()` function. You use `parse_xyz()` when the data is in a character vector in R already; you use `col_xyz()` when you want to tell readr how to load the data.
+Cada función `parse_xyz()` tiene su correspondiente función `col_xyz()`. Utilizas `parse_xyz()` cuando los datos se encuentran en un vector de caracteres que ya está disponible en R, usas `col_xyz` cuando quieres decirle a **readr** cómo cargar los datos.
 
-I highly recommend always supplying `col_types`, building up from the print-out provided by readr. This ensures that you have a consistent and reproducible data import script. If you rely on the default guesses and your data changes, readr will continue to read it in. If you want to be really strict, use `stop_for_problems()`: that will throw an error and stop your script if there are any parsing problems.
+Recomiendo fuertemente proporcionar siempre `col_types`, estructurándolos a partir de la impresión en consola provista por **readr**. Esto asegura que tienes un script para importar datos consistente y reproducible. Si confías en las deducciones por defecto y tus datos cambian, **readr** continuará leyéndolos. Si quieres ser realmente estricto, emplea `stop_for_problems()` (del inglés, detención cuando hay problemas): Esto devolverá un mensaje de error y detendrá tu script si hay cualquier problema con la segmentación.
 
-### Other strategies
+### Otras estrategias
 
-There are a few other general strategies to help you parse files:
+Hay unas pocas estrategias generales más para ayudarte a segmentar archivos:
 
-*   In the previous example, we just got unlucky: if we look at just
-    one more row than the default, we can correctly parse in one shot:
+*   En el ejemplo previo, simplemente fuimos desafortunados: si miramos solo una fila más que el número por defecto, podemos segmentar correctamente de una sola vez:
+
+
    
     ```{r}
-    challenge2 <- read_csv(readr_example("challenge.csv"), guess_max = 1001)
-    challenge2
+    desafio2 <- read_csv(readr_example("desafio.csv"), guess_max = 1001)
+    desafio2
     ```
 
-*   Sometimes it's easier to diagnose problems if you just read in all
-    the columns as character vectors:
-   
+*   Algunas veces es más fácil diagnosticar problemas si lees todas las columnas como vectores de caracteres:
+
     ```{r}
-    challenge2 <- read_csv(readr_example("challenge.csv"), 
+    desafio2 <- read_csv(readr_example("desafio.csv"), 
       col_types = cols(.default = col_character())
     )
     ```
     
-    This is particularly useful in conjunction with `type_convert()`,
-    which applies the parsing heuristics to the character columns in a data
-    frame.
+    Esto es particularmente útil en combinación con 'type_convert()', que aplica la heurística de segmentación a las columnas de       caracteres en un marco de datos.
 
     ```{r}
     df <- tribble(
@@ -556,63 +518,56 @@ There are a few other general strategies to help you parse files:
     )
     df
     
-    # Note the column types
+    # Fíjate los tipos de columna
     type_convert(df)
     ```
     
-*   If you're reading a very large file, you might want to set `n_max` to
-    a smallish number like 10,000 or 100,000. That will accelerate your 
-    iterations while you eliminate common problems.
+*   Si estás leyendo un archivo muy largo, podrías querer seleccionar `n_max` a un número menor, como 10000 o 100000. Esto acelerará las iteraciones a la vez que eliminarás problemas comunes.
 
-*   If you're having major parsing problems, sometimes it's easier
-    to just read into a character vector of lines with `read_lines()`,
-    or even a character vector of length 1 with `read_file()`. Then you
-    can use the string parsing skills you'll learn later to parse
-    more exotic formats.
 
-## Writing to a file
+*   Si tienes problemas de segmentación importantes, a veces es más fácil leer simplemente un vector de caracteres de líneas con `read_lines()`, o incluso un vector de caracteres de largo 1 con `read_file()`. Luego puedes utilizar las habilidades sobre segmentación de cadenas de texto que aprenderás más adelante para segmentar formatos más exóticos.
 
-readr also comes with two useful functions for writing data back to disk: `write_csv()` and `write_tsv()`. Both functions increase the chances of the output file being read back in correctly by:
 
-* Always encoding strings in UTF-8.
-  
-* Saving dates and date-times in ISO8601 format so they are easily
-  parsed elsewhere.
+## Escribir a un archivo
 
-If you want to export a csv file to Excel, use `write_excel_csv()` --- this writes a special character (a "byte order mark") at the start of the file which tells Excel that you're using the UTF-8 encoding.
+**readr** también incluye dos funciones muy útiles para escribir datos de nuevo en el disco: `write_csv()` y `write_tsv()`. Ambas funciones incrementan las posibilidades de que el archivo resultante sea leído correctamente al: 
 
-The most important arguments are `x` (the data frame to save), and `path` (the location to save it). You can also specify how missing values are written with `na`, and if you want to `append` to an existing file.
+* Codificar siempre las cadenas de texto en UTF-8.
+* Guardar fechas y fechas-horas en formato ISO8601, por lo que son fácilmente segmentadas en cualquier sitio.
+
+Si quieres exportar un archivo csv a Excel, utiliza `write_excel_csv()` ---esto escribe un caracter especial (un símbolo de orden de bytes) al comienzo del archivo que le dice a Excel que estás utilizando codificación UTF-8.
+
+Los argumentos más importantes son `x` (el marco de datos a guardar), y `path` (la ubicación donde lo guardarás). También puedes especificar cómo se escriben los valores ausentes con `na`, y si quieres `append` (agregarlo) a un archivo existente.
+
 
 ```{r, eval = FALSE}
-write_csv(challenge, "challenge.csv")
+write_csv(desafio, "desafio.csv")
 ```
-
-Note that the type information is lost when you save to csv:
+Fíjate que la información sobre el tipo de datos se pierde cuando guardas en csv:
 
 ```{r, warning = FALSE}
-challenge
-write_csv(challenge, "challenge-2.csv")
-read_csv("challenge-2.csv")
+desafio
+write_csv(desafio, "desafio-2.csv")
+read_csv("desafio-2.csv")
 ```
 
-This makes CSVs a little unreliable for caching interim results---you need to recreate the column specification every time you load in. There are two alternatives:
+Esto hace a los CSV poco confiables para almacenar en caché los resultados provisorios--- necesitas recrear la especificación de las columnas cada vez que los cargas. Hay dos alternativas:
 
-1.  `write_rds()` and `read_rds()` are uniform wrappers around the base 
-    functions `readRDS()` and `saveRDS()`. These store data in R's custom 
-    binary format called RDS:
-    
+1.  `write_rds()` and `read_rds()` son envoltorios uniformes sobre las funciones base `readRDS()` y `saveRDS()`. Éstas almacenan datos en un formato binario personalizado de R llamado RDS:
+
+
     ```{r}
-    write_rds(challenge, "challenge.rds")
-    read_rds("challenge.rds")
+    write_rds(desafio, "desafio.rds")
+    read_rds("desafio.rds")
     ```
   
-1.  The feather package implements a fast binary file format that can
-    be shared across programming languages:
+1. El paquete **feather** implementa un formato rápido de archivos binarios que puede compartirse a través de lenguajes de programación:
+
     
     ```{r, eval = FALSE}
     library(feather)
-    write_feather(challenge, "challenge.feather")
-    read_feather("challenge.feather")
+    write_feather(desafio, "desafio.feather")
+    read_feather("desafio.feather")
     #> # A tibble: 2,000 x 2
     #>       x      y
     #>   <dbl> <date>
@@ -625,25 +580,27 @@ This makes CSVs a little unreliable for caching interim results---you need to re
     #> # ... with 1,994 more rows
     ```
 
-Feather tends to be faster than RDS and is usable outside of R. RDS supports list-columns (which you'll learn about in [many models]); feather currently does not.
+Feather tiende a ser más rápido que RDS y es utilizable fuera de R. RDS permite columnas-listas (sobre las que aprenderás en [muchos modelos]); feather no lo permite actualmente.
+
 
 ```{r, include = FALSE}
-file.remove("challenge-2.csv")
-file.remove("challenge.rds")
+file.remove("desafio-2.csv")
+file.remove("desafio.rds")
 ```
 
-## Other types of data
 
-To get other types of data into R, we recommend starting with the tidyverse packages listed below. They're certainly not perfect, but they are a good place to start. For rectangular data:
+## Otros tipos de datos
 
-* __haven__ reads SPSS, Stata, and SAS files.
+Para acceder a otros tipos de datos en R, recomendamos comenzar con los paquetes de **tidyverse** listados abajo. Ciertamente no son perfectos, pero son un buen lugar para comenzar. Para datos rectangulares: 
 
-* __readxl__ reads excel files (both `.xls` and `.xlsx`).
+* __haven__ lee archivos SPSS, Stata, y SAS.
 
-* __DBI__, along with a database specific backend (e.g. __RMySQL__, 
-  __RSQLite__, __RPostgreSQL__ etc) allows you to run SQL queries against a 
-  database and return a data frame.
+* __readxl__ lee archivos excel  (tanto `.xls` como `.xlsx`).
 
-For hierarchical data: use __jsonlite__ (by Jeroen Ooms) for json, and __xml2__ for XML. Jenny Bryan has some excellent worked examples at <https://jennybc.github.io/purrr-tutorial/>.
+* __DBI__, junto con un backend de base de datos específico (e.g. __RMySQL__, 
+  __RSQLite__, __RPostgreSQL__ etc) te permite correr consultas SQL contra una base de datos y devolver un marco de datos.
 
-For other file types, try the [R data import/export manual](https://cran.r-project.org/doc/manuals/r-release/R-data.html) and the [__rio__](https://github.com/leeper/rio) package.
+Para datos jerárquicos: utiliza __jsonlite__ (por Jeroen Ooms) para json, y __xml2__ para XML. Jenny Bryan tiene algunos ejemplos muy bien trabajados en <https://jennybc.github.io/purrr-tutorial/>.
+
+Para otros tipos de archivos, prueba [manual de importación/exportación de datos de R] (https://cran.r-project.org/doc/manuals/r-release/R-data.html) y el paquete [__rio__](https://github.com/leeper/rio).
+
