@@ -1,16 +1,16 @@
 # Flujo de trabajo: proyectos
 
-Llegará el día en que tendrás que salir de R, ir a hacer otra cosa y volver a tu análisis al día siguiente. O tal vez llegará un día en que estés trabajando simultáneamente en múltiples análisis estadísticos en R, y quieras mantenerlos separados. Eventualmente quizá tendrás que importar datos del mundo exterior y enviar de vuelta resultados numéricos y gráficas creados en R. Para poder manejar estas situaciones de la vida real, tienes que tomar dos decisiones:
+Llegará el día en que tendrás que salir de R, ir a hacer otra cosa y volver a tu análisis al día siguiente. O tal vez llegará un día en que estés trabajando simultáneamente en múltiples análisis estadísticos en R, y quieras mantenerlos separados. Un día quizá tendrás que importar datos del mundo exterior y exportar resultados numéricos y gráficas creados en R. Para manejar estas situaciones de la vida real, tienes que tomar dos decisiones:
 
 1.  ¿Qué parte de tu análisis es "real"? Es decir, ¿qué vas a guardar como registro permanente de lo sucedido durante el análisis?
 
-1.  ¿Dónde "vive" tu análisis?
+2.  ¿Dónde "vive" tu análisis?
 
 ## ¿Qué es real?
 
-Como un usuario de R principiante, está bien que consideres que tu ambiente (esto es, los objetos listados en el panel) es "real". Sin embargo, a largo plazo tendrás una mejor experiencia usando R si consideras que tus _scripts_ son "reales". 
+Como usuaria de R principiante, está bien que consideres "real" tu ambiente (esto es, los objetos listados en el panel). Sin embargo, a largo plazo tendrás una mejor experiencia usando R si consideras que tus _scripts_ son "reales". 
 
-Con tus _scripts_ de R (y tus archivos con datos) puedes crear de nuevo el ambiente. ¡Es mucho más difícil volver a crear tus _scripts_ a partir de tu ambiente! Para hacerlo, tendrías que volver a escribir muchas líneas de código de memoria (cometiendo errores durante el proceso), o analizar con muchísima atención tu historia de R.  
+Con tus _scripts_ de R (y tus archivos con datos) puedes volver a crear el ambiente. ¡Es mucho más difícil volver a crear tus _scripts_ a partir de tu ambiente! Para hacerlo, tendrías que reescribir muchas líneas de código de memoria (cometiendo errores durante el proceso), o analizar con muchísima atención tu historia de R.  
 
 Para promover este comportamiento, te recomiendo que configures a RStudio para que no guarde tu espacio de trabajo (_workspace_ en inglés) entre sesiones:
 
@@ -18,7 +18,7 @@ Para promover este comportamiento, te recomiendo que configures a RStudio para q
 knitr::include_graphics("screenshots/rstudio-workspace.png")
 ```
 
-Esto te va a hacer sufrir a corto plazo, pues cuando reinicies RStudio este no recordará los resultados del código que ejecutaste la última vez. Pero este sufrimiento momentáneo te va a salvar de una agonía a largo plazo, ya que te va a obligar a capturar en tu código todas las interacciones importantes. No hay nada peor que descubrir tres meses más tarde que sólo guardaste los resultados de un cálculo importante en tu espacio de trabajo, y no el cálculo por sí mismo en el código.
+Esto te va a hacer sufrir a corto plazo, pues cuando reinicies RStudio este no recordará los resultados del código que ejecutaste la última vez. Pero este sufrimiento momentáneo te va a salvar de una agonía a largo plazo, ya que te va a obligar a capturar en tu código todas las interacciones importantes. No hay nada peor que descubrir tres meses más tarde que sólo guardaste los resultados de un cálculo importante en tu espacio de trabajo, y no el cálculo en sí en el código.
 
 Hay un par de métodos abreviados de teclado (_keyboard shortcuts_) geniales que te ayudarán a asegurarte de que las partes importantes de tu código están capturadas en el editor:
 
@@ -42,7 +42,7 @@ getwd()
 #> [1] "/Users/hadley/Documents/r4ds/r4ds"
 ```
 
-Como usuario principiante de R, está bien que tu fólder de usuario, documentos o cualquier otro directorio en tu computadora sea el directorio de trabajo de R. Pero estás en el capítulo seis de este libro, y ya no eres un novato. Pronto deberías dar el siguiente paso y comenzar a organizar tus proyectos analíticos en directorios, y una vez trabajando en un proyecto, definir el directorio de trabajo de R como el directorio asociado a dicho proyecto.
+Como usuaria principiante de R, está bien que tu directorio de inicio, documentos o cualquier otro directorio en tu computadora sea el directorio de trabajo de R. Pero estás en el capítulo seis de este libro, y ya no eres una novata. Pronto deberías dar el siguiente paso y comenzar a organizar tus proyectos analíticos en directorios, y una vez trabajando en un proyecto, definir el directorio de trabajo de R como el directorio asociado a dicho proyecto.
 
 __No lo recomiendo__, pero también es posible definir el directorio de trabajo desde R:
 
@@ -64,14 +64,14 @@ Las rutas (del inglés _paths_) y los directorios son un poco complicados porque 
     en la ruta, ¡tendrás que teclear dos barras invertidas! Eso hace que la vida sea frustrante,
     así que recomiendo es siempre usar el estilo Linux/Mac con las barras ("/").
 
-1.  Las rutas absolutas (es decir, las rutas que te llevan a la misma ubicación sin importar 
+2.  Las rutas absolutas (es decir, las rutas que te llevan a la misma ubicación sin importar 
     tu directorio de trabajo) lucen diferentes. En Windows dichas rutas comienzan con la letra 
     del disco (p. ej. `C:`) o dos barras invertidas (p. ej. `\\nombredelservidor`) y en 
     Mac/Linux comienzan con una barra "/" (p. ej. `/usuarios/hadley`). __Nunca__ deberías
     usar rutas absolutas en tus _scripts_, ya que afectan negativamente el proceso de compartir archivos:
     nadie más va a tener exactamente la misma configuración de directorios y fólders que tú. 
 
-1.  La última diferencia es la ubicación a la que `~` se refiere. `~` es un
+3.  La última diferencia es la ubicación a la que `~` se refiere. `~` es un
     conveniente acceso directo a tu directorio personal. Windows no cuenta realmente con la
     noción de un directorio personal, así que se refiere a tu directorio de documentos.
 
