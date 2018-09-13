@@ -20,7 +20,7 @@ knitr::include_graphics("screenshots/rstudio-workspace.png")
 
 Esto te va a hacer sufrir a corto plazo, pues cuando reinicies RStudio este no recordará los resultados del código que ejecutaste la última vez. Pero este sufrimiento momentáneo te va a salvar de una agonía a largo plazo, ya que te va a obligar a capturar en tu código todas las interacciones importantes. No hay nada peor que descubrir tres meses más tarde que sólo guardaste los resultados de un cálculo importante en tu espacio de trabajo, y no el cálculo por sí mismo en el código.
 
-Hay un par de métodos de acceso rápido (_keyboard shortcuts_) geniales que van a ayudarte a asegurarte de que las partes importantes de tu código están capturadas en el editor:
+Hay un par de métodos abreviados de teclado (_keyboard shortcuts_) geniales que te ayudarán a asegurarte de que las partes importantes de tu código están capturadas en el editor:
 
 1. Presiona Cmd/Ctrl + Shift + F10 para reiniciar RStudio.
 2. Presiona Cmd/Ctrl + Shift + S para volver a ejecutar el _script_ actual.
