@@ -1,32 +1,17 @@
-# (PART) Communicate {-}
 
-# Introduction {#communicate-intro}
+Comunicando
+Introducción 
+Hasta aquí, hemos aprendido a usar las herramientas para importar tus datos en R, ordenarlos de una manera conveniente para el análisis, y luego interpretarlos a través de su transformación, visualización y modelado. Sin embargo, no importa lo bien que esté hecho tu análisis si no puedes explicarlo de manera sencilla a otros: es decir, que es necesario comunicar tus resultados.
 
-So far, you've learned the tools to get your data into R, tidy it into a form convenient for analysis, and then understand your data through transformation, visualisation and modelling. However, it doesn't matter how great your analysis is unless you can explain it to others: you need to __communicate__ your results.
+La comunicación de resultados es el tema de los siguientes cuatro capítulos.
 
-```{r echo = FALSE, out.width = "75%"}
-knitr::include_graphics("diagrams/data-science-communicate.png")
-```
+* En [el capítulo: R Markdown], aprenderás sobre dicho paquete, el cual es una herramienta para integrar texto, código y resultados. Puedes usarlo en modo notebook, es decir, en un entorno interactivo de ejecución de código para la comunicación de analista-a-analista, y en modo reporte para la comunicación de analista-a-tomadores-de-decisión. Gracias al potencial de los formatos de R Markdown, incluso puedes usar el mismo documento para ambos propósitos.
 
-Communication is the theme of the following four chapters:
+* En [el capítulo: Gráficos para la comunicación], aprenderás cómo convertir tus gráficos exploratorios en gráficos explicativos,
+los cuales ayudarán a quien ve tu análisis por primera vez a comprender de qué se trata de manera fácil y sencilla.
 
-* In [R Markdown], you will learn about R Markdown, a tool for integrating
-  prose, code, and results. You can use R Markdown in notebook mode for 
-  analyst-to-analyst communication, and in report mode for 
-  analyst-to-decision-maker communication. Thanks to the power of R Markdown
-  formats, you can even use the same document for both purposes.
-  
-* In [Graphics for communication], you will learn how to take your exploratory
-  graphics and turn them into expository graphics, graphics that help the
-  newcomer to your analysis understand what's going on as quickly and 
-  easily as possible.
-  
-* In [R Markdown formats], you'll learn a little about the many other varieties
-  of outputs you can produce using R Markdown, including dashboards, websites,
-  and books.
-  
-* We'll finish up with [R Markdown workflow], where you'll learn about the
-  "analysis notebook" and how to systematically record your successes and 
-  failures so that you can learn from them.
+* En [el capítulo: Formatos de R Markdown], aprenderás un poco sobre la gran variedad de salidas que puedes generar usando la librería R Markdown, incluyendo dashboards (tableros de control), sitios web, y libros.
 
-Unfortunately, these chapters focus mostly on the technical mechanics of communication, not the really hard problems of communicating your thoughts to other humans. However, there are lot of other great books about communication, which we'll point you to at the end of each chapter.
+* Terminaremos con [el flujo de trabajo de R Markdown], donde aprenderás sobre "analysis notebook", en otras palabras, aprenderás sobre el modo notebook para realizar el análisis y registrar sistemáticamente tus logros y fallas para que puedas aprender de ellos. 
+
+Desafortunadamente, estos capítulos se enfocan principalmente en la parte técnica de la comunicación, y no en los verdaderos grandes problemas de comunicar tus pensamientos a otras personas. Sin embargo, existe una gran cantidad de excelentes libros que abordan esta problemática, cuyas referencias estarán disponibles al final de cada capítulo.
