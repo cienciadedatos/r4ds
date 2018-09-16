@@ -1,85 +1,85 @@
 # Flujo de trabajo: proyectos
 
-Llegar· el dÌa en que tendr·s que salir de R, ir a hacer otra cosa y volver a tu an·lisis al dÌa siguiente. O tal vez llegar· un dÌa en que estÈs trabajando simult·neamente en m˙ltiples an·lisis estadÌsticos en R, y quieras mantenerlos separados. Un dÌa quiz· tendr·s que importar datos del mundo exterior y exportar resultados numÈricos y gr·ficas creados en R. Para manejar estas situaciones de la vida real, tienes que tomar dos decisiones:
+Llegar√° el d√≠a en que tendr√°s que salir de R, ir a hacer otra cosa y volver a tu an√°lisis al d√≠a siguiente. O tal vez llegar√° un d√≠a en que est√©s trabajando simult√°neamente en m√∫ltiples an√°lisis estad√≠sticos en R, y quieras mantenerlos separados. Un d√≠a quiz√° tendr√°s que importar datos del mundo exterior y exportar resultados num√©ricos y gr√°ficas creados en R. Para manejar estas situaciones de la vida real, tienes que tomar dos decisiones:
 
-1.  øQuÈ parte de tu an·lisis es "real"? Es decir, øquÈ vas a guardar como registro permanente de lo sucedido durante el an·lisis?
+1.  ¬øQu√© parte de tu an√°lisis es "real"? Es decir, ¬øqu√© vas a guardar como registro permanente de lo sucedido durante el an√°lisis?
 
-2.  øDÛnde "vive" tu an·lisis?
+2.  ¬øD√≥nde "vive" tu an√°lisis?
 
-## øQuÈ es real?
+## ¬øQu√© es real?
 
-Como usuaria de R principiante, est· bien que consideres "real" tu ambiente (esto es, los objetos listados en el panel). Sin embargo, a largo plazo tendr·s una mejor experiencia usando R si consideras que tus _scripts_ son "reales". 
+Como usuaria de R principiante, est√° bien que consideres "real" tu ambiente (esto es, los objetos listados en el panel). Sin embargo, a largo plazo tendr√°s una mejor experiencia usando R si consideras que tus _scripts_ son "reales". 
 
-Con tus _scripts_ de R (y tus archivos con datos) puedes volver a crear el ambiente. °Es mucho m·s difÌcil volver a crear tus _scripts_ a partir de tu ambiente! Para hacerlo, tendrÌas que reescribir muchas lÌneas de cÛdigo de memoria (cometiendo errores durante el proceso), o analizar con muchÌsima atenciÛn tu historia de R.  
+Con tus _scripts_ de R (y tus archivos con datos) puedes volver a crear el ambiente. ¬°Es mucho m√°s dif√≠cil volver a crear tus _scripts_ a partir de tu ambiente! Para hacerlo, tendr√≠as que reescribir muchas l√≠neas de c√≥digo de memoria (cometiendo errores durante el proceso), o analizar con much√≠sima atenci√≥n tu historia de R.  
 
-Para promover este comportamiento, te recomiendo que configures a RStudio para que no guarde tu espacio de trabajo (_workspace_ en inglÈs) entre sesiones:
+Para promover este comportamiento, te recomiendo que configures a RStudio para que no guarde tu espacio de trabajo (_workspace_ en ingl√©s) entre sesiones:
 
 ```{r, echo = FALSE, out.width = "75%"}
 knitr::include_graphics("screenshots/rstudio-workspace.png")
 ```
 
-Esto te va a hacer sufrir a corto plazo, pues cuando reinicies RStudio este no recordar· los resultados del cÛdigo que ejecutaste la ˙ltima vez. Pero este sufrimiento moment·neo te va a salvar de una agonÌa a largo plazo, ya que te va a obligar a capturar en tu cÛdigo todas las interacciones importantes. No hay nada peor que descubrir tres meses m·s tarde que sÛlo guardaste los resultados de un c·lculo importante en tu espacio de trabajo, y no el c·lculo en sÌ en el cÛdigo.
+Esto te va a hacer sufrir a corto plazo, pues cuando reinicies RStudio este no recordar√° los resultados del c√≥digo que ejecutaste la √∫ltima vez. Pero este sufrimiento moment√°neo te va a salvar de una agon√≠a a largo plazo, ya que te va a obligar a capturar en tu c√≥digo todas las interacciones importantes. No hay nada peor que descubrir tres meses m√°s tarde que s√≥lo guardaste los resultados de un c√°lculo importante en tu espacio de trabajo, y no el c√°lculo en s√≠ en el c√≥digo.
 
-Hay un par de mÈtodos abreviados de teclado (_keyboard shortcuts_) geniales que te ayudar·n a asegurarte de que las partes importantes de tu cÛdigo est·n capturadas en el editor:
+Hay un par de m√©todos abreviados de teclado (_keyboard shortcuts_) geniales que te ayudar√°n a asegurarte de que las partes importantes de tu c√≥digo est√°n capturadas en el editor:
 
 1. Presiona Cmd/Ctrl + Shift + F10 para reiniciar RStudio.
 2. Presiona Cmd/Ctrl + Shift + S para volver a ejecutar el _script_ actual.
 
-Yo uso este patrÛn cientos de veces a la semana. 
+Yo uso este patr√≥n cientos de veces a la semana. 
 
-## øDÛnde vive tu an·lisis?
+## ¬øD√≥nde vive tu an√°lisis?
 
-R posee el poderoso concepto de __directorio de trabajo__ (_working directory_ en inglÈs). AquÌ es donde R busca los archivos que le pides que lea para ti, y donde colocar· todos los archivos que le pidas que guarde. RStudio muestra tu directorio de trabajo actual en la parte superior de la consola: 
+R posee el poderoso concepto de __directorio de trabajo__ (_working directory_ en ingl√©s). Aqu√≠ es donde R busca los archivos que le pides que lea para ti, y donde colocar√° todos los archivos que le pidas que guarde. RStudio muestra tu directorio de trabajo actual en la parte superior de la consola: 
 
 ```{r, echo = FALSE, out.width = "50%"}
 knitr::include_graphics("screenshots/rstudio-wd.png")
 ```
 
-Puedes mostrar esto en cÛdigo R ejecutando el comando `getwd()` (en inglÈs _get working directory_, que significa _obtener directorio de trabajo_ :
+Puedes mostrar esto en c√≥digo R ejecutando el comando `getwd()` (en ingl√©s _get working directory_, que significa _obtener directorio de trabajo_ :
 
 ```{r eval = FALSE}
 getwd()
 #> [1] "/Users/hadley/Documents/r4ds/r4ds"
 ```
 
-Como usuaria principiante de R, est· bien que tu directorio de inicio, documentos o cualquier otro directorio en tu computadora sea el directorio de trabajo de R. Pero est·s en el capÌtulo seis de este libro, y ya no eres una novata. Pronto deberÌas dar el siguiente paso y comenzar a organizar tus proyectos analÌticos en directorios, y una vez trabajando en un proyecto, definir el directorio de trabajo de R como el directorio asociado a dicho proyecto.
+Como usuaria principiante de R, est√° bien que tu directorio de inicio, documentos o cualquier otro directorio en tu computadora sea el directorio de trabajo de R. Pero est√°s en el cap√≠tulo seis de este libro, y ya no eres una novata. Pronto deber√≠as dar el siguiente paso y comenzar a organizar tus proyectos anal√≠ticos en directorios, y una vez trabajando en un proyecto, definir el directorio de trabajo de R como el directorio asociado a dicho proyecto.
 
-__No lo recomiendo__, pero tambiÈn es posible definir el directorio de trabajo desde R:
+__No lo recomiendo__, pero tambi√©n es posible definir el directorio de trabajo desde R:
 
 ```{r eval = FALSE}
 setwd("/ruta/a/mi/InteresanteProyecto")
 ```
 
-Pero nunca deberÌas hacerlo de esta forma, pues existe una mejor manera: y con esto estar·s en el camino correcto a manejar tu trabajo en R como un experto.
+Pero nunca deber√≠as hacerlo de esta forma, pues existe una mejor manera: y con esto estar√°s en el camino correcto a manejar tu trabajo en R como un experto.
 
 ## Rutas y directorios
 
-Las rutas (del inglÈs _paths_) y los directorios son un poco complicados porque existen dos estilos b·sicos de rutas: Mac/Linux y Windows. Las tres diferencias principales entre estos estilos son:
+Las rutas (del ingl√©s _paths_) y los directorios son un poco complicados porque existen dos estilos b√°sicos de rutas: Mac/Linux y Windows. Las tres diferencias principales entre estos estilos son:
 
-1.  La diferencia m·s importante es cÛmo separas los componentes de la ruta. 
+1.  La diferencia m√°s importante es c√≥mo separas los componentes de la ruta. 
     Mac y Linux usan barras (_slash_) (p. ej. `graficos/diamantes.pdf`) y Windows
     usa barras invertidas (_backslash_) (p. ej. `graficos\diamantes.pdf`). R puede trabajar con ambos tipos
-    (sin importar quÈ plataforma estÈs usando actualmente), pero desafortunadamente,
+    (sin importar qu√© plataforma est√©s usando actualmente), pero desafortunadamente,
     las barras invertidas tienen un significado especial en R, y para poder escribir una barra invertida 
-    en la ruta, °tendr·s que teclear dos barras invertidas! Eso hace que la vida sea frustrante,
-    asÌ que recomiendo es siempre usar el estilo Linux/Mac con las barras ("/").
+    en la ruta, ¬°tendr√°s que teclear dos barras invertidas! Eso hace que la vida sea frustrante,
+    as√≠ que recomiendo es siempre usar el estilo Linux/Mac con las barras ("/").
 
-2.  Las rutas absolutas (es decir, las rutas que te llevan a la misma ubicaciÛn sin importar 
+2.  Las rutas absolutas (es decir, las rutas que te llevan a la misma ubicaci√≥n sin importar 
     tu directorio de trabajo) lucen diferentes. En Windows dichas rutas comienzan con la letra 
     del disco (p. ej. `C:`) o dos barras invertidas (p. ej. `\\nombredelservidor`) y en 
-    Mac/Linux comienzan con una barra "/" (p. ej. `/usuarios/hadley`). __Nunca__ deberÌas
+    Mac/Linux comienzan con una barra "/" (p. ej. `/usuarios/hadley`). __Nunca__ deber√≠as
     usar rutas absolutas en tus _scripts_, ya que afectan negativamente el proceso de compartir archivos:
-    nadie m·s va a tener exactamente la misma configuraciÛn de directorios y fÛlders que t˙. 
+    nadie m√°s va a tener exactamente la misma configuraci√≥n de directorios y f√≥lders que t√∫. 
 
-3.  La ˙ltima diferencia es la ubicaciÛn a la que `~` se refiere. `~` es un
+3.  La √∫ltima diferencia es la ubicaci√≥n a la que `~` se refiere. `~` es un
     conveniente acceso directo a tu directorio personal. Windows no cuenta realmente con la
-    nociÛn de un directorio personal, asÌ que se refiere a tu directorio de documentos.
+    noci√≥n de un directorio personal, as√≠ que se refiere a tu directorio de documentos.
 
 ## Proyectos en RStudio
 
-Los expertos de R mantienen todos los archivos asociados a un proyecto en un mismo lugar --- datos de entrada, _scripts_, resultados, gr·ficos. Esta es una pr·ctica tan acertada y com˙n que RStudio cuenta con soporte integrado para esto por medio de los __proyectos__.   
+Los expertos de R mantienen todos los archivos asociados a un proyecto en un mismo lugar --- datos de entrada, _scripts_, resultados, gr√°ficos. Esta es una pr√°ctica tan acertada y com√∫n que RStudio cuenta con soporte integrado para esto por medio de los __proyectos__.   
 
-Hagamos un proyecto para que puedas usarlo mientras trabajas con el resto de este libro. Haz clic en Archivo > Nuevo Proyecto, y despuÈs:
+Hagamos un proyecto para que puedas usarlo mientras trabajas con el resto de este libro. Haz clic en Archivo > Nuevo Proyecto, y despu√©s:
 
 ```{r, echo = FALSE, out.width = "50%"}
 knitr::include_graphics("screenshots/rstudio-project-1.png")
@@ -87,18 +87,18 @@ knitr::include_graphics("screenshots/rstudio-project-2.png")
 knitr::include_graphics("screenshots/rstudio-project-3.png")
 ```
 
-Escribe `r4ds` como nombre de tu proyecto y piensa en quÈ _subdirectorio_ quieres guardar el proyecto. Si no lo guardas en una ubicaciÛn razonable, °ser· difÌcil encontrarlo en el futuro!
+Escribe `r4ds` como nombre de tu proyecto y piensa en qu√© _subdirectorio_ quieres guardar el proyecto. Si no lo guardas en una ubicaci√≥n razonable, ¬°ser√° dif√≠cil encontrarlo en el futuro!
 
-Una vez que hayas terminado con este proceso, tendr·s un nuevo proyecto en RStudio para este libro. Verifica que el directorio "personal" de tu proyecto sea el actual directorio de trabajo:
+Una vez que hayas terminado con este proceso, tendr√°s un nuevo proyecto en RStudio para este libro. Verifica que el directorio "personal" de tu proyecto sea el actual directorio de trabajo:
 
 ```{r eval = FALSE}
 getwd()
 #> [1] /Usuarios/hadley/Documentos/r4ds/r4ds
 ```
 
-Siempre que hagas referencia a un archivo con una ruta relativa, RStudio lo buscar· en este directorio. 
+Siempre que hagas referencia a un archivo con una ruta relativa, RStudio lo buscar√° en este directorio. 
 
-Ahora teclea los siguientes comandos en el editor, luego guarda el archivo como "diamantes.R". Ahora ejecuta el _script_ completo; esto guardar· un archivo PDF y un archivo CSV en el directorio de tu proyecto. No te preocupes por los detalles, aprender·s acerca de ellos m·s adelante en este libro.
+Ahora teclea los siguientes comandos en el editor, luego guarda el archivo como "diamantes.R". Ahora ejecuta el _script_ completo; esto guardar√° un archivo PDF y un archivo CSV en el directorio de tu proyecto. No te preocupes por los detalles, aprender√°s acerca de ellos m√°s adelante en este libro.
 
 ```{r toy-line, eval = FALSE}
 library(tidyverse)
@@ -110,22 +110,22 @@ ggsave("diamantes.pdf")
 write_csv(diamantes, "diamantes.csv")
 ```
 
-Cierra RStudio. Inspecciona el fÛlder asociado a tu proyecto --- verifica que el archivo `.Rproj` estÈ allÌ. Haz doble clic en ese archivo para re-abrir el proyecto. Nota que al hacer esto, vuelves al punto donde estabas justo antes de cerrar RStudio: es el mismo directorio de trabajo e historial de comandos, y todos los archivos con los que estabas trabajando siguen abiertos. Sin embargo, dado que seguiste mis instrucciones anteriores, el ambiente habr· sido limpiado y ser· completamente nuevo, garantizando empezar desde cero. 
+Cierra RStudio. Inspecciona el f√≥lder asociado a tu proyecto --- verifica que el archivo `.Rproj` est√© all√≠. Haz doble clic en ese archivo para re-abrir el proyecto. Nota que al hacer esto, vuelves al punto donde estabas justo antes de cerrar RStudio: es el mismo directorio de trabajo e historial de comandos, y todos los archivos con los que estabas trabajando siguen abiertos. Sin embargo, dado que seguiste mis instrucciones anteriores, el ambiente habr√° sido limpiado y ser√° completamente nuevo, garantizando empezar desde cero. 
 
-Seg˙n tu sistema operativo y de la manera que prefieras, busca en tu computadora el archivo `diamantes.pdf`, y encontrar·s el archivo PDF (lo que no es precisamente una sorpresa), pero _tambiÈn el script que lo creÛ_ (`diamantes.R`). °Esta es una ventaja increÌble! Un dÌa vas a querer crear un gr·fico o simplemente entender de dÛnde vino. Si siempre guardas gr·ficos por medio de _comandos en cÛdigo_ y nunca con el ratÛn o el portapapeles (del inglÈs _clipboard_),  °ser·s capaz de reproducir f·cilmente trabajo pasado!
+Seg√∫n tu sistema operativo y de la manera que prefieras, busca en tu computadora el archivo `diamantes.pdf`, y encontrar√°s el archivo PDF (lo que no es precisamente una sorpresa), pero _tambi√©n el script que lo cre√≥_ (`diamantes.R`). ¬°Esta es una ventaja incre√≠ble! Un d√≠a vas a querer crear un gr√°fico o simplemente entender de d√≥nde vino. Si siempre guardas gr√°ficos por medio de _comandos en c√≥digo_ y nunca con el rat√≥n o el portapapeles (del ingl√©s _clipboard_),  ¬°ser√°s capaz de reproducir f√°cilmente trabajo pasado!
 
 ## Resumen
 
-En resumen, los proyectos en RStudio te ofrecen la oportunidad de mantener un flujo de trabajo consistente que te ser· de mucha utilidad en el futuro:
+En resumen, los proyectos en RStudio te ofrecen la oportunidad de mantener un flujo de trabajo consistente que te ser√° de mucha utilidad en el futuro:
 
-* Crea un proyecto RStudio para cada proyecto de an·lisis de datos. 
+* Crea un proyecto RStudio para cada proyecto de an√°lisis de datos. 
 
-* MantÈn los archivos ahÌ; ya hablaremos de cÛmo leerlos en R en el capÌtulo [data import].
+* Mant√©n los archivos ah√≠; ya hablaremos de c√≥mo leerlos en R en el cap√≠tulo [data import].
 
-* Conserva los _scripts_ ahÌ tambiÈn; edÌtalos, ejecut·los por partes o en su totalidad.
+* Conserva los _scripts_ ah√≠ tambi√©n; ed√≠talos, ejecut√°los por partes o en su totalidad.
 
-* Guarda todos los resultados de tu trabajo (gr·ficos y sets de datos limpios) ahÌ.
+* Guarda todos los resultados de tu trabajo (gr√°ficos y sets de datos limpios) ah√≠.
 
 * Siempre usa rutas relativas, nunca rutas absolutas.
 
-Todo lo que necesites siempre estar· concentrado en una sola ubicaciÛn, y organizado por separado de los otros proyectos en los que estÈs trabajando.
+Todo lo que necesites siempre estar√° concentrado en una sola ubicaci√≥n, y organizado por separado de los otros proyectos en los que est√©s trabajando.
