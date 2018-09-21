@@ -3,7 +3,8 @@
 
 # Introducción {#domar datos -intro}
 
-En esta parte del libro, aprenderás cómo domar datos: el arte de tener tus datos en R de una forma conveniente para su visualización y modelado. La doma de datos es muy importante: ¡sin ella no puedes trabajar con tus propios datos! Existen tres partes principales para la doma de datos:  
+En esta parte del libro, aprenderás cómo domar datos: el arte de tener tus datos en R de una forma conveniente para su visualización y modelado. La doma de datos es muy importante: ¡sin ella no puedes trabajar con tus propios datos! 
+La doma de datos está compuesta por tres partes principales:  
 
 ```{r echo = FALSE, out.width = "75%"}
 knitr::include_graphics("diagrams/data-science-wrangle.png")
