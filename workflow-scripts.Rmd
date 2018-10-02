@@ -1,22 +1,22 @@
 ---
 output:
-  word_document: default
+  pdf_document: default
   html_document: default
+  word_document: default
 ---
 # Flujo de trabajo: *Scripts*
 
-Hasta ahora estuviste utilizando la consola para ejecutar código. Ese es un buen punto de partida, pero verás que se 
-vuelve estrecho rápidamente a medida que creas gráficos de **ggplot2** más complejos y *pipes* (/paip/, del inglés, tubo) en **dplyr**. Para tener más espacio de trabajo, una buena idea es usar el editor de *script*. Ábrelo ya sea haciendo clic en el menú de Archivo (*File*), seleccionando Nuevo Archivo (*New File*), luego Script de R (*R Script*), o utilizando el atajo del teclado Cmd/Ctrl + Shift + N. Ahora verás cuatro paneles: 
+Hasta ahora estuviste utilizando la consola para ejecutar código. Ese es un buen punto de partida, pero verás que se vuelve incómodo rápidamente a medida que creas gráficos de **ggplot2** más complejos y *pipes* (/paip/, del inglés, tubo) en **dplyr**. Para tener más espacio de trabajo, una buena idea es usar el editor de *script*. Ábrelo ya sea haciendo clic en el menú de Archivo (*File*), seleccionando Nuevo Archivo (*New File*), luego Script de R (*R Script*), o utilizando el atajo del teclado `Cmd/Ctrl` + `Shift` + `N`. Ahora verás cuatro paneles: 
 ```{r echo = FALSE, out.width = "75%"}
 knitr::include_graphics("diagrams/rstudio-editor.png")
 ```
-El editor de *script* es un excelente espacio para colocar el código que te interesa. Continúa experimentando en la consola, pero una vez que has escrito un código que funciona y hace lo que quieres, colócalo en el editor de *script*. Rstudio guardará automáticamente los contenidos del editor cuando salgas del programa, y los cargará automáticamente cuando vuelvas a abrirlo. De todos modos, es una buena idea que guardes los *scripts* regularmente y para respaldarlos.
+El editor de *script* es un excelente espacio para colocar el código que te importa. Continúa experimentando en la consola, pero una vez que has escrito un código que funciona y hace lo que quieres, colócalo en el editor de *script*. Rstudio guardará automáticamente los contenidos del editor cuando salgas del programa, y los cargará automáticamente cuando vuelvas a abrirlo. De todas formas, es una buena idea que guardes los *scripts* regularmente y para respaldarlos.
 
 
 ## Ejecutando código
 
 
-El editor de *script* es también un excelente espacio para desarrollar gráficos de **ggplot2** complejos o largas secuencias de manupulación con **dplyr**. La clave para utilizar el editor de *script* efectivamente es memorizar uno de los atajos del teclado más importantes: Cmd/Ctrl + Enter. Esto ejecuta la expresión actual de R en la consola. Por ejemplo, toma el código de abajo. Si tu cursor está sobre XX, presionar Cmd/Ctrl + Enter correrá el comando completo que genera `no_cancelado`. También moverá el cursor al siguiente enunciado (que comienza con `no_cancelado %>%`). Esto facilita el correr todo tu *script* presionando repetidamente Cmd/Ctrl + Enter.
+El editor de *script* es también un excelente espacio para desarrollar gráficos de **ggplot2** complejos o largas secuencias de manipulación con **dplyr**. La clave para utilizar el editor de *script* efectivamente es memorizar uno de los atajos del teclado más importantes: `Cmd/Ctrl` + `Enter`. Esto ejecuta la expresión actual de R en la consola. Por ejemplo, toma el código de abajo. Si tu cursor está sobre XX, presionar `Cmd/Ctrl` + `Enter` correrá el comando completo que genera `no_cancelado`. También moverá el cursor al siguiente enunciado (que comienza con `no_cancelado %>%`). Esto facilita el correr todo tu *script* presionando repetidamente `Cmd/Ctrl` + `Enter`.
 
 
 ```{r, eval = FALSE}
@@ -31,7 +31,7 @@ no_cancelado %>%
   summarise(media = mean(atraso_salida))
 ```
 
-En lugar de correr expresión por expresión, también puedes ejecutar el *script* completo en un paso: Cmd/Ctrl + Shift + S. Hacer esto regularmente es una buena forma de verificar que has capturado todas las partes importantes de tu código en el *script*.
+En lugar de correr expresión por expresión, también puedes ejecutar el *script* completo en un paso: `Cmd/Ctrl` + `Shift` + `s`. Hacer esto regularmente es una buena forma de verificar que has capturado todas las partes importantes de tu código en el *script*.
 Te recomiendo que siempre comiences tu *script* cargando los paquetes que necesitas. De este modo, si compartes tu código con otras personas, quienes lo utilicen pueden fácilmente ver qué paquetes necesitan instalar. Fíjate, sin embargo, que nunca deberías incluir `install.packages()` (del inglés, instalar paquetes)  o `setwd()` (del inglés  *set working directory*, establecer directorio de trabajo) en un *script* que compartes. ¡Es muy antisocial cambiar la configuración en la computadora de otra persona!
 
 Cuando trabajes en los capítulos que siguen, te sugiero comenzar en el editor y practicar los atajos de tu teclado.  Con el tiempo, enviar código a la consola de esta forma se volverá tan natural que ni siquiera tendrás que pensarlo.
@@ -59,9 +59,7 @@ knitr::include_graphics("screenshots/rstudio-diagnostic-warn.png")
 
 ## Práctica
 
-1.  Visita la cuenta de Twitter de RStudio Tips, <https://twitter.com/rstudiotips>, 
-y encuentra algún *tip* que parezca interesante. Practica utilizándolo.
+1.  Visita la cuenta de Twitter de RStudio Tips, <https://twitter.com/rstudiotips>, y encuentra algún *tip* que parezca interesante. Practica utilizándolo.
 
-2. ¿Qué otros errores comunes reportarán los diagnósticos de RStudio? Lee
-    <https://support.rstudio.com/hc/en-us/articles/205753617-Code-Diagnostics> para descubrirlo.
+2. ¿Qué otros errores comunes reportarán los diagnósticos de RStudio? Lee <https://support.rstudio.com/hc/en-us/articles/205753617-Code-Diagnostics> para descubrirlo.
     

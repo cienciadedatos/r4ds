@@ -14,3 +14,4 @@ bookdown*
 tmp-pdfcrop-*
 figures
 .idea/
+import traduccion.Rmd
