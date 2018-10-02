@@ -100,7 +100,7 @@ vuelos %>%
   mutate(salida = make_datetime(anio, mes, dia, hora, minuto))
 ```
 
-Hagamos esto mismo para cada una de las cuatro columnas de tiempo en `vuelos`. Las horas están representadas en un formato ligeramente más extraño, así que usamos el módulo aritmético para extraer los componentes de horas y minutos. Una vez que hayamos creado las variables `date-time`, nos centraremos en las variables que usaremos por el resto del capítulo.
+Hagamos esto mismo para cada una de las cuatro columnas de tiempo en `vuelos`. Las horas están representadas en un formato ligeramente más extraño, así que usamos el módulo aritmético para extraer los componentes de horas y minutos. Una vez que hayamos creado las variables `date-time`, nos centraremos en las variables que usaremos por el resto del capítulo^[NdT: El último select de esta parte del código difiere de la obra original ya que el orden de las palabras *scheduled* y *time* en el idioma inglés difiere del castellano].
 
 ```{r}
 hacer_fechahora_100 <- function(anio, mes, dia, tiempo) {
@@ -115,7 +115,7 @@ vuelos_dt <- vuelos %>%
     salida_programada = hacer_fechahora_100(anio, mes, dia, salida_programada),
     llegada_programada = hacer_fechahora_100(anio, mes, dia, llegada_programada)
   ) %>% 
-  select(origen, destino, starts_with("atraso"), starts_with("horario"))
+  select(origen, destino, starts_with("atraso"), starts_with("horario"), ends_with("programada"))
 
 vuelos_dt
 ```
