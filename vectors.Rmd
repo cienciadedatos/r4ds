@@ -19,7 +19,7 @@ library(tidyverse)
 There are two types of vectors:
 
 1. _Hay dos tipos de vectores:
-1.	Vectores atómicos, de los cuales existen seis tipos: lógico o booleano, entero, doble o real, carácter, complejo y raw (que consisten en datos sin procesar). Los vectores de tipo  entero y doble son ampliamente conocidos como vectores númericos.
+1.	Vectores atómicos, de los cuales existen seis tipos: lógico o booleano, entero, doble o real, caracter, complejo y raw (que consisten en datos sin procesar). Los vectores de tipo  entero y doble son ampliamente conocidos como vectores númericos.
 2.	Las listas, las cuales son denominadas en ciertas ocasiones como vectores recursivos debido a que pueden contener otras listas.. 
 
 La diferencia principal entre vectores atómicos y listas es que los vectores atomicos son homogéneos, mientras las listas pueden ser heterogéneas. Existe, otro objeto relacionado: Null (nulo). El nulo es a menudo usado para representar la ausencia de un vector (como el opuesto a NA el cual es usado para representar la ausencia de un valor en un vector.) Null típicamente se comporta como un vector de longitud cero 0. Figura @ref (fig:datatypes) resume las interrelaciones.
@@ -207,20 +207,17 @@ Esto es generalmente lo más útil cuando estás trabajando con vectores y "esca
 sample(10) + 100 (del inglés muestreo)
 runif(10) > 0.5
 ```
-
 En R, las operaciones matemáticas básicas funcionan con vectores. Lo que significa que no necesitarás la ejecución de una interación explicita cuando realices  cálculos matemáticos sencillos.
 Es intuitivo lo que debería pasar si agregas dos vectores de la misma longitud, o un vector y un "escalar", pero ¿qué sucede si agregas dos vectores de diferentes longitudes?
 
 ```{r}
 1:10 + 1:2
 ```
-
 Aquí, R expandirá el vector de menor longitud a la misma longitud del vector de mayor longitud, a esto es lo que denominamos reciclaje o reutilización de un vector. Esto es una excepción cuando la longitud del vector de mayor longitud no es un múltiplo entero de la longitud del vector más corto:
 
 ```{r}
 1:10 + 1:3
 ```
-
 Mientras el vector reciclado puede ser usado para crear código claro y conciso, también puede ocultar problemas de manera silenciosa. Por esta razón, las funciones vectorizadas en tidyverse mostrarán errores cuando recicles cualquier otra cosa que no sea un escalar. Si quieres reutilzar, necesitarás hacerlo tu mismo con la sentencia `rep()`:
 
 ```{r, error = TRUE}
@@ -230,7 +227,6 @@ tibble(x = 1:4, y = rep(1:2, 2))
 
 tibble(x = 1:4, y = rep(1:2, each = 2))
 ```
-
 ### Nombrando vectores
 
 Todos los tipos de vectores pueden ser nombrados. Puedes asignarles un nombre al momento de crearlos con `c()`:
@@ -244,14 +240,11 @@ O después de la creación con `purrr::set_names()`:
 ```{r}
 set_names(1:3, c("a", "b", "c"))
 ```
-
 Los vectores con nombres son más útiles para subconjuntos, como se describe a continuación.
 
+### Subsetting (Subdivisión o creación de subconjuntos) {#vector-subsetting, subdivisión de vectores}
 
-
-### Subsetting (creación de subconjuntos) {#vector-subsetting,  creación de subconjuntos de vectores}
-
-Hasta ahora hemos usado `dplyr::filter()` para filtrar filas en una TIBBLE. La sentencia `filter()` sólo funciona con TIBBLES, por lo que necesitaremos una nueva herramienta para trabajar con vectores: `[`. `[` representa a la función Subsetting, la cual nos permite crear subconuntos a partir devectores, y se indica como `x[a]`. Existen cuatro tipos de cosas en las que puedes subdividir un vector:
+Hasta ahora hemos usado `dplyr::filter()` para filtrar filas en una TIBBLE. La sentencia `filter()` sólo funciona con TIBBLES, por lo que necesitaremos una nueva herramienta para trabajar con vectores: `[`. `[` representa a la función Subdivisión (Subsetting), la cual nos permite crear subconjuntos o subdivisiones a partir de vectores, y se indica como `x[a]`. Existen cuatro tipos de cosas en las que puedes subdividir un vector:
 
 1.  Un vector numérico contiene sólo enteros. Los enteros deben ser todos positivos, todos negativos, o cero. 
 
@@ -293,7 +286,6 @@ Hasta ahora hemos usado `dplyr::filter()` para filtrar filas en una TIBBLE. La s
  
 1. La subdivisión de un vector lógico mantiene/almacena todos los valores correspondientes al valor `TRUE` `VERDADERO`. Esto es a menudo mayormente útil en conjunto con las funciones de comparación.
 
-    
     ```{r}
     x <- c(10, 3, NA, 5, 8, 1, NA)
     
@@ -304,13 +296,11 @@ Hasta ahora hemos usado `dplyr::filter()` para filtrar filas en una TIBBLE. La s
     x[x %% 2 == 0]
     ```
 1.   Si tienes un vector con nombre, puedes subdivirlo en un vector de tipo caracter.
-    
-    
+     
     ```{r}
     x <- c(abc = 1, def = 2, xyz = 5)
     x[c("xyz", "def")]
-    ```
-    
+    ```  
    Como con los enteros positivos, también puedes usar un vector del tipo caracter para duplicar entradas individuales.
     
 1.  El tipo más sencillo de subsetting es el valor vacío, `x[]`, el cual retorna el valor completo de `x`. Esto no es útil para vectores subdivididos, aunque si lo es para matrices subdivididas(y otras estructuras de grandes dimensiones) ya que te permite seleccionar toda las filas o todas las columnas, dejando el indice en blanco. Por ejemplo, si `x` está en la segunda posición, `x[1, ]` selecciona la primera fila y todas las columnas, y la expresión `x[, -1]` selecciona todas las filas y todas las columnas excepto la primera.
@@ -335,4 +325,209 @@ Hasta ahora hemos usado `dplyr::filter()` para filtrar filas en una TIBBLE. La s
 	1. ¿Por qué `x[-which(x > 0)]` no es lo mismo que `x[x <= 0]`? 
 	1. ¿Qué sucede cuando realizas un subset (subdivisión) con un entero positivo que es mayor que la longitud del vector? ¿Qué sucede cuando realizas un subset (subdivisión) con un nombre que no existe?
 
+## Vectores Recursivos (listas) 
+Las listas son un escalon más en complejidad partiendo de los vectores atómicos, debido a que las listas pueden contener otras listas. Lo cual las hace adecuadas para representar una estructura jerárquica o de tipo árbol. Puedes crear una lista con ´list()´:
+
+x <- list(1, 2, 3) (del inglés lista)
+x
+Un herramienta muy útil para trabajar con listas es ´str()´ ya que se enfoca en la estructura, no en los contenidos. 
+```{r}
+str(x)
+
+x_nombrada <- list(a = 1, b = 2, c = 3)
+str(x_nombrada)
+
+A diferencia de los vectores atómicos, el objeto ´list()´ puede contener una variedad de diferentes objetos:
+
+```{r}
+y <- list("a", 1L, 1.5, TRUE)
+str(y)
+```
+¡Incluso las listas pueden contener otras listas!
+```{r}
+z <- list(list(1, 2), list(3, 4))
+str(z)
+## Visualizando listas
+Para explicar funciones de manipulacion de listas más complicadas, es útil tener una representacion visual de las mismas. Por ejemplo, defino estas tres listas:
+```{r}
+x1 <- list(c(1, 2), c(3, 4))
+x2 <- list(list(1, 2), list(3, 4))
+x3 <- list(1, list(2, list(3)))
+```
+Y a continuación, las grafico:
+```{r, echo = FALSE, out.width = "75%"}
+knitr::include_graphics("diagrams/lists-structure.png")
+```
+Existen tres principios, al momento de observer el gráfico anterior:
+1.	Las listas tienen esquinas redondeadas, en cambio, los vectores atómicos tienen esquinas cuadradas.
+2.	Los hijos son representados dentro de sus listas padres, y tienen un fondo ligeramente más oscuro para facilitar la visualización de la jerarquía.
+3.	No es importante la orientación de los hijos (p.ej. las filas o columnas), entonces utilizaré la orientacion de una fila o columna para almacenar espacio o incluso para ilustrar una propiedad importante en el ejemplo.
+
+Subdivisión (Subsetting)
+Existen tres maneras de subdividir una lista, lo cual ilustraré con una lista denominada ´a´:
+```{r}
+a <- list(a = 1:3, b = "a string", c = pi, d = list(-1, -5))
+```
+El corchete simple ´[´ extrae una sub-lista. Por lo que, el resultado siempre será una lista.
+
+```{r}
+str(a[1:2])
+str(a[4])
+```
+Al igual que con vectores, puedes subdividirla, en un vector lógico, de enteros o caracteres.
+El doble corchete ´[[´ extrae un solo componente de una lista.  Y remueve un nivel de la jerarquía de la lista.
+
+```{r}
+str(a[[1]])
+str(a[[4]])
+```
+El símbolo $ es un atajo para extraer elementos con nombres de una lista.  Este funciona de modo similar al doble corchete´[[´ excepto que en el primer caso no es necesario el uso de comillas dobles.
+
+```{r}
+a$a
+a[["a"]]
+```
+La diferencia entre el corchete simple `[` y el doble `[[` es realmente importante para las listas, porque el doble `[[` profundiza en una lista mientras que el simple `[` retorna una nueva, lista más pequeña. Compara el código y el output de arriba con la representacion visual de la Figura @ref(fig:lists-subsetting).
+
+```{r
+lists-subsetting, echo = FALSE, out.width = "75%", fig.cap = "Subdividir una lista, de manera visual."}
+knitr::include_graphics("diagrams/lists-subsetting.png")
+```
+
+## Listas de Condimentos
+La diferencia entre ambos `[` y `[[` es muy importante, pero es muy fácil confundirlos. Para ayudarte a recordar, permiteme mostrarte un pimientero inusual
+
+
+```{r, echo = FALSE, out.width = "25%"} 
+knitr::include_graphics("images/pepper.jpg")
+```
+Si este pimientero es tu lista `x`, entonces, `x[1] es un pimientero que contiene un simple paquete de pimienta:
+
+```{r, echo = FALSE, out.width = "25%"} 
+knitr::include_graphics("images/pepper-1.jpg")
+``` 
+La expresión `x[2]` luciría del mismo modo, pero podría contener el segundo paquete. La expresión `x[1:2]` sería un pimientero que contiente dos paquetes de pimienta.
+La expresión `x[[1]]` es:
+
+```{r, echo = FALSE, out.width = "25%"} 
+knitr::include_graphics("images/pepper-2.jpg")
+```
+Si quisieras obtener el contenido del paquete de pimiento, necesitarías utilizar la siguiente expresión `x[[1]][[1]:
+
+```{r, echo = FALSE, out.width = "25%"} 
+knitr::include_graphics("images/pepper-3.jpg")
+```
+### Ejercicios
+1.Dibuja las listas siguientes como sets anidados:
+
+```{r 
+    1.	`list(a, b, list(c, d), list(e, f))` 
+    1.	`list(list(list(list(list(list(a))))))` 
+```
+1.¿Qué pasaría si subdividieras un tibble como si fuera una lista? ¿Cuáles son las principales diferencias entre una lista y un tibble?
+
+## Atributos
+Cualquier vector puede contener metadata arbitraria adicional mediante sus atributos. Puedes pensar en los  atributos como una lista de vectores que pueden ser adjuntadas a cualquier otro objeto. Puedes obtener y setear valores de atributos individuales con `attr()` o verlos todos al mismo tiempo con `attributes()`.
+
+```{r} 
+x <- 1:10
+attr(x, "saludo")
+attr(x, "saludo") <- "Hola!"
+attr(x, " despedida") <- "Adiós!"
+attributes(x)
+```
+
+Existen tres atributos muy importantes que son utilizados para implementar partes fundamentals de R:
+1.	Los __Nombres__ son utilizados para nombrar los elementos de un vector.
+2.	Las __Dimensiones__ (o dims, denominación más corta) hacen que un vector se comporte como una matriz o arreglo.
+3.	Una __Clase__ es utilizada para implementar el sistema S3 orientado a objetos.
+A los atributos nombres los vimos arriba, y no cubriremos las dimensiones porque no se usan matrices en este libro. Resta describir el atributo clase, el cual controla como las funciones genéricas funcionan. Las funciones genéricas son clave para la programacion orientada a objetos en R, porque ellas hacen que las funciones se comporten de manera diferente de acuerdo a las diferentes clases de inputs. Una discusión más profunda sobre programacion orientada a objetos no está contemplada en el ámbito de este libro, pero puedes leer más al respecto en el documento R Avanzado en: http://adv-r.had.co.nz/OO-essentials.html#s3.
+Así es como una función genérica típica luce: 
+```{r}
+as.Date
+``` 
+La llamada al método "UseMethod" significa que esta es una función genérica, y llamará a un metódo específico, una función, basada en la clase del primer argumento. (Todos los métodos son funciones; no todas las funciones son métodos). Puedes listar todos los métodos existentes para una función genérica utilizando la función: `methods()`:
+
+```{r}
+methods("as.Date")
+``` 
+Por ejemplo, si `x` es un vector de caracteres, `as.Date()` llamará a `as.Date.character()`; si es un factor, llamará a  `as.Date.factor()`.
+
+Puedes ver la implementación específica de un método con: `getS3method()`:
+
+```{r}
+getS3method("as.Date", "default")
+getS3method("as.Date", "numeric")
+``` 
+Lo mas importante del S3 genérico; sistema OO, es decir, orientado a objetos; es la función `print()`: el cual controla como el objeto es impreso cuando tipeas su nombre en la consola. Otras funciones genéricas importantes son las funciones de subdivisión `[`, `[[`, and `$`.
+
+## Vectores Aumentados
+Los vectores atómicos y las listas son los bloques sobre los que se construyen otros tipos importantes de vectores como los tipos factores y fechas (dates).  A estos vectores , los llamo __ vectores aumentados __, porque son vectores con __attributos__ adicionales, incluyendo la clase. Los vectores aumentados tienen una clase, por ello se comportan de manera diferente a los vectores atómicos sobre los cuales son construidos. En este libro, hacemos uso de cuatro importantes vectores aumentados:
+•	Los Factores
+•	Las Dates (Fechas)
+•	Los Date-times (Fecha-tiempo)
+•	Los Tibbles
+Estos son descriptos a continuación:
+Factores
+Los factores son diseñados para representar datos categoricos que pueden tomar un set fijo de valores posibles, son construidos sobre los enteros, y tienen 
+```{r}
+x <- factor(c("ab", "cd", "ab"), levels = c("ab", "cd", "ef"))
+typeof(x)
+attributes(x)
+```
+### Dates and date-times (Fechas y Fecha – Hora)
+Las vectores del tipo date en R son vectores numéricos que representan el número de días desde el 1° de enero de 1970.
+
+```{r}
+x <- as.Date("1971-01-01")
+unclass(x)
+
+typeof(x)
+attributes(x)
+```
+Los vectores date-time son vectores numéricos de clase `POSIXct` que representan el número de segundos desde el 1° de enero de 1970. (En caso de que te preguntes sobre "POSIXct"; "POSIXct" significa "Portable Operating System Interface, lo que significa “Interfaz portable de sistema operativo"; tiempo de calendario.)
+```{r}
+
+x <- lubridate::ymd_hm("1970-01-01 01:00")
+unclass(x)
+
+typeof(x)
+attributes(x)
+```
+El atributo `tzone` es opcional. Este controla como se muestra la hora, y no hace referencia al tiempo en términos absolutos.
+```{r}
+attr(x, "tzone") <- "US/Pacifico"
+x
+attr(x, "tzone") <- "US/ Oriental"
+x
+```
+Existe otro tipo de vector date-time llamado POSIXlt. Éstos son construidos en  base a listas con nombres (named lists).
+```{r}
+y <- as.POSIXlt(x)
+typeof(y)
+attributes(y)
+```
+
+Los vectores POSIXlts son pocos comunes dentro del paquete tidyverse. Surgen en base a R, porque son necesarios para extraer components específicos de una fecha, como el año o el mes. Desde que el paquete lubridate te provee helpers para efectuar dicha extracción, los vectores POSIXlts no son necesarios. Siempre es más sencillo trabajar con loa vectores POSIXct's, por lo tanto si tenés  un vector POSIXlt, deberías convertirlo a un vector regular del tipo data-time con `lubridate::as_date_time()`.
+
+### Tibbles 
+Los Tibbles son listas aumentadas: los cuales tienen las clases "tbl_df", "tbl" y  "data.frame", y los atributos `names` (para nombrar una columna) y `row.names` (para nombrar una fila):
+```{r}
+tb <- tibble::tibble(x = 1:5, y = 5:1)
+typeof(tb)
+attributes(tb)
+```
+La diferencia entre un tibble y una lista, consiste en que todos los elementos de un data frame deben ser vectores con la misma longitud. Por lo tanto, todas las funciones que utilizan tibbles refuerzan esta condición.
+
+Además, los data.frames tradicionales tienen una estructura muy similar a los tibbles:
+```{r}
+df <- data.frame(x = 1:5, y = 5:1)
+typeof(df)
+attributes(df)
+```
+Se puede decir, que la diferencia principal entre ambos es la clase. Debido a que un tibble incluye el tipo "data.frame" lo que significa que los tibbles heredan el comportamiento regular de un data frame por defecto.
+Ejecicios:
+1.	¿Qué valor retorna la siguiente expresión hms::hms(3600)? ¿Cómo se muestra? ¿Cuál es la tipo primario sobre el cual se basa el vector aumentado? ¿Qué atributos utiliza el mismo?
+2.	Intenta y crea un tibble que tenga columnas con diferentes longitudes ¿Qué es lo que ocurre?
+3.	Teniendo en cuenta 
 
