@@ -42,7 +42,7 @@ getwd()
 #> [1] "/Users/hadley/Documents/r4ds/r4ds"
 ```
 
-Como usuaria principiante de R, está bien que tu directorio de inicio, documentos o cualquier otro directorio en tu computadora sea el directorio de trabajo de R. Pero estás en el capítulo seis de este libro, y ya no eres una novata. Pronto deberías dar el siguiente paso y comenzar a organizar tus proyectos analíticos en directorios, y una vez trabajando en un proyecto, definir el directorio de trabajo de R como el directorio asociado a dicho proyecto.
+Como usuaria principiante de R, está bien que tu directorio _home_ (carpeta personal o de usuario), tu directorio de documentos o cualquier otro directorio en tu computadora sea el directorio de trabajo de R. Pero estás en el capítulo seis de este libro, y ya no eres una novata. Pronto deberías dar el siguiente paso y comenzar a organizar tus proyectos analíticos en directorios, y una vez trabajando en un proyecto, definir el directorio de trabajo de R como el directorio asociado a dicho proyecto.
 
 __No lo recomiendo__, pero también es posible definir el directorio de trabajo desde R:
 
