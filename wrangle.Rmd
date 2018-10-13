@@ -5,7 +5,7 @@
 In this part of the book, you'll learn about data wrangling, the art of getting your data into R in a useful form for visualisation and modelling. Data wrangling is very important: without it you can't work with your own data! There are three main parts to data wrangling:
 
 ```{r echo = FALSE, out.width = "75%"}
-knitr::include_graphics("diagrams/data-science-wrangle.png")
+knitr::include_graphics("diagrams/data-science-wrangle.svg")
 ```
 
 This part of the book proceeds as follows:

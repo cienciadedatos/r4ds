@@ -144,10 +144,10 @@ There are two ways in which this function can fail:
 1.  `df$x` might not exist. There are two potential failure modes:
       
     ```{r, error = TRUE}
-    big_x(mtcars, 10)
-    
-    x <- 1
-    big_x(mtcars, 10)
+big_x(mtcars, 10)
+
+x <- 1
+big_x(mtcars, 10)
     ```
     
     The second failure mode is particularly pernicious because it doesn't 
@@ -164,8 +164,8 @@ There are two ways in which this function can fail:
 1.  `df$threshold` might exist:
     
     ```{r}
-    df <- tibble::tibble(x = 1:10, threshold = 100)
-    big_x(df, 5)
+df <- tibble::tibble(x = 1:10, threshold = 100)
+big_x(df, 5)
     ```
     
     Again, this is bad because it silently gives an unexpected result.
@@ -174,12 +174,14 @@ How can you avoid this problem?  Currently, you need to do this:
 
 ```{r}
 big_x <- function(df, threshold) {
-  if (!"x" %in% names(df)) 
+  if (!"x" %in% names(df)) {
     stop("`df` must contain variable called `x`.", call. = FALSE)
-  
-  if ("threshold" %in% names(df))
+  }
+
+  if ("threshold" %in% names(df)) {
     stop("`df` must not contain variable called `threshold`.", call. = FALSE)
-  
+  }
+
   dplyr::filter(df, x > threshold)
 }
 ```

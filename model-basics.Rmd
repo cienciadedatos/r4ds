@@ -57,7 +57,7 @@ options(na.action = na.warn)
 Lets take a look at the simulated dataset `sim1`, included with the modelr package. It contains two continuous variables, `x` and `y`. Let's plot them to see how they're related:
 
 ```{r}
-ggplot(sim1, aes(x, y)) + 
+ggplot(sim1, aes(x, y)) +
   geom_point()
 ```
 
@@ -69,9 +69,9 @@ models <- tibble(
   a2 = runif(250, -5, 5)
 )
 
-ggplot(sim1, aes(x, y)) + 
-  geom_abline(aes(intercept = a1, slope = a2), data = models, alpha = 1/4) +
-  geom_point() 
+ggplot(sim1, aes(x, y)) +
+  geom_abline(aes(intercept = a1, slope = a2), data = models, alpha = 1 / 4) +
+  geom_point()
 ```
 
 There are 250 models on this plot, but a lot are really bad! We need to find the good models by making precise our intuition that a good model is "close" to the data. We need a way to quantify the distance between the data and a model. Then we can fit the model by finding the value of `a_0` and `a_1` that generate the model with the smallest distance from this data.
@@ -79,17 +79,17 @@ There are 250 models on this plot, but a lot are really bad! We need to find the
 One easy place to start is to find the vertical distance between each point and the model, as in the following diagram. (Note that I've shifted the x values slightly so you can see the individual distances.)
 
 ```{r, echo = FALSE}
-dist1 <- sim1 %>% 
+dist1 <- sim1 %>%
   mutate(
     dodge = rep(c(-1, 0, 1) / 20, 10),
     x1 = x + dodge,
     pred = 7 + x1 * 1.5
   )
 
-ggplot(dist1, aes(x1, y)) + 
+ggplot(dist1, aes(x1, y)) +
   geom_abline(intercept = 7, slope = 1.5, colour = "grey40") +
   geom_point(colour = "grey40") +
-  geom_linerange(aes(ymin = y, ymax = pred), colour = "#3366FF") 
+  geom_linerange(aes(ymin = y, ymax = pred), colour = "#3366FF")
 ```
 
 This distance is just the difference between the y value given by the model (the __prediction__), and the actual y value in the data (the __response__).
@@ -110,7 +110,7 @@ One common way to do this in statistics to use the "root-mean-squared deviation"
 ```{r}
 measure_distance <- function(mod, data) {
   diff <- data$y - model1(mod, data)
-  sqrt(mean(diff ^ 2))
+  sqrt(mean(diff^2))
 }
 measure_distance(c(7, 1.5), sim1)
 ```
@@ -122,7 +122,7 @@ sim1_dist <- function(a1, a2) {
   measure_distance(c(a1, a2), sim1)
 }
 
-models <- models %>% 
+models <- models %>%
   mutate(dist = purrr::map2_dbl(a1, a2, sim1_dist))
 models
 ```
@@ -130,10 +130,10 @@ models
 Next, let's overlay the 10 best models on to the data. I've coloured the models by `-dist`: this is an easy way to make sure that the best models (i.e. the ones with the smallest distance) get the brighest colours.
 
 ```{r}
-ggplot(sim1, aes(x, y)) + 
-  geom_point(size = 2, colour = "grey30") + 
+ggplot(sim1, aes(x, y)) +
+  geom_point(size = 2, colour = "grey30") +
   geom_abline(
-    aes(intercept = a1, slope = a2, colour = -dist), 
+    aes(intercept = a1, slope = a2, colour = -dist),
     data = filter(models, rank(dist) <= 10)
   )
 ```
@@ -152,22 +152,22 @@ Instead of trying lots of random models, we could be more systematic and generat
 grid <- expand.grid(
   a1 = seq(-5, 20, length = 25),
   a2 = seq(1, 3, length = 25)
-  ) %>% 
+) %>%
   mutate(dist = purrr::map2_dbl(a1, a2, sim1_dist))
 
-grid %>% 
+grid %>%
   ggplot(aes(a1, a2)) +
   geom_point(data = filter(grid, rank(dist) <= 10), size = 4, colour = "red") +
-  geom_point(aes(colour = -dist)) 
+  geom_point(aes(colour = -dist))
 ```
 
 When you overlay the best 10 models back on the original data, they all look pretty good:
 
 ```{r}
-ggplot(sim1, aes(x, y)) + 
-  geom_point(size = 2, colour = "grey30") + 
+ggplot(sim1, aes(x, y)) +
+  geom_point(size = 2, colour = "grey30") +
   geom_abline(
-    aes(intercept = a1, slope = a2, colour = -dist), 
+    aes(intercept = a1, slope = a2, colour = -dist),
     data = filter(grid, rank(dist) <= 10)
   )
 ```
@@ -178,8 +178,8 @@ You could imagine iteratively making the grid finer and finer until you narrowed
 best <- optim(c(0, 0), measure_distance, data = sim1)
 best$par
 
-ggplot(sim1, aes(x, y)) + 
-  geom_point(size = 2, colour = "grey30") + 
+ggplot(sim1, aes(x, y)) +
+  geom_point(size = 2, colour = "grey30") +
   geom_abline(intercept = best$par[1], slope = best$par[2])
 ```
 
@@ -202,10 +202,10 @@ These are exactly the same values we got with `optim()`! Behind the scenes `lm()
     generate different simulated datasets. What do you notice about the model? 
     
     ```{r}
-    sim1a <- tibble(
-      x = rep(1:10, each = 3),
-      y = x * 1.5 + 6 + rt(length(x), df = 2)
-    )
+sim1a <- tibble(
+  x = rep(1:10, each = 3),
+  y = x * 1.5 + 6 + rt(length(x), df = 2)
+)
     ```
 
 1.  One way to make linear models more robust is to use a different distance
@@ -213,10 +213,10 @@ These are exactly the same values we got with `optim()`! Behind the scenes `lm()
     mean-absolute distance:
     
     ```{r}
-    measure_distance <- function(mod, data) {
-      diff <- data$y - model1(mod, data)
-      mean(abs(diff))
-    }
+measure_distance <- function(mod, data) {
+  diff <- data$y - model1(mod, data)
+  mean(abs(diff))
+}
     ```
     
     Use `optim()` to fit this model to the simulated data above and compare it 
@@ -227,9 +227,9 @@ These are exactly the same values we got with `optim()`! Behind the scenes `lm()
     a three parameter model like this?
     
     ```{r}
-    model1 <- function(a, data) {
-      a[1] + data$x * a[2] + a[3]
-    }
+model1 <- function(a, data) {
+  a[1] + data$x * a[2] + a[3]
+}
     ```
 
 ## Visualising models
@@ -243,8 +243,8 @@ It's also useful to see what the model doesn't capture, the so-called residuals 
 To visualise the predictions from a model, we start by generating an evenly spaced grid of values that covers the region where our data lies. The easiest way to do that is to use `modelr::data_grid()`. Its first argument is a data frame, and for each subsequent argument it finds the unique variables and then generates all combinations:
 
 ```{r}
-grid <- sim1 %>% 
-  data_grid(x) 
+grid <- sim1 %>%
+  data_grid(x)
 grid
 ```
 
@@ -253,8 +253,8 @@ grid
 Next we add predictions. We'll use `modelr::add_predictions()` which takes a data frame and a model. It adds the predictions from the model to a new column in the data frame:
 
 ```{r}
-grid <- grid %>% 
-  add_predictions(sim1_mod) 
+grid <- grid %>%
+  add_predictions(sim1_mod)
 grid
 ```
 
@@ -275,7 +275,7 @@ The flip-side of predictions are __residuals__. The predictions tells you the pa
 We add residuals to the data with `add_residuals()`, which works much like `add_predictions()`. Note, however, that we use the original dataset, not a manufactured grid. This is because to compute residuals we need actual y values.
 
 ```{r}
-sim1 <- sim1 %>% 
+sim1 <- sim1 %>%
   add_residuals(sim1_mod)
 sim1
 ```
@@ -283,7 +283,7 @@ sim1
 There are a few different ways to understand what the residuals tell us about the model. One way is to simply draw a frequency polygon to help us understand the spread of the residuals:
 
 ```{r}
-ggplot(sim1, aes(resid)) + 
+ggplot(sim1, aes(resid)) +
   geom_freqpoly(binwidth = 0.5)
 ```
 
@@ -292,9 +292,9 @@ This helps you calibrate the quality of the model: how far away are the predicti
 You'll often want to recreate plots using the residuals instead of the original predictor. You'll see a lot of that in the next chapter.
 
 ```{r}
-ggplot(sim1, aes(x, resid)) + 
+ggplot(sim1, aes(x, resid)) +
   geom_ref_line(h = 0) +
-  geom_point() 
+  geom_point()
 ```
 
 This looks like random noise, suggesting that our model has done a good job of capturing the patterns in the dataset.
@@ -325,7 +325,7 @@ The majority of modelling functions in R use a standard conversion from formulas
 
 ```{r}
 df <- tribble(
-  ~y, ~x1, ~x2,
+  ~ y, ~ x1, ~ x2,
   4, 2, 5,
   5, 1, 6
 )
@@ -367,7 +367,7 @@ You might wonder why R also doesn't create a `sexfemale` column. The problem is 
 Fortunately, however, if you focus on visualising predictions you don't need to worry about the exact parameterisation. Let's look at some data and models to make that concrete. Here's the `sim2` dataset from modelr:
 
 ```{r}
-ggplot(sim2) + 
+ggplot(sim2) +
   geom_point(aes(x, y))
 ```
 
@@ -376,8 +376,8 @@ We can fit a model to it, and generate predictions:
 ```{r}
 mod2 <- lm(y ~ x, data = sim2)
 
-grid <- sim2 %>% 
-  data_grid(x) %>% 
+grid <- sim2 %>%
+  data_grid(x) %>%
   add_predictions(mod2)
 grid
 ```
@@ -385,7 +385,7 @@ grid
 Effectively, a model with a categorical `x` will predict the mean value for each category. (Why? Because the mean minimises the root-mean-squared distance.) That's easy to see if we overlay the predictions on top of the original data:
 
 ```{r}
-ggplot(sim2, aes(x)) + 
+ggplot(sim2, aes(x)) +
   geom_point(aes(y = y)) +
   geom_point(data = grid, aes(y = pred), colour = "red", size = 4)
 ```
@@ -393,7 +393,7 @@ ggplot(sim2, aes(x)) +
 You can't make predictions about levels that you didn't observe. Sometimes you'll do this by accident so it's good to recognise this error message:
 
 ```{r, error = TRUE}
-tibble(x = "e") %>% 
+tibble(x = "e") %>%
   add_predictions(mod2)
 ```
 
@@ -402,7 +402,7 @@ tibble(x = "e") %>%
 What happens when you combine a continuous and a categorical variable?  `sim3` contains a categorical predictor and a continuous predictor. We can visualise it with a simple plot:
 
 ```{r}
-ggplot(sim3, aes(x1, y)) + 
+ggplot(sim3, aes(x1, y)) +
   geom_point(aes(colour = x2))
 ```
 
@@ -429,8 +429,8 @@ To visualise these models we need two new tricks:
 Together this gives us:
 
 ```{r}
-grid <- sim3 %>% 
-  data_grid(x1, x2) %>% 
+grid <- sim3 %>%
+  data_grid(x1, x2) %>%
   gather_predictions(mod1, mod2)
 grid
 ```
@@ -438,9 +438,9 @@ grid
 We can visualise the results for both models on one plot using facetting:
 
 ```{r}
-ggplot(sim3, aes(x1, y, colour = x2)) + 
-  geom_point() + 
-  geom_line(data = grid, aes(y = pred)) + 
+ggplot(sim3, aes(x1, y, colour = x2)) +
+  geom_point() +
+  geom_line(data = grid, aes(y = pred)) +
   facet_wrap(~ model)
 ```
 
@@ -449,11 +449,11 @@ Note that the model that uses `+` has the same slope for each line, but differen
 Which model is better for this data? We can take look at the residuals. Here I've facetted by both model and `x2` because it makes it easier to see the pattern within each group.
 
 ```{r}
-sim3 <- sim3 %>% 
+sim3 <- sim3 %>%
   gather_residuals(mod1, mod2)
 
-ggplot(sim3, aes(x1, resid, colour = x2)) + 
-  geom_point() + 
+ggplot(sim3, aes(x1, resid, colour = x2)) +
+  geom_point() +
   facet_grid(model ~ x2)
 ```
 
@@ -467,11 +467,11 @@ Let's take a look at the equivalent model for two continuous variables. Initiall
 mod1 <- lm(y ~ x1 + x2, data = sim4)
 mod2 <- lm(y ~ x1 * x2, data = sim4)
 
-grid <- sim4 %>% 
+grid <- sim4 %>%
   data_grid(
-    x1 = seq_range(x1, 5), 
-    x2 = seq_range(x2, 5) 
-  ) %>% 
+    x1 = seq_range(x1, 5),
+    x2 = seq_range(x2, 5)
+  ) %>%
   gather_predictions(mod1, mod2)
 grid
 ```
@@ -483,8 +483,8 @@ Note my use of `seq_range()` inside `data_grid()`. Instead of using every unique
     output:
     
     ```{r}
-    seq_range(c(0.0123, 0.923423), n = 5)
-    seq_range(c(0.0123, 0.923423), n = 5, pretty = TRUE)
+seq_range(c(0.0123, 0.923423), n = 5)
+seq_range(c(0.0123, 0.923423), n = 5, pretty = TRUE)
     ```
     
 *   `trim = 0.1` will trim off 10% of the tail values. This is useful if the 
@@ -492,39 +492,39 @@ Note my use of `seq_range()` inside `data_grid()`. Instead of using every unique
     values near the center:
     
     ```{r}
-    x1 <- rcauchy(100)
-    seq_range(x1, n = 5)
-    seq_range(x1, n = 5, trim = 0.10)
-    seq_range(x1, n = 5, trim = 0.25)
-    seq_range(x1, n = 5, trim = 0.50)
+x1 <- rcauchy(100)
+seq_range(x1, n = 5)
+seq_range(x1, n = 5, trim = 0.10)
+seq_range(x1, n = 5, trim = 0.25)
+seq_range(x1, n = 5, trim = 0.50)
     ```
     
 *   `expand = 0.1` is in some sense the opposite of `trim()` it expands the 
     range by 10%.
     
     ```{r}
-    x2 <- c(0, 1)
-    seq_range(x2, n = 5)
-    seq_range(x2, n = 5, expand = 0.10)
-    seq_range(x2, n = 5, expand = 0.25)
-    seq_range(x2, n = 5, expand = 0.50)
+x2 <- c(0, 1)
+seq_range(x2, n = 5)
+seq_range(x2, n = 5, expand = 0.10)
+seq_range(x2, n = 5, expand = 0.25)
+seq_range(x2, n = 5, expand = 0.50)
     ```
 
 Next let's try and visualise that model. We have two continuous predictors, so you can imagine the model like a 3d surface. We could display that using `geom_tile()`:
 
 ```{r}
-ggplot(grid, aes(x1, x2)) + 
-  geom_tile(aes(fill = pred)) + 
+ggplot(grid, aes(x1, x2)) +
+  geom_tile(aes(fill = pred)) +
   facet_wrap(~ model)
 ```
 
 That doesn't suggest that the models are very different! But that's partly an illusion: our eyes and brains are not very good at accurately comparing shades of colour. Instead of looking at the surface from the top, we could look at it from either side, showing multiple slices:
 
 ```{r, asp = 1/2}
-ggplot(grid, aes(x1, pred, colour = x2, group = x2)) + 
+ggplot(grid, aes(x1, pred, colour = x2, group = x2)) +
   geom_line() +
   facet_wrap(~ model)
-ggplot(grid, aes(x2, pred, colour = x1, group = x1)) + 
+ggplot(grid, aes(x2, pred, colour = x1, group = x1)) +
   geom_line() +
   facet_wrap(~ model)
 ```
@@ -543,10 +543,10 @@ Again, if you get confused about what your model is doing, you can always use `m
 
 ```{r}
 df <- tribble(
-  ~y, ~x,
-   1,  1,
-   2,  2, 
-   3,  3
+  ~ y, ~ x,
+  1, 1,
+  2, 2,
+  3, 3
 )
 model_matrix(df, y ~ x^2 + x)
 model_matrix(df, y ~ I(x^2) + x)
@@ -586,11 +586,11 @@ mod3 <- lm(y ~ ns(x, 3), data = sim5)
 mod4 <- lm(y ~ ns(x, 4), data = sim5)
 mod5 <- lm(y ~ ns(x, 5), data = sim5)
 
-grid <- sim5 %>% 
-  data_grid(x = seq_range(x, n = 50, expand = 0.1)) %>% 
+grid <- sim5 %>%
+  data_grid(x = seq_range(x, n = 50, expand = 0.1)) %>%
   gather_predictions(mod1, mod2, mod3, mod4, mod5, .pred = "y")
 
-ggplot(sim5, aes(x, y)) + 
+ggplot(sim5, aes(x, y)) +
   geom_point() +
   geom_line(data = grid, colour = "red") +
   facet_wrap(~ model)
@@ -612,8 +612,8 @@ Notice that the extrapolation outside the range of the data is clearly bad. This
     into 0-1 variables.)
     
     ```{r, eval = FALSE}
-    mod1 <- lm(y ~ x1 + x2, data = sim3)
-    mod2 <- lm(y ~ x1 * x2, data = sim3)
+mod1 <- lm(y ~ x1 + x2, data = sim3)
+mod2 <- lm(y ~ x1 * x2, data = sim3)
     ```
 
 1.   For `sim4`,  which of `mod1` and `mod2` is better? I think `mod2` does a 
@@ -626,7 +626,7 @@ Missing values obviously can not convey any information about the relationship b
 
 ```{r}
 df <- tribble(
-  ~x, ~y,
+  ~ x, ~ y,
   1, 2.2,
   2, NA,
   3, 3.5,

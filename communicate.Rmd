@@ -5,7 +5,13 @@ Hasta aquí, hemos aprendido a usar las herramientas para importar tus datos en 
 
 La comunicación de resultados es el tema de los siguientes cuatro capítulos.
 
+<<<<<<< HEAD
+```{r echo = FALSE, out.width = "75%"}
+knitr::include_graphics("diagrams/data-science-communicate.svg")
+```
+=======
 * En [el capítulo: R Markdown], aprenderás sobre dicho paquete, el cual es una herramienta para integrar texto, código y resultados. Puedes usarlo en modo notebook, es decir, en un entorno interactivo de ejecución de código para la comunicación de analista-a-analista, y en modo reporte para la comunicación de analista-a-tomadores-de-decisión. Gracias al potencial de los formatos de R Markdown, incluso puedes usar el mismo documento para ambos propósitos.
+>>>>>>> upstream/traduccion
 
 * En [el capítulo: Gráficos para la comunicación], aprenderás cómo convertir tus gráficos exploratorios en gráficos explicativos,
 los cuales ayudarán a quien ve tu análisis por primera vez a comprender de qué se trata de manera fácil y sencilla.

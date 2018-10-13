@@ -100,7 +100,7 @@ df <- tibble(
   y = true_model(x)
 )
 
-df %>% 
+df %>%
   ggplot(aes(x, y)) +
   geom_point()
 ```
@@ -116,14 +116,14 @@ my_model <- function(df) {
 mod <- my_model(df)
 rmse(mod, df)
 
-grid <- df %>% 
+grid <- df %>%
   expand(x = seq_range(x, 50))
-preds <- grid %>% 
+preds <- grid %>%
   add_predictions(mod, var = "y")
 
-df %>% 
+df %>%
   ggplot(aes(x, y)) +
-  geom_line(data = preds) + 
+  geom_line(data = preds) +
   geom_point()
 ```
 
@@ -141,15 +141,15 @@ fs <- list(
 )
 
 models <- tibble(
-  n = 1:7, 
+  n = 1:7,
   f = fs,
   mod = map(f, lm, data = df),
   rmse = map2_dbl(mod, list(df), rmse)
 )
 
-models %>% 
-  ggplot(aes(n, rmse)) + 
-  geom_line(colour = "grey70") + 
+models %>%
+  ggplot(aes(n, rmse)) +
+  geom_line(colour = "grey70") +
   geom_point(size = 3)
 ```
 
@@ -158,22 +158,22 @@ But do you think this model will do well if we apply it to new data from the sam
 In real-life you can't easily go out and recollect your data. There are two approaches to help you get around this problem. I'll introduce them briefly here, and then we'll go into more depth in the following sections.
 
 ```{r}
-boot <- bootstrap(df, 100) %>% 
+boot <- bootstrap(df, 100) %>%
   mutate(
     mod = map(strap, my_model),
     pred = map2(list(grid), mod, add_predictions)
   )
 
-boot %>% 
-  unnest(pred) %>% 
+boot %>%
+  unnest(pred) %>%
   ggplot(aes(x, pred, group = .id)) +
-  geom_line(alpha = 1/3)
+  geom_line(alpha = 1 / 3)
 ```
 
 It's a little easier to see what's going on if we zoom on the y axis:
 
 ```{r}
-last_plot() + 
+last_plot() +
   coord_cartesian(ylim = c(0, 5))
 ```
 
@@ -184,7 +184,7 @@ Bootstrapping is a useful tool to help us understand how the model might vary if
 The following code generates 100 test-training splits, holding out 20% of the data for testing each time. We then fit a model to the training set, and evaluate the error on the test set:
 
 ```{r}
-cv <- crossv_mc(df, 100) %>% 
+cv <- crossv_mc(df, 100) %>%
   mutate(
     mod = map(train, my_model),
     rmse = map2_dbl(mod, test, rmse)
@@ -195,7 +195,7 @@ cv
 Obviously, a plot is going to help us see distribution more easily. I've added our original estimate of the model error as a white vertical line (where the same dataset is used for both training and testing), and you can see it's very optimistic.
 
 ```{r}
-cv %>% 
+cv %>%
   ggplot(aes(rmse)) +
   geom_ref_line(v = rmse(mod, df)) +
   geom_freqpoly(binwidth = 0.2) +
@@ -205,11 +205,11 @@ cv %>%
 The distribution of errors is highly skewed: there are a few cases which have very high errors. These represent samples where we ended up with a few cases on all with low values or high values of x.  Let's take a look:
 
 ```{r}
-filter(cv, rmse > 1.5) %>% 
-  unnest(map(train, as.data.frame)) %>% 
-  ggplot(aes(x, .id)) + 
-    geom_point() + 
-    xlim(0, 1)
+filter(cv, rmse > 1.5) %>%
+  unnest(map(train, as.data.frame)) %>%
+  ggplot(aes(x, .id)) +
+  geom_point() +
+  xlim(0, 1)
 ```
 
 All of the models that fit particularly poorly were fit to samples that either missed the first one or two or the last one or two observation. Because polynomials shoot off to positive and negative, they give very bad predictions for those values.
@@ -246,7 +246,7 @@ If you get a strange error, it's probably because the modelling function doesn't
 *   `boostrap()` returns a data frame with two columns:
 
     ```{r}
-    bootstrap(df, 3)
+bootstrap(df, 3)
     ```
     
     `strap` gives the bootstrap sample dataset, and `.id` assigns a 
@@ -255,7 +255,7 @@ If you get a strange error, it's probably because the modelling function doesn't
 *   `crossv_mc()` return a data frame with three columns:
 
     ```{r}
-    crossv_mc(df, 3)
+crossv_mc(df, 3)
     ```
     `train` contains the data that you should use to fit (train) the model,
     and `test` contains the data you should use to validate the model. Together,
@@ -270,7 +270,7 @@ One way to capture the quality of the model is to summarise the distribution of 
 ```{r}
 heights <- tibble(readRDS("data/heights.RDS"))
 h <- lm(income ~ height, data = heights)
-h 
+h
 
 qae(h, heights)
 range(heights$income)
@@ -287,7 +287,7 @@ $R^2$ can be interpreted as the amount of variation in the data explained by the
 It's called the $R^2$ because for simple models like this, it's just the square of the correlation between the variables:
 
 ```{r}
-cor(heights$income, heights$height) ^ 2
+cor(heights$income, heights$height)^2
 ```
 
 The $R^2$ is an ok single number summary, but I prefer to think about the unscaled residuals because it's easier to interpret in the context of the original data. As you'll also learn later, it's also a rather optimistic interpretation of the model. Because you're assessing the model using the same data that was used to fit it, it really gives more of an upper bound on the quality of the model, not a fair assessment. 

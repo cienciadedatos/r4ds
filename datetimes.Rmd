@@ -87,15 +87,15 @@ ymd(20170131, tz = "UTC")
 En lugar de una cadena de caracteres simple, a veces tienes los componentes individuales de una fecha/hora esparcidos en múltiples columnas. Esto es lo que tenemos en los datos de vuelos:
 
 ```{r}
-vuelos %>% 
+vuelos %>%
   select(anio, mes, dia, hora, minuto)
 ```
 
 Para crear una fecha y hora desde este tipo de entrada, usa `make_date()` (del inglés, _crear fechas_) para las fechas, o `make_datetime()` (del inglés _crear fecha-hora_) para las fechas-horas:
 
 ```{r}
-vuelos %>% 
-  select(anio, mes, dia, hora, minuto) %>% 
+vuelos %>%
+  select(anio, mes, dia, hora, minuto) %>%
   mutate(salida = make_datetime(anio, mes, dia, hora, minuto))
 ```
 
@@ -106,14 +106,14 @@ hacer_fechahora_100 <- function(anio, mes, dia, tiempo) {
   make_datetime(anio, mes, dia, tiempo %/% 100, tiempo %% 100)
 }
 
-vuelos_dt <- vuelos %>% 
-  filter(!is.na(horario_salida), !is.na(horario_llegada)) %>% 
+vuelos_dt <- vuelos %>%
+  filter(!is.na(horario_salida), !is.na(horario_llegada)) %>%
   mutate(
     horario_salida = hacer_fechahora_100(anio, mes, dia, horario_salida),
     horario_llegada = hacer_fechahora_100(anio, mes, dia, horario_llegada),
     salida_programada = hacer_fechahora_100(anio, mes, dia, salida_programada),
     llegada_programada = hacer_fechahora_100(anio, mes, dia, llegada_programada)
-  ) %>% 
+  ) %>%
   select(origen, destino, starts_with("atraso"), starts_with("horario"), ends_with("programada"), tiempo_vuelo)
 
 vuelos_dt
@@ -122,17 +122,17 @@ vuelos_dt
 Con estos datos, puedo visualizar la distribución de las horas de salida a lo largo del año:
 
 ```{r}
-vuelos_dt %>% 
-  ggplot(aes(horario_salida)) + 
+vuelos_dt %>%
+  ggplot(aes(horario_salida)) +
   geom_freqpoly(binwidth = 86400) # 86400 segundos = 1 día
 ```
 
 O para un solo día:
 
 ```{r}
-vuelos_dt %>% 
-  filter(horario_salida < ymd(20130102)) %>% 
-  ggplot(aes(horario_salida)) + 
+vuelos_dt %>%
+  filter(horario_salida < ymd(20130102)) %>%
+  ggplot(aes(horario_salida)) +
   geom_freqpoly(binwidth = 600) # 600 segundos = 10 minutos
 ```
 
@@ -159,7 +159,7 @@ as_date(365 * 10 + 2)
 1. ¿Qué sucede si analizas una cadena de caracteres que contiene fechas inválidas?
 
     ```{r, eval = FALSE}
-    ymd(c("2010-10-10", "bananas"))
+ymd(c("2010-10-10", "bananas"))
     ```
 
 1. ¿Qué hace el argumento `tzone` (del inglés, _huso horario_ abreviado) para `today()`? ¿Por qué es importante?
@@ -167,11 +167,11 @@ as_date(365 * 10 + 2)
 1. Usa la función de __lubridate__ apropiada para analizar las siguientes fechas:
 
     ```{r}
-    d1 <- "Enero 1, 2010"
-    d2 <- "2015-Mar-07"
-    d3 <- "06-Jun-2017"
-    d4 <- c("Agosto 19 (2015)", "Julio 1 (2015)")
-    d5 <- "12/30/14" # Diciembre 30, 2014
+d1 <- "Enero 1, 2010"
+d2 <- "2015-Mar-07"
+d3 <- "06-Jun-2017"
+d4 <- c("Agosto 19 (2015)", "Julio 1 (2015)")
+d5 <- "12/30/14" # Diciembre 30, 2014
     ```
 
 ## Componentes fecha-hora
@@ -203,37 +203,39 @@ wday(fechahora, label = TRUE, abbr = FALSE)
 Podemos usar `wday()` para ver que más vuelos salen durante la semana que durante el fin de semana:
 
 ```{r}
-vuelos_dt %>% 
-  mutate(dia_semana = wday(horario_salida, label = TRUE)) %>% 
+vuelos_dt %>%
+  mutate(dia_semana = wday(horario_salida, label = TRUE)) %>%
   ggplot(aes(x = dia_semana)) +
-    geom_bar()
+  geom_bar()
 ```
 
 Hay un patrón interesante si miramos a la demora promedio por minuto dentro de la hora. ¡Parece que los vuelos que salen en los minutos 20-30 y 50-30 tienen mucho más demora que en el resto de las horas!
 
 ```{r}
-vuelos_dt %>% 
-  mutate(minuto = minute(horario_salida)) %>% 
-  group_by(minuto) %>% 
+vuelos_dt %>%
+  mutate(minuto = minute(horario_salida)) %>%
+  group_by(minuto) %>%
   summarise(
     atraso_promedio = mean(atraso_llegada, na.rm = TRUE),
-    n = n()) %>% 
+    n = n()
+  ) %>%
   ggplot(aes(minuto, atraso_promedio)) +
-    geom_line()
+  geom_line()
 ```
 
 De forma interesante, si miramos al horario _programado_ de salida, no vemos un patrón tan prominente:
 
 ```{r}
-  salida_programada <- vuelos_dt %>% 
-    mutate(minuto = minute(salida_programada)) %>% 
-    group_by(minuto) %>% 
-    summarise(
-      atraso_promedio = mean(atraso_llegada, na.rm = TRUE),
-      n = n())
-  
-  ggplot(salida_programada, aes(minuto, atraso_promedio)) +
-    geom_line()
+salida_programada <- vuelos_dt %>%
+  mutate(minuto = minute(salida_programada)) %>%
+  group_by(minuto) %>%
+  summarise(
+    atraso_promedio = mean(atraso_llegada, na.rm = TRUE),
+    n = n()
+  )
+
+ggplot(salida_programada, aes(minuto, atraso_promedio)) +
+  geom_line()
 ```
 
 Entonces ¿por qué vemos ese patrón con los horarios reales de salida? Bueno, como muchos datos recolectados por los humanos, hay un sesgo importante hacia los vuelos que salen en horas "lindas". ¡Mantente siempre alerta respecto a este tipo de patrón, cuando sea que trabajes con datos que involucran al juicio humano!
@@ -249,10 +251,10 @@ ggplot(salida_programada, aes(minuto, n)) +
 Un método alternativo para graficar los componentes individuales es redondear la fecha a una unidad de tiempo cercana, con `floor_date()` (del inglés, _redondear fecha hacia abajo_), `round_date()` (del inglés, _redondear fecha_), y `ceiling_date()` (del inglés, _redondear fecha hacia arriba_). Cada función toma un vector de fechas para ajustarlas, y luego el nombre de la unidad redondeada hacia abajo (con _floor_), hacia arriba (con _ceiling_), o al mas cercano. Esto, por ejemplo, nos permite graficiar el número de vuelos por semana:
 
 ```{r}
-vuelos_dt %>% 
-  count(semana = floor_date(horario_salida, "week")) %>% 
+vuelos_dt %>%
+  count(semana = floor_date(horario_salida, "week")) %>%
   ggplot(aes(semana, n)) +
-    geom_line()
+  geom_line()
 ```
 
 Calcular la diferencia entre una fecha redondeada y una sin redondear puede ser particularmente útil.
@@ -288,10 +290,10 @@ ymd("2015-02-01") %>% update(hour = 400)
 Puedes usar `update()` para mostrar la distribución de los vuelos a lo largo del día para cada día del año: 
 
 ```{r}
-vuelos_dt %>% 
-  mutate(horario_salida = update(horario_salida, yday = 1)) %>% 
+vuelos_dt %>%
+  mutate(horario_salida = update(horario_salida, yday = 1)) %>%
   ggplot(aes(horario_salida)) +
-    geom_freqpoly(binwidth = 300)
+  geom_freqpoly(binwidth = 300)
 ```
 
 Fijar los componentes más grandes de una fecha con una constante es una técnica que te permite explorar patrones en los componentes más pequeños.
@@ -421,14 +423,14 @@ una_pm + days(1)
 Usemos los períodos para arreglar una rareza relacionada a nuestras fechas de vuelos. Algunos aviones parecen arrivar a su destino _antes_ de salir de la ciudad de Nueva York.
 
 ```{r}
-vuelos_dt %>% 
-  filter(horario_llegada < horario_salida) 
+vuelos_dt %>%
+  filter(horario_llegada < horario_salida)
 ```
 
 Estos son vuelos nocturnos. Usamos la misma información de fecha para los horarios de salida y llegada, pero estos vuelos llegaron en el día siguiente. Podemos arreglarlo al sumar `days(1)` a la fecha de llegada de cada vuelo nocturno.
 
 ```{r}
-vuelos_dt <- vuelos_dt %>% 
+vuelos_dt <- vuelos_dt %>%
   mutate(
     nocturno = horario_llegada < horario_salida,
     horario_llegada = horario_llegada + days(nocturno * 1),
@@ -439,8 +441,8 @@ vuelos_dt <- vuelos_dt %>%
 Ahora todos los vuelos obedecen a las leyes de la física.
 
 ```{r}
-vuelos_dt %>% 
-  filter(nocturno, horario_llegada < horario_salida) 
+vuelos_dt %>%
+  filter(nocturno, horario_llegada < horario_salida)
 ```
 
 ### Intervalos
@@ -473,7 +475,7 @@ Para encontrar cuántos períodos caen dentro de un intervalo, tienes que usar l
 La figura \@ref(fig:dt-algebra) resume las operaciones artiméticas permitidas entre los tipos de datos.
 
 ```{r dt-algebra, echo = FALSE, fig.cap = "Las operaciones artiméticas permitidas entre pares de clases fecha/hora."}
-knitr::include_graphics("diagrams/datetimes-arithmetic.png")
+knitr::include_graphics("diagrams/datetimes-arithmetic.svg")
 ```
 
 ### Ejercicios
@@ -538,9 +540,9 @@ Puedes cambiar el huso horario de dos formas:
 * Mantener el instante en el tiempo igual, y cambiar sólo cómo se representa. Usa esto cuando el instante es correcto, pero quieres una visualización más natural.
   
     ```{r}
-    x4a <- with_tz(x4, tzone = "Australia/Lord_Howe")
-    x4a
-    x4a - x4
+x4a <- with_tz(x4, tzone = "Australia/Lord_Howe")
+x4a
+x4a - x4
     ```
     
     (Esto también ilustra otro desafío de los husos horarios: ¡no todos los desfasajes son horas como números enteros!)
@@ -548,7 +550,7 @@ Puedes cambiar el huso horario de dos formas:
 * Cambia el instante en el tiempo. Usa esto cuando tienes un instante que ha sido etiquetado con un huso horario incorrecto, y necesitas arreglarlo.
 
     ```{r}
-    x4b <- force_tz(x4, tzone = "Australia/Lord_Howe")
-    x4b
-    x4b - x4
+x4b <- force_tz(x4, tzone = "Australia/Lord_Howe")
+x4b
+x4b - x4
     ```

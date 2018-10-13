@@ -60,7 +60,7 @@ You may also worry that this form creates many copies of your data and takes up 
 
 ```{r}
 diamonds <- ggplot2::diamonds
-diamonds2 <- diamonds %>% 
+diamonds2 <- diamonds %>%
   dplyr::mutate(price_per_carat = price / carat)
 
 pryr::object_size(diamonds)
@@ -112,7 +112,7 @@ bop(
   scoop(
     hop(foo_foo, through = forest),
     up = field_mice
-  ), 
+  ),
   on = head
 )
 ```
@@ -150,11 +150,11 @@ This means that the pipe won't work for two classes of functions:
     will create a new variable with the given name in the current environment:
      
     ```{r}
-    assign("x", 10)
-    x
-    
-    "x" %>% assign(100)
-    x
+assign("x", 10)
+x
+
+"x" %>% assign(100)
+x
     ```
     
     The use of assign with the pipe does not work because it assigns it to 
@@ -162,9 +162,9 @@ This means that the pipe won't work for two classes of functions:
     pipe, you must be explicit about the environment:
     
     ```{r}
-    env <- environment()
-    "x" %>% assign(100, envir = env)
-    x
+env <- environment()
+"x" %>% assign(100, envir = env)
+x
     ```
     
     Other functions with this problem include `get()` and `load()`.
@@ -178,10 +178,10 @@ This means that the pipe won't work for two classes of functions:
     and handle errors:
     
     ```{r, error = TRUE}
-    tryCatch(stop("!"), error = function(e) "An error")
-    
-    stop("!") %>% 
-      tryCatch(error = function(e) "An error")
+tryCatch(stop("!"), error = function(e) "An error")
+
+stop("!") %>%
+  tryCatch(error = function(e) "An error")
     ```
     
     There are a relatively wide class of functions with this behaviour,
@@ -220,15 +220,15 @@ All packages in the tidyverse automatically make `%>%` available for you, so you
     side. It's called "tee" because it's like a literal T-shaped pipe.
 
     ```{r}
-    rnorm(100) %>%
-      matrix(ncol = 2) %>%
-      plot() %>%
-      str()
-    
-    rnorm(100) %>%
-      matrix(ncol = 2) %T>%
-      plot() %>%
-      str()
+rnorm(100) %>%
+  matrix(ncol = 2) %>%
+  plot() %>%
+  str()
+
+rnorm(100) %>%
+  matrix(ncol = 2) %T>%
+  plot() %>%
+  str()
     ```
 
 *   If you're working with functions that don't have a data frame based API  
@@ -239,22 +239,22 @@ All packages in the tidyverse automatically make `%>%` available for you, so you
     in base R:
     
     ```{r}
-    mtcars %$%
-      cor(disp, mpg)
+mtcars %$%
+  cor(disp, mpg)
     ```
 
 *   For assignment magrittr provides the `%<>%` operator which allows you to
     replace code like:
   
     ```{r, eval = FALSE}
-    mtcars <- mtcars %>% 
-      transform(cyl = cyl * 2)
+mtcars <- mtcars %>%
+  transform(cyl = cyl * 2)
     ```
     
     with
      
     ```{r, eval = FALSE}
-    mtcars %<>% transform(cyl = cyl * 2)
+mtcars %<>% transform(cyl = cyl * 2)
     ```
     
     I'm not a fan of this operator because I think assignment is such a 

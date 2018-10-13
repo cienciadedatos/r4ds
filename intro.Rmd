@@ -7,7 +7,7 @@ Data science is an exciting discipline that allows you to turn raw data into und
 Data science is a huge field, and there's no way you can master it by reading a single book. The goal of this book is to give you a solid foundation in the most important tools. Our model of the tools needed in a typical data science project looks something like this:
 
 ```{r echo = FALSE, out.width = "75%"}
-knitr::include_graphics("diagrams/data-science.png")
+knitr::include_graphics("diagrams/data-science.svg")
 ```
 
 First you must __import__ your data into R. This typically means that you take data stored in a file, database, or web API, and load it into a data frame in R. If you can't get your data into R, you can't do data science on it!
@@ -112,7 +112,7 @@ RStudio is an integrated development environment, or IDE, for R programming. Dow
 When you start RStudio, you'll see two key regions in the interface:
 
 ```{r echo = FALSE, out.width = "75%"}
-knitr::include_graphics("diagrams/rstudio-console.png")
+knitr::include_graphics("diagrams/rstudio-console.svg")
 ```
 
 For now, all you need to know is that you type R code in the console pane, and press enter to run it. You'll learn more as we go along!

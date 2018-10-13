@@ -35,32 +35,32 @@ We will use the nycflights13 package to learn about relational data. nycflights1
     code:
 
     ```{r}
-    airlines
+airlines
     ```
 
 *   `airports` gives information about each airport, identified by the `faa`
     airport code:
 
     ```{r}
-    airports
+airports
     ```
 
 *   `planes` gives information about each plane, identified by its `tailnum`:
 
     ```{r}
-    planes
+planes
     ```
 
 *   `weather` gives the weather at each NYC airport for each hour:
 
     ```{r}
-    weather
+weather
     ```
 
 One way to show the relationships between the different tables is with a drawing:
 
 ```{r, echo = FALSE}
-knitr::include_graphics("diagrams/relational-nycflights.png")
+knitr::include_graphics("diagrams/relational-nycflights.svg")
 ```
 
 This diagram is a little overwhelming, but it's simple compared to some you'll see in the wild! The key to understanding diagrams like this is to remember each relation always concerns a pair of tables. You don't need to understand the whole thing; you just need to understand the chain of relations between the tables that you are interested in.
@@ -114,24 +114,24 @@ A variable can be both a primary key _and_ a foreign key. For example, `origin` 
 Once you've identified the primary keys in your tables, it's good practice to verify that they do indeed uniquely identify each observation. One way to do that is to `count()` the primary keys and look for entries where `n` is greater than one:
 
 ```{r}
-planes %>% 
-  count(tailnum) %>% 
+planes %>%
+  count(tailnum) %>%
   filter(n > 1)
 
-weather %>% 
-  count(year, month, day, hour, origin) %>% 
+weather %>%
+  count(year, month, day, hour, origin) %>%
   filter(n > 1)
 ```
 
 Sometimes a table doesn't have an explicit primary key: each row is an observation, but no combination of variables reliably identifies it. For example, what's the primary key in the `flights` table? You might think it would be the date plus the flight or tail number, but neither of those are unique:
 
 ```{r}
-flights %>% 
-  count(year, month, day, flight) %>% 
+flights %>%
+  count(year, month, day, flight) %>%
   filter(n > 1)
 
-flights %>% 
-  count(year, month, day, tailnum) %>% 
+flights %>%
+  count(year, month, day, tailnum) %>%
   filter(n > 1)
 ```
 
@@ -167,7 +167,7 @@ The first tool we'll look at for combining a pair of tables is the __mutating jo
 Like `mutate()`, the join functions add variables to the right, so if you have a lot of variables already, the new variables won't get printed out. For these examples, we'll make it easier to see what's going on in the examples by creating a narrower dataset:
 
 ```{r}
-flights2 <- flights %>% 
+flights2 <- flights %>%
   select(year:day, hour, origin, dest, tailnum, carrier)
 flights2
 ```
@@ -178,7 +178,7 @@ Imagine you want to add the full airline name to the `flights2` data. You can co
 
 ```{r}
 flights2 %>%
-  select(-origin, -dest) %>% 
+  select(-origin, -dest) %>%
   left_join(airlines, by = "carrier")
 ```
 
@@ -186,7 +186,7 @@ The result of joining airlines to flights2 is an additional variable: `name`. Th
 
 ```{r}
 flights2 %>%
-  select(-origin, -dest) %>% 
+  select(-origin, -dest) %>%
   mutate(name = airlines$name[match(carrier, airlines$carrier)])
 ```
 
@@ -199,20 +199,20 @@ The following sections explain, in detail, how mutating joins work. You'll start
 To help you learn how joins work, I'm going to use a visual representation:
 
 ```{r, echo = FALSE, out.width = NULL}
-knitr::include_graphics("diagrams/join-setup.png")
+knitr::include_graphics("diagrams/join-setup.svg")
 ```
 ```{r}
 x <- tribble(
-  ~key, ~val_x,
-     1, "x1",
-     2, "x2",
-     3, "x3"
+  ~ key, ~ val_x,
+  1, "x1",
+  2, "x2",
+  3, "x3"
 )
 y <- tribble(
-  ~key, ~val_y,
-     1, "y1",
-     2, "y2",
-     4, "y3"
+  ~ key, ~ val_y,
+  1, "y1",
+  2, "y2",
+  4, "y3"
 )
 ```
 
@@ -221,7 +221,7 @@ The coloured column represents the "key" variable: these are used to match the r
 A join is a way of connecting each row in `x` to zero, one, or more rows in `y`. The following diagram shows each potential match as an intersection of a pair of lines.
 
 ```{r, echo = FALSE, out.width = NULL}
-knitr::include_graphics("diagrams/join-setup2.png")
+knitr::include_graphics("diagrams/join-setup2.svg")
 ```
 
 (If you look closely, you might notice that we've switched the order of the key and value columns in `x`. This is to emphasise that joins match based on the key; the value is just carried along for the ride.)
@@ -229,7 +229,7 @@ knitr::include_graphics("diagrams/join-setup2.png")
 In an actual join, matches will be indicated with dots. The number of dots = the number of matches = the number of rows in the output.
 
 ```{r, echo = FALSE, out.width = NULL}
-knitr::include_graphics("diagrams/join-inner.png")
+knitr::include_graphics("diagrams/join-inner.svg")
 ```
 
 ### Inner join {#inner-join}
@@ -237,7 +237,7 @@ knitr::include_graphics("diagrams/join-inner.png")
 The simplest type of join is the __inner join__. An inner join matches pairs of observations whenever their keys are equal:
 
 ```{r, echo = FALSE, out.width = NULL}
-knitr::include_graphics("diagrams/join-inner.png")
+knitr::include_graphics("diagrams/join-inner.svg")
 ```
 
 (To be precise, this is an inner __equijoin__ because the keys are matched using the equality operator. Since most joins are equijoins we usually drop that specification.)
@@ -245,7 +245,7 @@ knitr::include_graphics("diagrams/join-inner.png")
 The output of an inner join is a new data frame that contains the key, the x values, and the y values. We use `by` to tell dplyr which variable is the key:
 
 ```{r}
-x %>% 
+x %>%
   inner_join(y, by = "key")
 ```
 
@@ -264,7 +264,7 @@ These joins work by adding an additional "virtual" observation to each table. Th
 Graphically, that looks like:
 
 ```{r, echo = FALSE, out.width = NULL}
-knitr::include_graphics("diagrams/join-outer.png")
+knitr::include_graphics("diagrams/join-outer.svg")
 ```
 
 The most commonly used join is the left join: you use this whenever you look up additional data from another table, because it preserves the original observations even when there isn't a match. The left join should be your default join: use it unless you have a strong reason to prefer one of the others.
@@ -272,7 +272,7 @@ The most commonly used join is the left join: you use this whenever you look up 
 Another way to depict the different types of joins is with a Venn diagram:
 
 ```{r, echo = FALSE, out.width = NULL}
-knitr::include_graphics("diagrams/join-venn.png")
+knitr::include_graphics("diagrams/join-venn.svg")
 ```
 
 However, this is not a great representation. It might jog your memory about which join preserves the observations in which table, but it suffers from a major limitation: a Venn diagram can't show what happens when keys don't uniquely identify an observation.
@@ -286,7 +286,7 @@ So far all the diagrams have assumed that the keys are unique. But that's not al
     relationship.
 
     ```{r, echo = FALSE, out.width = NULL}
-    knitr::include_graphics("diagrams/join-one-to-many.png")
+knitr::include_graphics("diagrams/join-one-to-many.svg")
     ```
 
     Note that I've put the key column in a slightly different position
@@ -294,19 +294,19 @@ So far all the diagrams have assumed that the keys are unique. But that's not al
     and a foreign key in `x`.
 
     ```{r}
-    x <- tribble(
-      ~key, ~val_x,
-         1, "x1",
-         2, "x2",
-         2, "x3",
-         1, "x4"
-    )
-    y <- tribble(
-      ~key, ~val_y,
-         1, "y1",
-         2, "y2"
-    )
-    left_join(x, y, by = "key")
+x <- tribble(
+  ~ key, ~ val_x,
+  1, "x1",
+  2, "x2",
+  2, "x3",
+  1, "x4"
+)
+y <- tribble(
+  ~ key, ~ val_y,
+  1, "y1",
+  2, "y2"
+)
+left_join(x, y, by = "key")
     ```
 
 1.  Both tables have duplicate keys. This is usually an error because in
@@ -314,25 +314,25 @@ So far all the diagrams have assumed that the keys are unique. But that's not al
     duplicated keys, you get all possible combinations, the Cartesian product:
 
     ```{r, echo = FALSE, out.width = NULL}
-    knitr::include_graphics("diagrams/join-many-to-many.png")
+knitr::include_graphics("diagrams/join-many-to-many.svg")
     ```
 
     ```{r}
-    x <- tribble(
-      ~key, ~val_x,
-         1, "x1",
-         2, "x2",
-         2, "x3",
-         3, "x4"
-    )
-    y <- tribble(
-      ~key, ~val_y,
-         1, "y1",
-         2, "y2",
-         2, "y3",
-         3, "y4"
-    )
-    left_join(x, y, by = "key")
+x <- tribble(
+  ~ key, ~ val_x,
+  1, "x1",
+  2, "x2",
+  2, "x3",
+  3, "x4"
+)
+y <- tribble(
+  ~ key, ~ val_y,
+  1, "y1",
+  2, "y2",
+  2, "y3",
+  3, "y4"
+)
+left_join(x, y, by = "key")
     ```
 
 ### Defining the key columns {#join-by}
@@ -345,8 +345,8 @@ So far, the pairs of tables have always been joined by a single variable, and th
     `origin`.
 
     ```{r}
-    flights2 %>% 
-      left_join(weather)
+flights2 %>%
+  left_join(weather)
     ```
 
   * A character vector, `by = "x"`. This is like a natural join, but uses only
@@ -355,8 +355,8 @@ So far, the pairs of tables have always been joined by a single variable, and th
     `tailnum`.
 
     ```{r}
-    flights2 %>% 
-      left_join(planes, by = "tailnum")
+flights2 %>%
+  left_join(planes, by = "tailnum")
     ```
 
     Note that the `year` variables (which appear in both input data frames,
@@ -373,11 +373,11 @@ So far, the pairs of tables have always been joined by a single variable, and th
     need to specify which one we want to join to:
 
     ```{r}
-    flights2 %>% 
-      left_join(airports, c("dest" = "faa"))
-    
-    flights2 %>% 
-      left_join(airports, c("origin" = "faa"))
+flights2 %>%
+  left_join(airports, c("dest" = "faa"))
+
+flights2 %>%
+  left_join(airports, c("origin" = "faa"))
     ```
 
 ### Exercises
@@ -387,12 +387,12 @@ So far, the pairs of tables have always been joined by a single variable, and th
     easy way to draw a map of the United States:
 
     ```{r, eval = FALSE}
-    airports %>%
-      semi_join(flights, c("faa" = "dest")) %>%
-      ggplot(aes(lon, lat)) +
-        borders("state") +
-        geom_point() +
-        coord_quickmap()
+airports %>%
+  semi_join(flights, c("faa" = "dest")) %>%
+  ggplot(aes(lon, lat)) +
+  borders("state") +
+  geom_point() +
+  coord_quickmap()
     ```
 
     (Don't worry if you don't understand what `semi_join()` does --- you'll
@@ -412,16 +412,16 @@ So far, the pairs of tables have always been joined by a single variable, and th
     and then use Google to cross-reference with the weather.
 
     ```{r, eval = FALSE, include = FALSE}
-    worst <- filter(flights, !is.na(dep_time), month == 6, day == 13)
-    worst %>%
-      group_by(dest) %>%
-      summarise(delay = mean(arr_delay), n = n()) %>%
-      filter(n > 5) %>%
-      inner_join(airports, by = c("dest" = "faa")) %>%
-      ggplot(aes(lon, lat)) +
-        borders("state") +
-        geom_point(aes(size = n, colour = delay)) +
-        coord_quickmap()
+worst <- filter(flights, !is.na(dep_time), month == 6, day == 13)
+worst %>%
+  group_by(dest) %>%
+  summarise(delay = mean(arr_delay), n = n()) %>%
+  filter(n > 5) %>%
+  inner_join(airports, by = c("dest" = "faa")) %>%
+  ggplot(aes(lon, lat)) +
+  borders("state") +
+  geom_point(aes(size = n, colour = delay)) +
+  coord_quickmap()
     ```
 
 ### Other implementations
@@ -469,7 +469,7 @@ top_dest
 Now you want to find each flight that went to one of those destinations. You could construct a filter yourself:
 
 ```{r}
-flights %>% 
+flights %>%
   filter(dest %in% top_dest$dest)
 ```
 
@@ -478,26 +478,26 @@ But it's difficult to extend that approach to multiple variables. For example, i
 Instead you can use a semi-join, which connects the two tables like a mutating join, but instead of adding new columns, only keeps the rows in `x` that have a match in `y`:
 
 ```{r}
-flights %>% 
+flights %>%
   semi_join(top_dest)
 ```
 
 Graphically, a semi-join looks like this:
 
 ```{r, echo = FALSE, out.width = NULL}
-knitr::include_graphics("diagrams/join-semi.png")
+knitr::include_graphics("diagrams/join-semi.svg")
 ```
 
 Only the existence of a match is important; it doesn't matter which observation is matched. This means that filtering joins never duplicate rows like mutating joins do:
 
 ```{r, echo = FALSE, out.width = NULL}
-knitr::include_graphics("diagrams/join-semi-many.png")
+knitr::include_graphics("diagrams/join-semi-many.svg")
 ```
 
 The inverse of a semi-join is an anti-join. An anti-join keeps the rows that _don't_ have a match:
 
 ```{r, echo = FALSE, out.width = NULL}
-knitr::include_graphics("diagrams/join-anti.png")
+knitr::include_graphics("diagrams/join-anti.svg")
 ```
 
 Anti-joins are useful for diagnosing join mismatches. For example, when connecting `flights` and `planes`, you might be interested to know that there are many `flights` that don't have a match in `planes`:
@@ -547,7 +547,7 @@ The data you've been working with in this chapter has been cleaned up so that yo
     but they are not good identifiers!
 
     ```{r}
-    airports %>% count(alt, lon) %>% filter(n > 1)
+airports %>% count(alt, lon) %>% filter(n > 1)
     ```
 
 1.  Check that none of the variables in the primary key are missing. If
@@ -576,14 +576,14 @@ Given this simple data:
 
 ```{r}
 df1 <- tribble(
-  ~x, ~y,
-   1,  1,
-   2,  1
+  ~ x, ~ y,
+  1, 1,
+  2, 1
 )
 df2 <- tribble(
-  ~x, ~y,
-   1,  1,
-   1,  2
+  ~ x, ~ y,
+  1, 1,
+  1, 2
 )
 ```
 

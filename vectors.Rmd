@@ -29,7 +29,7 @@ There are two types of vectors:
 The chief difference between atomic vectors and lists is that atomic vectors are __homogeneous__, while lists can be __heterogeneous__. There's one other related object: `NULL`. `NULL` is often used to represent the absence of a vector (as opposed to `NA` which is used to represent the absence of a value in a vector). `NULL` typically behaves like a vector of length 0. Figure \@ref(fig:datatypes) summarises the interrelationships. 
 
 ```{r datatypes, echo = FALSE, out.width = "50%", fig.cap = "The hierarchy of R's vector types"}
-knitr::include_graphics("diagrams/data-structures-overview.png")
+knitr::include_graphics("diagrams/data-structures-overview.svg")
 ```
 
 Every vector has two key properties: 
@@ -37,15 +37,15 @@ Every vector has two key properties:
 1.  Its __type__, which you can determine with `typeof()`.
 
     ```{r}
-    typeof(letters)
-    typeof(1:10)
+typeof(letters)
+typeof(1:10)
     ```
 
 1. Its __length__, which you can determine with `length()`.
 
     ```{r}
-    x <- list("a", "b", 1:10)
-    length(x)
+x <- list("a", "b", 1:10)
+length(x)
     ```
 
 Vectors can also contain arbitrary additional metadata in the form of attributes. These attributes are used to create __augmented vectors__ which build on additional behaviour. There are three important types of augmented vector:
@@ -88,9 +88,9 @@ The distinction between integers and doubles is not usually important, but there
      For example, what is square of the square root of two?
 
     ```{r}
-    x <- sqrt(2) ^ 2
-    x
-    x - 2
+x <- sqrt(2)^2
+x
+x - 2
     ```
 
     This behaviour is common when working with floating point numbers: most
@@ -102,7 +102,7 @@ The distinction between integers and doubles is not usually important, but there
     `NA`, `NaN`, `Inf` and `-Inf`. All three special values `NaN`, `Inf` and `-Inf` can arise during division:
    
     ```{r}
-    c(-1, 0, 1) / 0
+c(-1, 0, 1) / 0
     ```
 
     Avoid using `==` to check for these other special values. Instead use the 
@@ -136,9 +136,9 @@ pryr::object_size(y)
 Note that each type of atomic vector has its own missing value:
 
 ```{r}
-NA            # logical
-NA_integer_   # integer
-NA_real_      # double
+NA # logical
+NA_integer_ # integer
+NA_real_ # double
 NA_character_ # character
 ```
 
@@ -199,7 +199,7 @@ You've already seen the most important type of implicit coercion: using a logica
 ```{r}
 x <- sample(20, 100, replace = TRUE)
 y <- x > 10
-sum(y)  # how many are greater than 10?
+sum(y) # how many are greater than 10?
 mean(y) # what proportion are greater than 10?
 ```
 
@@ -301,33 +301,33 @@ So far we've used `dplyr::filter()` to filter the rows in a tibble. `filter()` o
     Subsetting with positive integers keeps the elements at those positions:
     
     ```{r}
-    x <- c("one", "two", "three", "four", "five")
-    x[c(3, 2, 5)]
+x <- c("one", "two", "three", "four", "five")
+x[c(3, 2, 5)]
     ```
     
     By repeating a position, you can actually make a longer output than 
     input:
     
     ```{r}
-    x[c(1, 1, 5, 5, 5, 2)]
+x[c(1, 1, 5, 5, 5, 2)]
     ```
     
     Negative values drop the elements at the specified positions:
     
     ```{r}
-    x[c(-1, -3, -5)]
+x[c(-1, -3, -5)]
     ```
     
     It's an error to mix positive and negative values:
     
     ```{r, error = TRUE}
-    x[c(1, -1)]
+x[c(1, -1)]
     ```
 
     The error message mentions subsetting with zero, which returns no values:
     
     ```{r}
-    x[0]
+x[0]
     ```
     
     This is not useful very often, but it can be helpful if you want to create 
@@ -338,20 +338,20 @@ So far we've used `dplyr::filter()` to filter the rows in a tibble. `filter()` o
     comparison functions.
     
     ```{r}
-    x <- c(10, 3, NA, 5, 8, 1, NA)
-    
-    # All non-missing values of x
-    x[!is.na(x)]
-    
-    # All even (or missing!) values of x
-    x[x %% 2 == 0]
+x <- c(10, 3, NA, 5, 8, 1, NA)
+
+# All non-missing values of x
+x[!is.na(x)]
+
+# All even (or missing!) values of x
+x[x %% 2 == 0]
     ```
 
 1.  If you have a named vector, you can subset it with a character vector:
     
     ```{r}
-    x <- c(abc = 1, def = 2, xyz = 5)
-    x[c("xyz", "def")]
+x <- c(abc = 1, def = 2, xyz = 5)
+x[c("xyz", "def")]
     ```
     
     Like with positive integers, you can also use a character vector to 
@@ -441,7 +441,7 @@ x3 <- list(1, list(2, list(3)))
 I'll draw them as follows:
 
 ```{r, echo = FALSE, out.width = "75%"}
-knitr::include_graphics("diagrams/lists-structure.png")
+knitr::include_graphics("diagrams/lists-structure.svg")
 ```
 
 There are three principles:
@@ -466,8 +466,8 @@ a <- list(a = 1:3, b = "a string", c = pi, d = list(-1, -5))
 *   `[` extracts a sub-list. The result will always be a list.
 
     ```{r}
-    str(a[1:2])
-    str(a[4])
+str(a[1:2])
+str(a[4])
     ```
     
     Like with vectors, you can subset with a logical, integer, or character
@@ -477,22 +477,22 @@ a <- list(a = 1:3, b = "a string", c = pi, d = list(-1, -5))
     hierarchy from the list.
 
     ```{r}
-    str(a[[1]])
-    str(a[[4]])
+str(a[[1]])
+str(a[[4]])
     ```
 
 *   `$` is a shorthand for extracting named elements of a list. It works
     similarly to `[[` except that you don't need to use quotes.
     
     ```{r}
-    a$a
-    a[["a"]]
+a$a
+a[["a"]]
     ```
 
 The distinction between `[` and `[[` is really important for lists, because `[[` drills down into the list while `[` returns a new, smaller list. Compare the code and output above with the visual representation in Figure \@ref(fig:lists-subsetting).
 
 ```{r lists-subsetting, echo = FALSE, out.width = "75%", fig.cap = "Subsetting a list, visually."}
-knitr::include_graphics("diagrams/lists-subsetting.png")
+knitr::include_graphics("diagrams/lists-subsetting.svg")
 ```
 
 ### Lists of condiments

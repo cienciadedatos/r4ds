@@ -129,7 +129,7 @@ flatten_dbl(y)
 Graphically, that sequence of operations looks like:
 
 ```{r, echo = FALSE}
-knitr::include_graphics("diagrams/lists-flatten.png")
+knitr::include_graphics("diagrams/lists-flatten.svg")
 ```
 
 Whenever I get confused about a sequence of flattening operations, I'll often draw a diagram like this to help me understand what's going on.
@@ -152,7 +152,7 @@ x %>% transpose() %>% str()
 Graphically, this looks like:
 
 ```{r, echo = FALSE}
-knitr::include_graphics("diagrams/lists-transpose.png")
+knitr::include_graphics("diagrams/lists-transpose.svg")
 ```
 
 You'll see an example of this in the next section, as `transpose()` is particularly useful in conjunction with adverbs like `safely()` and `quietly()`.

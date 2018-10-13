@@ -35,20 +35,20 @@ Usar una cadena de caracteres (o _string_, en inglés) para guardar esta variabl
 1. Sólo hay doce meses posibles, y no hay nada que te resguarde de errores de tipeo:
      
     ```{r}
-    x2 <- c("Dic", "Abr", "Eme", "Mar")
+x2 <- c("Dic", "Abr", "Eme", "Mar")
     ```
     
 1. No ordena de una forma útil:
 
     ```{r}
-    sort(x1)
+sort(x1)
     ```
 
 Puedes solucionar ambos problemas con un factor. Para crearlo debes empezar armando una lista de los __niveles__ válidos:
 
 ```{r}
 niveles_meses <- c(
-  "Ene", "Feb", "Mar", "Abr", "May", "Jun", 
+  "Ene", "Feb", "Mar", "Abr", "May", "Jun",
   "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
 )
 ```
@@ -177,7 +177,7 @@ Cuando haces transformaciones más complicadas, yo recomiendo que las remuevas d
 resumen_religion %>%
   mutate(religion = fct_reorder(religion, horas_tv)) %>%
   ggplot(aes(horas_tv, religion)) +
-    geom_point()
+  geom_point()
 ```
 
 ¿Qué sucede si creamos un gráfico para observar cómo varía la edad promedio para cada ingreso reportado?
@@ -229,7 +229,7 @@ Finalmente, para los gráficos de barra, puedes usar `fct_infreq()` (del inglés
 encuesta %>%
   mutate(estado_civil = estado_civil %>% fct_infreq() %>% fct_rev()) %>%
   ggplot(aes(estado_civil)) +
-    geom_bar()
+  geom_bar()
 ```
 
 ### Ejercicios
@@ -252,12 +252,12 @@ Los niveles son tersos e inconsistentes. Hay que correjirlos un poco para que se
 ```{r}
 encuesta %>%
   mutate(partido = fct_recode(partido,
-    "Republicano duro"              = "Republicano Acérrimo",
-    "Republicano moderado"          = "Republicado No Acérrimo",
+    "Republicano duro" = "Republicano Acérrimo",
+    "Republicano moderado" = "Republicado No Acérrimo",
     "Independiente pro republicano" = "Independiente, pro-Rep",
-    "Independiente pro demócrata"   = "Independiente, pro-Dem",
-    "Demócrata moderado"            = "Demócrata No Acérrimo",
-    "Demócrata duro"                = "Demócrata Acérrimo"
+    "Independiente pro demócrata" = "Independiente, pro-Dem",
+    "Demócrata moderado" = "Demócrata No Acérrimo",
+    "Demócrata duro" = "Demócrata Acérrimo"
   )) %>%
   count(partido)
 ```
@@ -269,15 +269,15 @@ Para combinar grupos, puedes asignar múltiples niveles viejos, al mismo nivel n
 ```{r}
 encuesta %>%
   mutate(partido = fct_recode(partido,
-    "Republicano duro"              = "Republicano Acérrimo",
-    "Republicano moderado"          = "Republicado No Acérrimo",
+    "Republicano duro" = "Republicano Acérrimo",
+    "Republicano moderado" = "Republicado No Acérrimo",
     "Independiente pro republicano" = "Independiente, pro-Rep",
-    "Independiente pro demócrata"   = "Independiente, pro-Dem",
-    "Demócrata moderado"            = "Demócrata No Acérrimo",
-    "Demócrata duro"                = "Demócrata Acérrimo",
-    "Otro"                 = "Sin respuesta",
-    "Otro"                 = "No sabe",
-    "Otro"                 = "Otro partido"
+    "Independiente pro demócrata" = "Independiente, pro-Dem",
+    "Demócrata moderado" = "Demócrata No Acérrimo",
+    "Demócrata duro" = "Demócrata Acérrimo",
+    "Otro" = "Sin respuesta",
+    "Otro" = "No sabe",
+    "Otro" = "Otro partido"
   )) %>%
   count(partido)
 ```

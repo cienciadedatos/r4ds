@@ -5,7 +5,7 @@
 El objetivo de la primera parte del libro es conducirte a las herramientas básicas de _exploración de datos_ de la manera más veloz posible. La exploración de datos es el arte de mirar tus datos, generar hipótesis rápidamente, testearlas con celeridad y luego repetir el proceso iterativamente. El objetivo de la exploración de datos es generar muchos hallazgos prometedores que luego puedes retomar para explorarlos en mayor profundidad.
 
 ```{r echo = FALSE, out.width = "75%"}
-knitr::include_graphics("diagrams/data-science-explore.png")
+knitr::include_graphics("diagrams/data-science-explore.svg")
 ```
 
 En esta parte del libro aprenderás algunas herramientas que traen un beneficio inmediato:

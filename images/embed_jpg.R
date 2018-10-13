@@ -1,5 +1,5 @@
 is_latex <- function() {
-  identical(knitr::opts_knit$get('rmarkdown.pandoc.to'), "latex")
+  identical(knitr::opts_knit$get("rmarkdown.pandoc.to"), "latex")
 }
 
 embed_jpg <- function(path, dpi) {

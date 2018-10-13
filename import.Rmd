@@ -55,12 +55,12 @@ In both cases `read_csv()` uses the first line of the data for the column names,
     all lines that start with (e.g.) `#`.
     
     ```{r}
-    read_csv("The first line of metadata
+read_csv("The first line of metadata
       The second line of metadata
       x,y,z
       1,2,3", skip = 2)
-    
-    read_csv("# A comment I want to skip
+
+read_csv("# A comment I want to skip
       x,y,z
       1,2,3", comment = "#")
     ```
@@ -70,7 +70,7 @@ In both cases `read_csv()` uses the first line of the data for the column names,
     label them sequentially from `X1` to `Xn`:
     
     ```{r}
-    read_csv("1,2,3\n4,5,6", col_names = FALSE)
+read_csv("1,2,3\n4,5,6", col_names = FALSE)
     ```
     
     (`"\n"` is a convenient shortcut for adding a new line. You'll learn more
@@ -80,7 +80,7 @@ In both cases `read_csv()` uses the first line of the data for the column names,
     used as the column names:
     
     ```{r}
-    read_csv("1,2,3\n4,5,6", col_names = c("x", "y", "z"))
+read_csv("1,2,3\n4,5,6", col_names = c("x", "y", "z"))
     ```
 
 Another option that commonly needs tweaking is `na`: this specifies the value (or values) that are used to represent missing values in your file:
@@ -126,18 +126,18 @@ If you've used R before, you might wonder why we're not using `read.csv()`. Ther
     to read the following text into a data frame?
     
     ```{r, eval = FALSE}
-    "x,y\n1,'a,b'"
+"x,y\n1,'a,b'"
     ```
     
 1.  Identify what is wrong with each of the following inline CSV files. 
     What happens when you run the code?
     
     ```{r, eval = FALSE}
-    read_csv("a,b\n1,2,3\n4,5,6")
-    read_csv("a,b,c\n1,2\n1,2,3,4")
-    read_csv("a,b\n\"1")
-    read_csv("a,b\n1,2\na,b")
-    read_csv("a;b\n1;3")
+read_csv("a,b\n1,2,3\n4,5,6")
+read_csv("a,b,c\n1,2\n1,2,3,4")
+read_csv("a,b\n\"1")
+read_csv("a,b\n1,2\na,b")
+read_csv("a;b\n1;3")
     ```
 
 ## Parsing a vector
@@ -304,9 +304,9 @@ You pick between three parsers depending on whether you want a date (the number 
     second.
     
     ```{r}
-    parse_datetime("2010-10-01T2010")
-    # If time is omitted, it will be set to midnight
-    parse_datetime("20101010")
+parse_datetime("2010-10-01T2010")
+# If time is omitted, it will be set to midnight
+parse_datetime("20101010")
     ```
     
     This is the most important date/time standard, and if you work with
@@ -317,16 +317,16 @@ You pick between three parsers depending on whether you want a date (the number 
     or `/`, then the day:
     
     ```{r}
-    parse_date("2010-10-01")
+parse_date("2010-10-01")
     ```
 
 *   `parse_time()` expects the hour, `:`, minutes, optionally `:` and seconds, 
     and an optional am/pm specifier:
   
     ```{r}
-    library(hms)
-    parse_time("01:10 am")
-    parse_time("20:10:01")
+library(hms)
+parse_time("01:10 am")
+parse_time("20:10:01")
     ```
     
     Base R doesn't have a great built in class for time data, so we use 
@@ -404,13 +404,13 @@ parse_date("1 janvier 2015", "%d %B %Y", locale = locale("fr"))
     dates and times:
     
     ```{r}
-    d1 <- "January 1, 2010"
-    d2 <- "2015-Mar-07"
-    d3 <- "06-Jun-2017"
-    d4 <- c("August 19 (2015)", "July 1 (2015)")
-    d5 <- "12/30/14" # Dec 30, 2014
-    t1 <- "1705"
-    t2 <- "11:15:10.12 PM"
+d1 <- "January 1, 2010"
+d2 <- "2015-Mar-07"
+d3 <- "06-Jun-2017"
+d4 <- c("August 19 (2015)", "July 1 (2015)")
+d5 <- "12/30/14" # Dec 30, 2014
+t1 <- "1705"
+t2 <- "11:15:10.12 PM"
     ```
 
 ## Parsing a file
@@ -479,7 +479,7 @@ To fix the call, start by copying and pasting the column specification into your
 
 ```{r, eval = FALSE}
 challenge <- read_csv(
-  readr_example("challenge.csv"), 
+  readr_example("challenge.csv"),
   col_types = cols(
     x = col_integer(),
     y = col_character()
@@ -491,7 +491,7 @@ Then you can tweak the type of the `x` column:
 
 ```{r}
 challenge <- read_csv(
-  readr_example("challenge.csv"), 
+  readr_example("challenge.csv"),
   col_types = cols(
     x = col_double(),
     y = col_character()
@@ -509,7 +509,7 @@ You can fix that by specifying that `y` is a date column:
 
 ```{r}
 challenge <- read_csv(
-  readr_example("challenge.csv"), 
+  readr_example("challenge.csv"),
   col_types = cols(
     x = col_double(),
     y = col_date()
@@ -530,17 +530,17 @@ There are a few other general strategies to help you parse files:
     one more row than the default, we can correctly parse in one shot:
    
     ```{r}
-    challenge2 <- read_csv(readr_example("challenge.csv"), guess_max = 1001)
-    challenge2
+challenge2 <- read_csv(readr_example("challenge.csv"), guess_max = 1001)
+challenge2
     ```
 
 *   Sometimes it's easier to diagnose problems if you just read in all
     the columns as character vectors:
    
     ```{r}
-    challenge2 <- read_csv(readr_example("challenge.csv"), 
-      col_types = cols(.default = col_character())
-    )
+challenge2 <- read_csv(readr_example("challenge.csv"),
+  col_types = cols(.default = col_character())
+)
     ```
     
     This is particularly useful in conjunction with `type_convert()`,
@@ -548,16 +548,16 @@ There are a few other general strategies to help you parse files:
     frame.
 
     ```{r}
-    df <- tribble(
-      ~x,  ~y,
-      "1", "1.21",
-      "2", "2.32",
-      "3", "4.56"
-    )
-    df
-    
-    # Note the column types
-    type_convert(df)
+df <- tribble(
+  ~ x, ~ y,
+  "1", "1.21",
+  "2", "2.32",
+  "3", "4.56"
+)
+df
+
+# Note the column types
+type_convert(df)
     ```
     
 *   If you're reading a very large file, you might want to set `n_max` to
@@ -602,27 +602,27 @@ This makes CSVs a little unreliable for caching interim results---you need to re
     binary format called RDS:
     
     ```{r}
-    write_rds(challenge, "challenge.rds")
-    read_rds("challenge.rds")
+write_rds(challenge, "challenge.rds")
+read_rds("challenge.rds")
     ```
   
 1.  The feather package implements a fast binary file format that can
     be shared across programming languages:
     
     ```{r, eval = FALSE}
-    library(feather)
-    write_feather(challenge, "challenge.feather")
-    read_feather("challenge.feather")
-    #> # A tibble: 2,000 x 2
-    #>       x      y
-    #>   <dbl> <date>
-    #> 1   404   <NA>
-    #> 2  4172   <NA>
-    #> 3  3004   <NA>
-    #> 4   787   <NA>
-    #> 5    37   <NA>
-    #> 6  2332   <NA>
-    #> # ... with 1,994 more rows
+library(feather)
+write_feather(challenge, "challenge.feather")
+read_feather("challenge.feather")
+# > # A tibble: 2,000 x 2
+# >       x      y
+# >   <dbl> <date>
+# > 1   404   <NA>
+# > 2  4172   <NA>
+# > 3  3004   <NA>
+# > 4   787   <NA>
+# > 5    37   <NA>
+# > 6  2332   <NA>
+# > # ... with 1,994 more rows
     ```
 
 Feather tends to be faster than RDS and is usable outside of R. RDS supports list-columns (which you'll learn about in [many models]); feather currently does not.

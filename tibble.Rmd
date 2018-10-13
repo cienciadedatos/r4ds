@@ -26,9 +26,9 @@ You can create a new tibble from individual vectors with `tibble()`. `tibble()` 
 
 ```{r}
 tibble(
-  x = 1:5, 
-  y = 1, 
-  z = x ^ 2 + y
+  x = 1:5,
+  y = 1,
+  z = x^2 + y
 )
 ```
 
@@ -38,7 +38,7 @@ It's possible for a tibble to have column names that are not valid R variable na
 
 ```{r}
 tb <- tibble(
-  `:)` = "smile", 
+  `:)` = "smile",
   ` ` = "space",
   `2000` = "number"
 )
@@ -51,7 +51,7 @@ Another way to create a tibble is with `tribble()`, short for **tr**ansposed tib
 
 ```{r}
 tribble(
-  ~x, ~y, ~z,
+  ~ x, ~ y, ~ z,
   #--|--|----
   "a", 2, 3.6,
   "b", 1, 8.5
@@ -83,7 +83,7 @@ Tibbles are designed so that you don't accidentally overwhelm your console when 
 First, you can explicitly `print()` the data frame and control the number of rows (`n`) and the `width` of the display. `width = Inf` will display all columns:
 
 ```{r, eval = FALSE}
-nycflights13::flights %>% 
+nycflights13::flights %>%
   print(n = 10, width = Inf)
 ```
 
@@ -101,7 +101,7 @@ You can see a complete list of options by looking at the package help with `pack
 A final option is to use RStudio's built-in data viewer to get a scrollable view of the complete dataset. This is also often useful at the end of a long chain of manipulations.
 
 ```{r, eval = FALSE}
-nycflights13::flights %>% 
+nycflights13::flights %>%
   View()
 ```
 
@@ -152,10 +152,10 @@ The main reason that some older functions don't work with tibble is the `[` func
     behaviours cause you frustration?
     
     ```{r, eval = FALSE}
-    df <- data.frame(abc = 1, xyz = "a")
-    df$x
-    df[, "xyz"]
-    df[, c("abc", "xyz")]
+df <- data.frame(abc = 1, xyz = "a")
+df$x
+df[, "xyz"]
+df[, c("abc", "xyz")]
     ```
 
 1.  If you have the name of a variable stored in an object, e.g. `var <- "mpg"`,
@@ -172,10 +172,10 @@ The main reason that some older functions don't work with tibble is the `[` func
     1.  Renaming the columns to `one`, `two` and `three`. 
     
     ```{r}
-    annoying <- tibble(
-      `1` = 1:10,
-      `2` = `1` * 2 + rnorm(length(`1`))
-    )
+annoying <- tibble(
+  `1` = 1:10,
+  `2` = `1` * 2 + rnorm(length(`1`))
+)
     ```
 
 1.  What does `tibble::enframe()` do? When might you use it?

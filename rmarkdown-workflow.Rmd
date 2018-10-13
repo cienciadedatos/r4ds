@@ -18,7 +18,7 @@ R Markdown is also important because it so tightly integrates prose and code. Th
     helps you share not only what you've done, but why you did it with your
     colleagues or lab mates.
 
-Much of the good advice about using lab notebooks effectively can also be translated to analysis notebooks. I've drawn on my own experiences and Colin Purrington's advice on lab notebooks  (<http://colinpurrington.com/tips/lab-notebooks>) to come up with the following tips:
+Much of the good advice about using lab notebooks effectively can also be translated to analysis notebooks. I've drawn on my own experiences and Colin Purrington's advice on lab notebooks (<http://colinpurrington.com/tips/lab-notebooks>) to come up with the following tips:
 
 *   Ensure each notebook has a descriptive title, an evocative filename, and a
     first paragraph that briefly describes the aims of the analysis.

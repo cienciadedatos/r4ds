@@ -1,5 +1,4 @@
 chequear_traduccion <- function(x = "wrangle.Rmd") {
-
   library(tidyverse)
   library(hunspell)
   library(tidytext)
@@ -18,11 +17,9 @@ chequear_traduccion <- function(x = "wrangle.Rmd") {
     data_palabras,
     data_titulos
   )
-
 }
 
 chequear_knitr <- function(x = "wrangle.Rmd") {
-
   message("chequear_knitr...")
 
   archivo_temp <- x
@@ -30,7 +27,6 @@ chequear_knitr <- function(x = "wrangle.Rmd") {
 }
 
 obtener_data <- function(x = "wrangle.Rmd") {
-
   message("obtener_data...")
 
   message("\tleyendo líneas")
@@ -43,11 +39,9 @@ obtener_data <- function(x = "wrangle.Rmd") {
   )
 
   data
-
 }
 
 obtener_stopwords <- function() {
-
   message("obtener_stopwords...")
 
   data_stopwords <- data_frame(
@@ -55,11 +49,9 @@ obtener_stopwords <- function() {
   )
 
   data_stopwords
-
 }
 
-obtener_diccionario <- function(){
-
+obtener_diccionario <- function() {
   message("obtener_diccionario...")
 
   dir_temp <- tempdir()
@@ -76,11 +68,9 @@ obtener_diccionario <- function(){
   dict <- dictionary(destfile1 %>% str_remove("\\.aff"))
 
   dict
-
 }
 
-obtener_funciones <- function(){
-
+obtener_funciones <- function() {
   message("obtener_funciones...")
 
   paquetes <- tidyverse:::tidyverse_packages()
@@ -94,11 +84,9 @@ obtener_funciones <- function(){
     filter(!str_detect(palabra, "Error"))
 
   data_funciones
-
 }
 
 limpiar_data <- function(data) {
-
   message("limpiar data")
 
   message("\tremoviendo líneas vacías")
@@ -111,14 +99,12 @@ limpiar_data <- function(data) {
       termina_bloque = str_detect(texto, "^\\s*```\\s*$"),
       bloque = cumsum(comienza_bloque + termina_bloque) + 1
     ) %>%
-    filter(bloque%%2 != 0) %>%
+    filter(bloque %% 2 != 0) %>%
     filter(!termina_bloque) %>%
     select(-comienza_bloque, -termina_bloque, -bloque)
-
 }
 
 chequear_palabras <- function(data) {
-
   message("chequear_palabras...")
 
   message("\tunnest_tokens")
@@ -132,7 +118,7 @@ chequear_palabras <- function(data) {
     "\\:\\s+",
     "\\]\\(",
     "/"
-    )
+  )
   separadores <- paste0(separadores, collapse = "|")
 
   data_palabras <- unnest_tokens(data, palabra, texto, token = stringr::str_split, pattern = separadores, to_lower = FALSE)
@@ -155,7 +141,7 @@ chequear_palabras <- function(data) {
     ":$",
     "^\"",
     "\"$"
-    )
+  )
   caracteres_inicales_finales <- paste0(caracteres_inicales_finales, collapse = "|")
 
   data_palabras <- data_palabras %>% mutate(palabra2 = str_remove_all(palabra2, caracteres_inicales_finales))
@@ -197,11 +183,9 @@ chequear_palabras <- function(data) {
     select(-check_esp, -check_eng)
 
   data_palabras
-
 }
 
 chequear_titulos <- function(data) {
-
   message("chequear_titulos...")
 
   data_titulos1 <- data %>%
@@ -228,7 +212,6 @@ chequear_titulos <- function(data) {
     arrange(linea)
 
   data_titulos
-
 }
 
 # chequear_traduccion(x)

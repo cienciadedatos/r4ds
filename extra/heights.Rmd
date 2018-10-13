@@ -58,7 +58,7 @@ We fit the model by supplying the family of models (the formula), and the data, 
 
 ```{r}
 h <- lm(income ~ height, data = heights)
-h 
+h
 ```
 
 We can extract the coefficients of this fitted model and write down the model it specifies:
@@ -97,9 +97,9 @@ ggplot(heights, aes(height, income)) +
 Our model so far is extremely simple: it only uses one variable to try and predict income. We also know something else important: women tend to be shorter than men and tend to get paid less.
 
 ```{r}
-ggplot(heights, aes(height, colour = sex)) + 
+ggplot(heights, aes(height, colour = sex)) +
   geom_freqpoly(binwidth = 1)
-ggplot(heights, aes(income, colour = sex)) + 
+ggplot(heights, aes(income, colour = sex)) +
   geom_freqpoly(binwidth = 5000)
 ```
 
@@ -107,14 +107,14 @@ What happens if we also include `sex` in the model?
 
 ```{r}
 h2 <- lm(income ~ height * sex, data = heights)
-grid <- heights %>% 
-  expand(height, sex) %>% 
+grid <- heights %>%
+  expand(height, sex) %>%
   add_predictions(h2, "income")
 
-ggplot(heights, aes(height, income)) + 
-  geom_point() + 
+ggplot(heights, aes(height, income)) +
+  geom_point() +
   geom_line(data = grid) +
-  facet_wrap(~sex)
+  facet_wrap(~ sex)
 ```
 
 Need to commment about predictions for tall women and short men - there is not a lot of data there.  Need to be particularly sceptical.
@@ -123,13 +123,13 @@ Need to commment about predictions for tall women and short men - there is not a
 
 ```{r}
 h3 <- lm(income ~ height + sex, data = heights)
-grid <- heights %>% 
-  expand(height, sex) %>% 
+grid <- heights %>%
+  expand(height, sex) %>%
   gather_predictions(h2, h3)
 
-ggplot(grid, aes(height, pred, colour = sex)) + 
+ggplot(grid, aes(height, pred, colour = sex)) +
   geom_line() +
-  facet_wrap(~model)
+  facet_wrap(~ model)
 ```
 
 ### Continuous
@@ -154,46 +154,46 @@ he2 <- lm(income ~ height * education, data = heights_ed)
 How can we visualise the results of this model? One way to think about it as a surface: we have a 2d grid of height and education, and point on that grid gets a predicted income.
 
 ```{r}
-grid <- heights_ed %>% 
-  expand(height, education) %>% 
+grid <- heights_ed %>%
+  expand(height, education) %>%
   gather_predictions(he1, he2)
 
-ggplot(grid, aes(height, education, fill = pred)) + 
+ggplot(grid, aes(height, education, fill = pred)) +
   geom_raster() +
-  facet_wrap(~model)
+  facet_wrap(~ model)
 ```
 
 It's easier to see what's going on in a line plot:
 
 ```{r}
-ggplot(grid, aes(height, pred, group = education)) + 
+ggplot(grid, aes(height, pred, group = education)) +
   geom_line() +
-  facet_wrap(~model)
-ggplot(grid, aes(education, pred, group = height)) + 
+  facet_wrap(~ model)
+ggplot(grid, aes(education, pred, group = height)) +
   geom_line() +
-  facet_wrap(~model)
+  facet_wrap(~ model)
 ```
 
 One of the big advantages to `+` instead of `*` is that because the terms are independent we display them using two simple plots instead of one complex plot:
 
 ```{r}
-heights_ed %>% 
+heights_ed %>%
   expand(
-    height = seq_range(height, 10), 
+    height = seq_range(height, 10),
     education = mean(education, na.rm = TRUE)
-  ) %>% 
-  add_predictions(he1, "income") %>% 
-  ggplot(aes(height, income)) + 
-    geom_line()
+  ) %>%
+  add_predictions(he1, "income") %>%
+  ggplot(aes(height, income)) +
+  geom_line()
 
-heights_ed %>% 
+heights_ed %>%
   expand(
-    height = mean(height, na.rm = TRUE), 
+    height = mean(height, na.rm = TRUE),
     education = seq_range(education, 10)
-  ) %>% 
-  add_predictions(he1, "income") %>% 
-  ggplot(aes(education, income)) + 
-    geom_line()
+  ) %>%
+  add_predictions(he1, "income") %>%
+  ggplot(aes(education, income)) +
+  geom_line()
 ```
 
 The full interaction suggests that height matters less as education increases. But which model is "better"? We'll come back to that question later.
@@ -226,8 +226,8 @@ tidy(hes)
 ```
 
 ```{r}
-heights %>% 
-  group_by(sex)  %>% 
+heights %>%
+  group_by(sex) %>%
   do(glance(lm(income ~ height, data = .)))
 ```
 
@@ -241,7 +241,7 @@ tidy(hes2)
 But what if the relationship between variables is not linear? For example, the relationship between income and education does not seem to be linear:
 
 ```{r}
-ggplot(heights_ed, aes(education, income)) + 
+ggplot(heights_ed, aes(education, income)) +
   geom_boxplot(aes(group = education)) +
   geom_smooth(se = FALSE)
 ```
@@ -250,14 +250,14 @@ One way to introduce non-linearity into our model is to use transformed variants
 
 ```{r}
 mod_e1 <- lm(income ~ education, data = heights_ed)
-mod_e2 <- lm(income ~ education + I(education ^ 2) + I(education ^ 3), data = heights_ed)
+mod_e2 <- lm(income ~ education + I(education^2) + I(education^3), data = heights_ed)
 
-heights_ed %>% 
-  expand(education) %>% 
-  gather_predictions(mod_e1, mod_e2) %>% 
+heights_ed %>%
+  expand(education) %>%
+  gather_predictions(mod_e1, mod_e2) %>%
   ggplot(aes(education, pred, colour = model)) +
-    geom_point() + 
-    geom_line()
+  geom_point() +
+  geom_line()
 ```
 
 This is a bit clunky because we have to surround each transformation with `I()`. This is because the rules of model algebra are a little different to usual algebra. `x ^ 2` is equivalent to `x * x` which in the modelling algebra is equivalent to `x + x + x:x` which is the same as `x`. This is useful because `(x + y + z)^2` fit all all major terms and second order interactions of x, y, and z.
@@ -267,21 +267,21 @@ mod_e1 <- lm(income ~ education, data = heights_ed)
 mod_e2 <- lm(income ~ poly(education, 2), data = heights_ed)
 mod_e3 <- lm(income ~ poly(education, 3), data = heights_ed)
 
-heights_ed %>% 
-  expand(education) %>% 
-  gather_predictions(mod_e1, mod_e2, mod_e3) %>% 
+heights_ed %>%
+  expand(education) %>%
+  gather_predictions(mod_e1, mod_e2, mod_e3) %>%
   ggplot(aes(education, pred, colour = model)) +
-    geom_point() + 
-    geom_line()
+  geom_point() +
+  geom_line()
 ```
 
 However: there's one major problem with using `poly()`: outside the range of the data, polynomials are going to rapidly shoot off to positive or negative infinity.
 
 ```{r}
-tibble(education = seq(5, 25)) %>% 
-  gather_predictions(mod_e1, mod_e2, mod_e3) %>% 
+tibble(education = seq(5, 25)) %>%
+  gather_predictions(mod_e1, mod_e2, mod_e3) %>%
   ggplot(aes(education, pred, colour = model)) +
-    geom_line()
+  geom_line()
 ```
 
 Splines avoid this problem by linearly interpolating outside the range of the data. This isn't great either, but it's a safer default when you don't know for sure what's going to happen.
@@ -292,10 +292,10 @@ mod_e1 <- lm(income ~ education, data = heights_ed)
 mod_e2 <- lm(income ~ ns(education, 2), data = heights_ed)
 mod_e3 <- lm(income ~ ns(education, 3), data = heights_ed)
 
-tibble(education = seq(5, 25)) %>% 
-  gather_predictions(mod_e1, mod_e2, mod_e3) %>% 
+tibble(education = seq(5, 25)) %>%
+  gather_predictions(mod_e1, mod_e2, mod_e3) %>%
   ggplot(aes(education, pred, colour = model)) +
-    geom_line()
+  geom_line()
 ```
 
 
