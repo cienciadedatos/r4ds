@@ -1,0 +1,50 @@
+# Glossario
+
+Hay términos técnicos que será necesario traducir y otros que no. El criterio suele estar en si existe una versión en español extendida (o entendible), o si se suele utilizar la versión original en inglés.
+
+## Términos técnicos que se traducen
+
+Although there are terms that we will translate into Spanish, it is important that the translator evaluates whether it is appropriate to mention the term in English the first time. For example, if string is a term that has a translation (string of characters) the first time it is mentioned, it would be useful to also offer the English version, because that makes it clearer why the package is called stringr. For example: "This chapter will introduce you to the manipulation of strings in R." In the case of terms whose translation in Spanish is not so widespread, it is necessary to evaluate if it is appropriate to add a small explanation (for example, mapping> "... map, that is, indicate which variables will be assigned to each axis ..." .
+
+| término en inglés | traducción a utilizar |
+| ----------- | ----------- |
+| aesthetics | estéticas |
+| assignment operator | operador de asignación |
+| atomic vectors | vectores atómicos |
+| backtick (\`) | acento grave |
+| base R | R base |
+| by default | por defecto |
+| click | hacer clic |
+| console | consola |
+| debugging | depurar |
+| dataset | conjunto de datos / set de datos |
+| facet | separar facetas |
+| input | input (la palabra existe en español, no se traduce) |
+| list-columns | columnas-lista |
+| log-transformation | transformación logarítmica |
+| mapping | mapear |
+| named list | lista nombrada |
+| partial matching | coincidencia parcial |
+| parse | segmentar o analizar (depende del contexto) |
+| placeholder | marcador de posición |
+| query | consulta |
+| raw data | datos sin procesar |
+| test set | set/datos de validación |
+| training set | set/datos de entrenamiento |
+| tidy data | datos ordenados |
+
+## Términos técnicos que se mantienen
+
+Estos términos irán _en cursiva_. De ser pertinente, se debe ofrecer una posible traducción al español, ya que en algunos casos permite entender mejor el concepto que está detrás (por ejemplo, que _pipe_ es tubo / tubería). En caso de que sean nombres de paquetes o palabras nuevas en inglés (cuyo uso en este contexto no se encontraría en un diccionario), ofreceremos una indicación sobre cómo se pronuncian la primera vez que aparezcan. Por ejemplo: "... el uso de un _pipe_ (/paip/)...". 
+
+| ----------------------------|
+| Big Data |
+| help | 
+| un _dashboard_ |
+| un _data frame_ |
+| un _notebook_ |
+| un _output_    |
+| un _pipe_ |
+| un _script_ |
+| un _tibble_    |
+| el _tidyverse_    |
