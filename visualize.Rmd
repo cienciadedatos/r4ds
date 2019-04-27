@@ -335,7 +335,7 @@ ggplot(data = millas) +
 
 # derecha
 ggplot(data = millas) + 
-  geom_point(mapping = aes(x = motor, y = autopista))
+  geom_smooth(mapping = aes(x = motor, y = autopista))
 ```
 
 Cada función geom en **ggplot2** toma un argumento de `mapping`. Sin embargo, no todas las estéticas funcionan con todos los geom. Podrías establecer la forma para un punto, pero no podrías establecer la "forma" de una línea. Por otro lado, para una línea es posible elegir el *tipo* de línea (*linetype*). `geom_smooth()` dibujará una línea diferente, con un tipo de línea diferente, para cada valor único de la variable que asignes al tipo de línea.
