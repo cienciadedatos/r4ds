@@ -8,9 +8,9 @@ Tomaremos ventaja del hecho que se puede pensar que un modelo particiona tus dat
 
 Para un grande y complejo conjunto de datos esto será mucho trabajo. Sin duda hay enfoques alternativos - un enfoque de aprendizaje más automático es simplemente enfocarse en la capacidad predictiva del modelo. Ese enfoque tiende a producir cajas negras: el modelo hace muy bien su trabajo generando predicciones, pero no sabes por qué. Esto es un enfoque totalmente razonable, pero es difícil de aplicar el conocimiento del mundo real al modelo. Eso, a su vez, hace difícil evaluar si el modelo continuará o no funcionando a largo plazo, ya que los fundamentos cambian. Para la mayoría de los modelos, esperaría que usaras alguna combinación de este enfoque y un enfoque clásico más automatizado.
 
-Es un desafío saber cuándo detenerse. Tú necesitas averiguar cuándo tu modelo es suficientemente bueno, y cuando una inversion adicional vale la pena. Me gusta especialmente esta cita del usuario Broseidon241: 
+Es un desafio saber cuando detenerse. Necesitas darte cuenta cuando tu modelo es lo suficientemente bueno, y cuando no es conveniente invertir mas tiempo en él. Me gusta especialmente esta cita del usuario de reddit Broseidon241: 
 
-> Hace mucho tiempo en clases de arte, mi profesor me dijo "Un artista necesita saber 
+> Hace mucho tiempo en clase de arte, mi profesor me dijo "Un artista necesita saber 
 > cuándo una pieza está terminada. No puedes retocar algo a la perfección - termínalo. 
 > Si no te gusta, hazlo otra vez. O sino empieza algo nuevo". En años posteriores,
 > yo escuché "Una pobre costurera comete muchos errores. Una buena costurera 
