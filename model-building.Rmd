@@ -34,7 +34,7 @@ library(lubridate)
 
 ## ¿Por qué los diamantes de baja calidad son más caros? {#diamond-prices}
 
-En el capítulo anterior vimos una sorprendente relación entre la calidad de los diamantes y su precio: baja calidad de diamantes (cortes pobres, colores malos, y claridad inferior) tienen más altos precios.
+En el capítulo anterior vimos una sorprendente relación entre la calidad de los diamantes y su precio: diamantes de baja calidad (cortes pobres, colores malos, y claridad inferior) tienen más altos precios.
 
 ```{r dev = "png"}
 ggplot(diamantes, aes(corte, precio)) + geom_boxplot()
@@ -53,10 +53,10 @@ ggplot(diamantes, aes(quilates, precio)) +
   geom_hex(bins = 50)
 ```
 
-Podemos hacer que sea más fácil ver cómo los otros atributos de un diamante afectan su `precio` relativo al ajustar un modelo para separar el efecto de `quilates`. Pero primero, hagamos algunos ajustes al conjunto de datos de diamantes para que sea más fácil trabajar con: 
+Podemos hacer que sea más fácil ver cómo los otros atributos de un diamante afectan su `precio` relativo al ajustar un modelo para separar el efecto de `quilates`. Pero primero, hagamos algunos ajustes al conjunto de datos de diamantes para que sea más fácil trabajar con ellos: 
 
-1. Foco en los diamantes más pequeños que 2.5 quilates (99.7% de los datos)
-1. Log-transformación de variables quilate y precio.
+1. Foco en los diamantes más pequeños que 2.5 quilates (99.7% de los datos).
+2. Haz una transformación logarítmica de las variables quilates y precio
 
 ```{r}
 diamonds2 <- diamantes %>% 
@@ -71,13 +71,13 @@ ggplot(diamonds2, aes(lcarat, lprice)) +
   geom_hex(bins = 50)
 ```
 
-La log-transformación es particularmente util aquí porque hace que el patrón sea lineal, y patrones lineales son más fáciles de usar.  Tomemos el próximo paso y eliminemos ese patron lineal fuerte. Primero hacemos explicito el patrón ajustando el modelo:
+La log-transformación es particularmente util aquí porque hace que el patrón sea lineal, y patrones lineales son más fáciles de usar.  Tomemos el próximo paso y eliminemos ese patron lineal fuerte. Primero hacemos explícito el patrón ajustando el modelo:
 
 ```{r}
 mod_diamond <- lm(lprice ~ lcarat, data = diamonds2)
 ```
 
-Luego observamos lo que el modelo nos dice. Ten en cuenta que vuelvo atrás la transformación de la predicción, deshaciendo la log transformación, para poder superponer las predicciones en los datos originales:
+Luego observamos lo que el modelo nos dice. Ten en cuenta que vuelvo atrás la transformación de la predicción, deshaciendo la transformación logarítmica, para poder superponer las predicciones sobre los datos originales:
 
 ```{r}
 grid <- diamonds2 %>% 
@@ -91,7 +91,7 @@ ggplot(diamonds2, aes(quilates, precio)) +
   geom_line(data = grid, colour = "red", size = 1)
 ```
 
-Eso nos dice algo interesante acerca de nuestros datos. Si creemos en nuestro modelo, los diamantes grandes son mucho más baratos que lo esperado. Esto es probablemente porque no hay diamantes en estos datos que cuesten más que US$19,000.
+Eso nos dice algo interesante acerca de nuestros datos. Si creemos en nuestro modelo, los diamantes grandes son mucho más baratos que lo esperado. Esto es posiblemente porque ninguno de los diamantes de estos datos cuesta más de US$19,000.
 
 Ahora podemos ver los residuos, lo cual comprueba que hemos eliminado el patrón lineal fuerte:
 
@@ -111,11 +111,11 @@ ggplot(diamonds2, aes(color, lresid)) + geom_boxplot()
 ggplot(diamonds2, aes(claridad, lresid)) + geom_boxplot()
 ```
 
-Ahora vemos la relación que esperábamos: a medida que aumenta la calidad del diamante, también lo hace su precio relativo. Para interpretar el eje `y`, necesitamos pensar que nos dicen los residuos, y en que escala estan. Un residuo de -1 indica que `lprice` era 1 unidad más baja que la predicción únicamente basada en su peso. $2^{-1}$ es 1/2, los puntos con un valor de -1 son la mitad del precio estimado, y los residuos con el valor 1 son el doble del precio predicho.
+Ahora vemos la relación que esperábamos: a medida que aumenta la calidad del diamante, también lo hace su precio relativo. Para interpretar el eje `y`, necesitamos pensar que nos dicen los residuos, y en que escala están. Un residuo de -1 indica que `lprice` era 1 unidad más baja que la predicción basada únicamente en su peso. $2^{-1}$ es 1/2, los puntos con un valor de -1 son la mitad del precio esperado, y los residuos con el valor 1 son el doble del precio predicho.
 
 ### Un modelo más complicado
 
-Si quisiéramos, podríamos continuar construyendo nuestro modelo, traspasando los resultados que hemos observado en el modelo para hacerlos explícitos. Por ejemplo, podriamos incluir `color`, `corte`, y `claridad` en el modelo para que también hagamos explícito el efecto de esas tres variables categóricas:
+Si quisiéramos, podríamos continuar construyendo nuestro modelo, traspasando los resultados que hemos observado en el modelo para hacerlos explícitos. Por ejemplo, podríamos incluir `color`, `corte`, y `claridad` en el modelo para que también hagamos explícito el efecto de esas tres variables categóricas:
 
 ```{r}
 mod_diamond2 <- lm(lprice ~ lcarat + color + corte + claridad, data = diamonds2)
@@ -133,7 +133,7 @@ ggplot(grid, aes(corte, pred)) +
   geom_point()
 ```
 
-Si el modelo necesita variables que no hayas suministrado, `data_grid()` automáticamente los rellenará con el valor "typical". Para variables continuas, se usa la mediana, y para variables categóricas se usa el valor más común (o valores, si hay un empate).
+Si el modelo necesita variables que no has suministrado, `data_grid()` automáticamente los rellenará con el valor "typical". Para variables continuas, se usa la mediana, y para variables categóricas se usa el valor más frecuente (o valores, si hay un empate).
 
 ```{r}
 diamonds2 <- diamonds2 %>% 
@@ -154,23 +154,23 @@ diamonds2 %>%
   arrange(precio)
 ```
 
-Hasta aquí nada realmente interesante, pero probablemente valga la pena pasar tiempo considerando si esto significa un problema con nuestro modelo, o si hay errores en los datos. Si hay errores en los datos, esta podría ser una oportunidad para comprar diamantes que tienen un precio bajo incorrecto.
+Hasta aquí nada realmente interesante, pero probablemente valga la pena pasar tiempo considerando si esto significa un problema con nuestro modelo, o si hay errores en los datos. Si hay errores en los datos, esta podría ser una oportunidad para comprar diamantes que fueron incorrectamente tasados con valor bajo.
 
 ### Ejercicios
 
 1.  En el gráfico de `lcarat` vs. `lprice`, hay unas tiras verticales brillantes.
-    ¿Que representan?
+    ¿Qué representan?
 
-1.  Si `log(precio) = a_0 + a_1 * log(quilates)`, ¿que dice eso acerca  
+1.  Si `log(precio) = a_0 + a_1 * log(quilates)`, ¿Qué dice eso acerca  
     la relación entre `precio` y `quilates`?
     
-1.  Extrae los diamantes que tiene muy alto y bajo residuos. 
+1.  Extrae los diamantes que tienen residuos muy altos y muy bajos. 
     ¿Hay algo inusual en estos diamantes? ¿Son particularmente malos 
     o buenos?, o ¿Crees que estos son errores de precio?
 
-1.  ¿El modelo final, `mod_diamond2`, hace un buen trabajo prediciendo 
-    precios de diamantes? ¿Confiarías en que te diga cuanto gastar 
-    si estuvieras comprando un diamante?
+1.  ¿El modelo final, `mod_diamond2`, hace un buen trabajo al predecir 
+    el precios de los diamantes? ¿Confiarías en lo que te indique gastar 
+    si fueras a comprar un diamante?
 
 ## ¿Que afecta el número de vuelos diarios?
 
@@ -189,7 +189,7 @@ ggplot(daily, aes(date, n)) +
 
 ### Día de semana
 
-Comprender la tendencia a largo plazo es un desafío porque hay un fuerte efecto en los días de la semana que dominan los patrones sutiles. Comenzaremos mirando la distribución de número de vuelos por día de la semana:
+Comprender la tendencia a largo plazo es un desafío porque hay un fuerte efecto de día de semana que domina a los patrones más sutiles. Comenzaremos mirando la distribución de número de vuelos por día de semana:
 
 ```{r}
 daily <- daily %>% 
@@ -198,7 +198,7 @@ ggplot(daily, aes(wday, n)) +
   geom_boxplot()
 ```
 
-Hay pocos vuelos los fines de semana porque la mayoría de los viajes son por negocios. El efecto es particularmente pronunciado el sábado: tu podrías algunas veces salir un domingo para una reunión un lunes en la mañana, pero esto es bastante raro que salgas un sábado ya que preferirías estar en casa con tu familia.
+Hay pocos vuelos los fines de semana porque la mayoría de los viajes son por negocios. El efecto es particularmente pronunciado el sábado: alguna vez podrías salir un domingo para ir a una reunión un lunes por la mañana, pero es menos común que salgas un sábado ya que preferirías estar en casa con tu familia.
 
 Una forma de eliminar este fuerte patrón es usar un modelo. Primero, ajustaremos el modelo, y mostraremos sus predicciones superpuestas sobre los datos originales:
 
@@ -225,7 +225,7 @@ daily %>%
   geom_line()
 ```
 
-Notar el cambio en el eje Y: ahora estamos viendo la desviación desde el número de vuelos esperados, dados los días de la semana. Este gráfico es útil porque ahora que removimos mucho de los grandes efectos día-de-semana, nosotros podemos ver algo de los patrones más sutiles que quedan:
+Notar el cambio en el eje Y: ahora estamos viendo el desvío desde el número de vuelos esperados, dado el día de la semana. Este gráfico es útil porque ahora que removimos la mayor parte del efecto día de semana, podemos ver algo de los patrones más sutiles que quedan:
 
 1.  Nuestro modelo parece fallar a partir de junio: todavía se puede ver un 
     patrón regular que nuestro modelo no ha capturado. Dibujando un diagrama con una 
