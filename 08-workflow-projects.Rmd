@@ -1,6 +1,6 @@
 # Flujo de trabajo: proyectos
 
-Llegará el día en que tendrás que salir de R, ir a hacer otra cosa y volver a tu análisis al día siguiente. O tal vez llegará un día en que estés trabajando simultáneamente en múltiples análisis estadísticos en R, y quieras mantenerlos separados. Un día quizá tendrás que importar datos del mundo exterior y exportar resultados numéricos y gráficas creados en R. Para manejar estas situaciones de la vida real, tienes que tomar dos decisiones:
+Llegará el día en que tendrás que salir de R, ir a hacer otra cosa y después volver a tu análisis al día siguiente. O tal vez llegará un día en que estés trabajando simultáneamente en múltiples análisis estadísticos en R, y quieras mantenerlos separados. Un día quizá tendrás que importar datos del mundo exterior y exportar resultados numéricos y gráficas creados en R. Para manejar estas situaciones de la vida real, tienes que tomar dos decisiones:
 
 1.  ¿Qué parte de tu análisis es "real"? Es decir, ¿qué vas a guardar como registro permanente de lo sucedido durante el análisis?
 
@@ -8,7 +8,7 @@ Llegará el día en que tendrás que salir de R, ir a hacer otra cosa y volver a
 
 ## ¿Qué es real?
 
-Como usuaria de R principiante, está bien que consideres "real" tu ambiente (esto es, los objetos listados en el panel). Sin embargo, a largo plazo tendrás una mejor experiencia usando R si consideras que tus _scripts_ son "reales". 
+Si ests recién empezando a utilizar R, está bien que consideres "real" tu ambiente (esto es, los objetos listados en el panel). Sin embargo, a largo plazo tendrás una mejor experiencia usando R si consideras que tus _scripts_ son "reales". 
 
 Con tus _scripts_ de R (y tus archivos con datos) puedes volver a crear el ambiente. ¡Es mucho más difícil volver a crear tus _scripts_ a partir de tu ambiente! Para hacerlo, tendrías que reescribir muchas líneas de código de memoria (cometiendo errores durante el proceso), o analizar con muchísima atención tu historia de R.  
 
@@ -42,7 +42,7 @@ getwd()
 # > [1] "/Users/hadley/Documents/r4ds/r4ds"
 ```
 
-Como usuaria principiante de R, está bien que tu directorio _home_ (carpeta personal o de usuario), tu directorio de documentos o cualquier otro directorio en tu computadora sea el directorio de trabajo de R. Pero estás en el capítulo seis de este libro, y ya no eres una novata. Pronto deberías dar el siguiente paso y comenzar a organizar tus proyectos analíticos en directorios, y una vez trabajando en un proyecto, definir el directorio de trabajo de R como el directorio asociado a dicho proyecto.
+Si estás recién empezando a utilizar R, está bien que tu directorio _home_ (carpeta personal o de usuario), tu directorio de documentos o cualquier otro directorio en tu computadora sea el directorio de trabajo de R. Pero estás en el capítulo seis de este libro, y ya no eres una novata. Pronto deberías dar el siguiente paso y comenzar a organizar tus proyectos analíticos en directorios, y una vez trabajando en un proyecto, definir el directorio de trabajo de R como el directorio asociado a dicho proyecto.
 
 __No lo recomiendo__, pero también es posible definir el directorio de trabajo desde R:
 
@@ -93,7 +93,7 @@ Una vez que hayas terminado con este proceso, tendrás un nuevo proyecto en RStu
 
 ```{r eval = FALSE}
 getwd()
-#> [1] /Usuarios/hadley/Documentos/r4ds/r4ds
+#> [1] /Users/hadley/Documents/r4ds/r4ds
 ```
 
 Siempre que hagas referencia a un archivo con una ruta relativa, RStudio lo buscará en este directorio. 
@@ -102,6 +102,7 @@ Ahora teclea los siguientes comandos en el editor, luego guarda el archivo como 
 
 ```{r toy-line, eval = FALSE}
 library(tidyverse)
+library(datos)
 
 
 ggplot(diamantes, aes(quilate, precio)) + 
