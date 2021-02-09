@@ -207,7 +207,7 @@ Podemos usar `mutate()` y `unnest()` para crear un _data frame_ con una fila por
 ```{r}
 por_pais %>%
   mutate(glance = map(modelo, broom::glance)) %>%
-  select(-data, -modelo, -resids) %>% # remover las listas-columnas innecesarias
+  select(-data, -modelo, -residuos) %>% # remover las listas-columnas innecesarias
   unnest(glance)
 ```
 
