@@ -205,10 +205,12 @@ broom::glance(nz_mod)
 Podemos usar `mutate()` y `unnest()` para crear un _data frame_ con una fila por cada país:
 
 ```{r}
-por_pais %>%
+glance <- por_pais %>%
   mutate(glance = map(modelo, broom::glance)) %>%
   select(-data, -modelo, -residuos) %>% # remover las listas-columnas innecesarias
   unnest(glance)
+
+glance
 ```
 
 (Presta atención a las variables que no se imprimieron: hay mucha información útil allí).
