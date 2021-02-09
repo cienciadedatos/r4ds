@@ -521,7 +521,7 @@ Hay tres razones por las que podrías necesitar usar una estadística explícita
    )
    
    ggplot(data = demo) +
-     geom_bar(mapping = aes(x = corte, y = freq), after_stat = "identity")
+     geom_bar(mapping = aes(x = corte, y = freq), stat = "identity")
    
    ```
 
