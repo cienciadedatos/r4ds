@@ -127,7 +127,14 @@ ggplot(encuesta, aes(raza)) +
   scale_x_discrete(drop = FALSE)
 ```
 
-Estos niveles representan valores válidos que simplemente no ocurren en este conjunto de datos. Desafortunadamente, __dplyr__ no tiene una opción de `drop` (_descartar_, _eliminar_), pero la tendrá en el futuro.
+
+Estos niveles representan valores válidos que simplemente no tuvieron ocurrencias en este dataset. Para mostrarlos, en `dplyr::count()` agrega el argumento `.drop` con la opción `FALSE`.
+
+```{r}
+encuesta %>% 
+  count(raza, 
+        .drop = FALSE)
+```
 
 Cuando se trabaja con factores, las dos operaciones más comunes son cambiar el orden de los niveles y cambiar sus valores. Estas operaciones se describen en las siguientes secciones.
 

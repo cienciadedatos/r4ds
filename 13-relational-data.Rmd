@@ -27,7 +27,7 @@ library(datos)
 
 ## Datos sobre vuelos {#nycflights13-relational}
 
-Usaremos datos sobre vuelos desde y hacia Nueva York para aprender sobre datos relacionales^[NdT. El texto original se refiere al paquete nycflights13 cuya traducción se incluye en el paquete **datos**.]. El paquete **datos** contiene cuatro tablas que se relacionan con la tabla `vuelos` que se usó en el capítulo sobre [transformación de datos]:
+Usaremos datos sobre vuelos desde y hacia Nueva York para aprender sobre datos relacionales^[NdT. El texto original se refiere al paquete nycflights13 cuya traducción se incluye en el paquete **datos**.]. El paquete **datos** contiene cinco _tibbles_ que utilizaremos para este propósito: `aerolineas`, `aeropuertos`, `aviones` y `clima`, que se relacionan con la tabla `vuelos` (que se usó en el capítulo sobre [transformación de datos]):
 
 * `aerolineas` permite observar el nombre completo de la aerolínea a partir de su código abreviado:
 

@@ -349,7 +349,7 @@ Las siguientes secciones detallan cómo esta notación de fórmulas funciona con
 
 ### Variables categóricas
 
-Generar una función a partir de una fórmula es directo cuando el predictor es una variable continua, pero las cosas son más complicadas cuando el predictor es una variable categórica. Imagina que tienes una fórmula como `y ~ sexo`, donde el sexo puede ser hombre o mujer. No tiene sentido convertir a una fórmula del tipo `y = x_0 + x_1 * sexo` debido a que `sexo` no es un número - ¡no se puede multiplicar! En su lugar, lo que R hace es convertir a `y = x_0 + x_1 * sexo_hombre` donde `sexo_hombre` tiene valor 1 si `sexo` corresponde a hombre y cero a mujer:
+Generar una función a partir de una fórmula es directo cuando el predictor es una variable continua, pero las cosas son más complicadas cuando el predictor es una variable categórica. Imagina que tienes una fórmula como `y ~ sexo`, donde el sexo puede ser hombre o mujer. No tiene sentido convertir a una fórmula del tipo `y = a_0 + a_1 * sexo` debido a que `sexo` no es un número - ¡no se puede multiplicar! En su lugar, lo que R hace es convertir a `y = a_0 + a_1 * sexo_hombre` donde `sexo_hombre` tiene valor 1 si `sexo` corresponde a hombre y cero a mujer:
 
 ```{r}
 df <- tribble(

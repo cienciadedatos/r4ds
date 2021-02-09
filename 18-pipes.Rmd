@@ -115,7 +115,7 @@ saltar(
 )
 ```
 
-Aquí la desventaja es que se debe leer de adentro hacia afuera, de derecha a izquierda y que los argumentos terminan separados (problema que se conoce como [dagwood sandwich](https://es.wikipedia.org/wiki/Dagwood_sandwich)). En resumen, este código es difícil leer para un ser humano.
+Aquí la desventaja es que se debe leer de adentro hacia afuera, de derecha a izquierda y que los argumentos terminan separados (problema que se conoce como [Dagwood sandwich](https://es.wikipedia.org/wiki/Dagwood_sandwich)). En resumen, este código es difícil leer para un ser humano.
 
 ### Uso de pipe
 

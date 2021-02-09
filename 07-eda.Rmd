@@ -379,8 +379,8 @@ ggplot(data = millas) +
     ¿Por qué la combinación de estas dos relaciones conlleva que los diamantes de 
     menor calidad sean más costosos?
 
-3.  Instala el paquete **ggstance**, y crea un diagrama de caja horizontal. 
-    ¿Cómo se compara esto a usar `coord_flip()`?
+3.  Intercambia las variables x e y en un diagrama de caja vertical y crear un
+    diagrama de cajas horizontal. ¿Cómo se compara esto a usar `coord_flip()`?
 
 4.  Un problema con los diagramas de caja es que fueron desarrollados en un tiempo en que 
     los set de datos eran más pequeños y por ende tienden a mostrar un número muy grande de 

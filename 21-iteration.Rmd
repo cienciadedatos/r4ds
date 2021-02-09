@@ -542,17 +542,17 @@ La sintaxis para crear una función anónima en R es bastante verbosa, por lo qu
 ```{r}
 modelos <- mtautos %>% 
   split(.$cilindros) %>% 
-  map(~lm(millas ~ peso, data = .))
+  map(~lm(millas ~ peso, data = .x))
 ```
 
-Hemos usado `.` como pronombre: se refiere al elemento actual de la lista (del mismo modo que `i` se refiere al índice actual en el loop for).
+Hemos usado `.` como pronombre: se refiere al elemento actual de la lista (del mismo modo que `i` se refiere al índice actual en el loop for). `.x` corresponde al argumento de una función anónima.
 
 Cuando examinas múltiples modelos, puedes querer extraer un estadístico resumen como lo es $R^2$. Para hacer eso primero necesitas correr `summary()` y luego extraer la componente `r.squared` (R-cuadrado). Podríamos hacerlo usando un atajo para las funciones anónimas:
 
 ```{r}
 modelos %>% 
   map(summary) %>% 
-  map_dbl(~.$r.squared)
+  map_dbl(~.x$r.squared)
 ```
 
 Sin embargo, extraer componentes con nombres es una operación común, por lo que purrr provee un atajo aún más corto: puedes usar una cadena de caracteres (o _string_).
@@ -708,7 +708,7 @@ mu %>%
 ```{r}
 sigma <- list(1, 5, 10)
 seq_along(mu) %>% 
-  map(~rnorm(5, mu[[.]], sigma[[.]])) %>% 
+  map(~rnorm(5, mu[[.x]], sigma[[.x]])) %>% 
   str()
 ```
 
@@ -839,13 +839,13 @@ Generalmente `walk()` no es tan útil si se compara con `walk2()` o `pwalk()`. P
 library(ggplot2)
 plots <- mtcars %>% 
   split(.$cyl) %>% 
-  map(~ggplot(., aes(mpg, wt)) + geom_point())
+  map(~ggplot(.x, aes(mpg, wt)) + geom_point())
 paths <- stringr::str_c(names(plots), ".pdf")
 
 pwalk(list(paths, plots), ggsave, path = tempdir())
 ```
 
-`walk()`, `walk2()` y `pwalk()` devuelven de forma invisible `.x`, el primer argumento. Esto las hace adecuadas para usar dentro de cadenas de pipes.
+`walk()`, `walk2()` y `pwalk()` devuelven de forma invisible `.`, el primer argumento. Esto las hace adecuadas para usar dentro de cadenas de pipes.
 
 ## Otros patrones para los bucles _for_
 
@@ -897,10 +897,10 @@ x %>%
 
 ```{r}
 x %>% 
-  head_while(~ . > 5)
+  head_while(~ .x > 5)
 
 x %>% 
-  tail_while(~ . > 5)
+  tail_while(~ .x > 5)
 ```
 
 ### Reducir y acumular

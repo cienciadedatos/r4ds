@@ -207,16 +207,8 @@ Podemos usar `mutate()` y `unnest()` para crear un _data frame_ con una fila por
 ```{r}
 por_pais %>%
   mutate(glance = map(modelo, broom::glance)) %>%
+  select(-data, -modelo, -resids) %>% # remover las listas-columnas innecesarias
   unnest(glance)
-```
-
-Este no es exactamente el _output_ que queremos, porque aún incluye todas las columnas que son una lista. Este es el comportamiento por defecto cuando `unnest()` trabaja sobre _data frames_ con una única fila. Para suprimir esas columnas usamos `.drop = TRUE` (`drop` = _descartar_, en inglés):
-
-```{r}
-glance <- por_pais %>%
-  mutate(glance = map(modelo, broom::glance)) %>%
-  unnest(glance, .drop = TRUE)
-glance
 ```
 
 (Presta atención a las variables que no se imprimieron: hay mucha información útil allí).
@@ -349,7 +341,7 @@ También lo puedes usar en un _data frame_ no agrupado, especificando cuáles co
 
 ```{r}
 paises %>%
-  nest(anio:pib_per_capita)
+  nest(data = anio:pib_per_capita)
 ```
 
 ### A partir de funciones vectorizadas
@@ -372,7 +364,7 @@ df %>%
 ```{r}
 df %>%
   mutate(x2 = stringr::str_split(x1, ",")) %>%
-  unnest()
+  unnest(x2)
 ```
 
 (Si usas mucho este patrón, asegúrate de chequear `tidyr::separate_rows()`, que es un _wrapper_ alrededor de este patrón común).
@@ -418,7 +410,7 @@ probs <- c(0.01, 0.25, 0.5, 0.75, 0.99)
 mtautos %>%
   group_by(cilindros) %>%
   summarise(p = list(probs), q = list(quantile(millas, probs))) %>%
-  unnest()
+  unnest(c(p, q))
 ```
 
 ### A partir de una lista nombrada
@@ -462,7 +454,7 @@ df %>%
 mtautos %>%
   group_by(cilindros) %>%
   summarise(q = list(quantile(millas))) %>%
-  unnest()
+  unnest(q)
 ```
 
 1. ¿Qué hace este código? ¿Por qué podría ser útil?
@@ -538,7 +530,7 @@ df1 <- tribble(
   2, "c", 3
 )
 df1
-df1 %>% unnest(y, z)
+df1 %>% unnest(c(y, z))
 
 # No funciona porque y y z tienen un número diferente de elementos
 df2 <- tribble(
@@ -547,7 +539,7 @@ df2 <- tribble(
   2, c("b", "c"), 3
 )
 df2
-df2 %>% unnest(y, z)
+df2 %>% unnest(c(y, z))
 ```
 
 El mismo principio aplica al desanidar columnas-lista de _data frames_. Puedes desanidar múltiples columnas-lista siempre que todos los _data frames_ de cada fila tengan la misma cantidad de filas.

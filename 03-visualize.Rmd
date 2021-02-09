@@ -521,7 +521,7 @@ Hay tres razones por las que podrías necesitar usar una estadística explícita
    )
    
    ggplot(data = demo) +
-     geom_bar(mapping = aes(x = corte, y = freq), stat = "identity")
+     geom_bar(mapping = aes(x = corte, y = freq), after_stat = "identity")
    
    ```
 
@@ -570,10 +570,10 @@ En otras palabras, ¿cuál es el problema con estos dos gráficos?
 
    ```{r, eval = FALSE}
    ggplot(data = diamantes) +
-     geom_bar(mapping = aes(x = corte, y = ..prop..))
+     geom_bar(mapping = aes(x = corte, y = after_stat(prop))
    
    ggplot(data = diamantes) +
-     geom_bar(mapping = aes(x = corte, fill = color, y = ..prop..))
+     geom_bar(mapping = aes(x = corte, fill = color, y = after_stat(prop))
    ```
 
 ## Ajustes de posición

@@ -528,7 +528,7 @@ r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()<>@,;:\\".\[\]
 ?:\r\n)?[ \t])*))*)?;\s*)
 ```
 
-En cierto sentido, este es un ejemplo "patológico" (porque las direcciones de correo electrónico son de verdad sorpresivamente complejas), pero se usa en código real. Mira esta discusión (en inglés) en stackoverflow <http://stackoverflow.com/a/201378> para más detalles. 
+En cierto sentido, este es un ejemplo "patológico" (porque las direcciones de correo electrónico son de verdad sorpresivamente complejas), pero se usa en código real. Mira esta discusión (en inglés) en Stack Overflow <http://stackoverflow.com/a/201378> para más detalles. 
 
 No olvides que estás trabajando en un lenguaje de programación y que tienes otras herramientas a tu disposición. En vez de crear una sola expresión regular compleja, usualmente es más fácil crear una serie de expresiones regulares más simples. Si te atascaste tratando de crear una sola expresión regular que resuelva tu problema, da un paso atrás y piensa cómo podrías dividir el problema en partes más pequeñas. Esto te permitirá ir resolviendo cada desafío antes de moverte al siguiente. 
 

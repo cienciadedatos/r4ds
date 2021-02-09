@@ -291,7 +291,7 @@ select(vuelos, fecha_hora, tiempo_vuelo, everything())
 
 2. ¿Qué sucede si incluyes el nombre de una variable varias veces en una llamada a `select()`?
 
-3. ¿Qué hace la función `one_of()`? ¡¿Por qué podría ser útil en conjunto con este vector?
+3. ¿Qué hace la función `any_of()`? ¡¿Por qué podría ser útil en conjunto con este vector?
 
 ```{r}
 vars <- c ("anio", "mes", "dia", "atraso_salida", "atraso_llegada")
@@ -549,7 +549,7 @@ La historia es en realidad un poco más matizada. Podemos obtener más informaci
 atrasos <- no_cancelados %>% 
   group_by(codigo_cola) %>% 
   summarise(
-    atraso = mean(atraso_llegada, na.rm = TRUE),
+    atraso = mean(atraso_llegada),
     n = n()
   )
 

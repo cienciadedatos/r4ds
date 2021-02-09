@@ -202,7 +202,6 @@ Algunas veces quieres diferentes cosas dependiendo del tipo de vector. Una opci�
 | `is_list()` | | | | | x |
 | `is_vector()` | x | x | x | x | x |
 
-Cada predicado además viene con una versión "escalar", como `is_scalar_atomic()`, que chequea que la longitud sea 1. Esto es útil, por ejemplo, si quieres chequear que un argumento de tu función sea un solo valor lógico.
 
 ### Escalares y reglas de reciclado
 
